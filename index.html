@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>LamsDataIF by luyuwww</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/luyuwww/LamsDataIF">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/luyuwww/LamsDataIF/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/luyuwww/LamsDataIF/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>LamsDataIF</h1>
+          <p>Lams的通用数据接口,提供通用的webservcie接口给第三方软件</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/luyuwww">luyuwww</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <p>业务背景
+ 在档案系统验收后可能还会增加其它业务系统进行归档操作；
+ 业务系统后期有升级或者版本修改的可能；
+ 下属单位的业务系统可能与总部存在不一致的情况；</p>
+
+<p>调用服务原型</p>
+
+<ol>
+<li> 档案系统对接说明:
+1.1 档案系统WSDL定义地址: 
+http://localhost/LamsDataIF/cxf/ArcDataWsSingle?wsdl
+1.2 查看xml字段定义顺序url地址为:
+1.2.1   正式服务器
+http://localhost/LamsDataIF/viewXMLList</li>
+</ol>
+
+<p>1.2.2   测试服务器
+http://localhost/LamsDataIF/viewXMLList</p>
+
+<p>档案类型    案卷  文件  原文
+文书档案    --  D_FILE2.XML E_FILE2.XML
+合同档案        D_FILE6.XML E_FILE6.XML
+2.  数据转换
+2.1 调用方通过WSDL生成WebServices-Client
+2.2 共有三个方法可以调用,来添加数据:
+fileReciveTxt: txt方式插入, &amp;; 分隔符分割
+fileReciveXml: XML方式插入,详见例子
+fileReciveJson:JSON数据插入, 详见例子
+三个方法的参数都为三个
+A.  相应xml的名称:D_FILE2.xml
+B.  数据的集合
+C.  文档所属人的登录code方法 addField :
+3.  Xml 文件描述说明(接口调用方参考):
+数据表：
+写入数据表在根节点fields表示
+Tablename 表示要写入表的表名称
+Fname 表示要写入表的描述表名称，例如F类表（F_D_FILE*）若描述表无可不填写
+Chname 表示要写入表的中文说明
+field字段中tname节点的各个属性描述： 
+primary -- 标识列 1为自增 2不自增 包含该属性的字段默认为标识列
+fieldname -- 字段名<br>
+chname -- 字段描述
+fieldtype -- 字段类型 1字符 3数字 11日期
+Thevalue -- 实际的值</p>
+
+<p>字段名   中文描述    类型  默认传入值
+STATUS  状态  整形  0
+ATTR    记录属性    整形  0
+ATTREX  扩展属性    整形  0
+CREATOR 创建者   字符  OA
+ATTACHED    原文标示    字符  有原文是1，没有原文是0
+QZH 全宗号   字符  ZCBd
+ND  年度  字符<br>
+F7  归档单位    字符<br>
+F6  文件形成者 字符<br>
+Title   题名  字符<br>
+Wenhao  文号  字符<br>
+CWRQ    成文日期    字符<br>
+YS  页数  数字<br>
+GDFS    归档份数    数字  1
+MJ  密级  字符<br>
+F2  载体代码    字符  </p>
+
+<p>数据示例:
+字段名   数据1 数据2 数据3
+STATUS  0   0   0
+ATTR    0   0   0
+ATTREX  0   0   0
+CREATOR OA  OA  OA
+DID 25  26  29
+QZH ZCB ZCB ZCB
+ND  2009    2010    2011
+F7  Xx部门    Xx单位    Xxx
+F6  办公室   项目组   Xxx
+Title   关于XXXXX的通知    关于XXXXX的通知    关于XXXXX的通知
+Wenhao  中交【123123】号<br>
+CWRQ    20120909<br>
+YS  20<br>
+GDFS    1<br>
+MJ  秘密  普通<br>
+F2  纸质  电子/纸质   </p>
+
+<p>电子文件上传
+ftp服务器地址:<br>
+ftp 服务器用户:<br>
+ftp 服务器密码:  </p>
+
+<p>字段名   中文描述    类型  默认传入值
+STATUS  状态  整形  0
+ATTR    记录属性    整形  0
+ATTREX  扩展属性    整形  0
+CREATOR 创建者   字符  ROOT
+DID Id标识    整形  0
+PID 对应文件DID值  整形  文件添加接口返回值
+EFILENAME   FTP电子文件名  字符  接口调用方生成
+TITLE   文件名   字符  接口调用方生成
+EXT 后缀名   字符  接口调用方生成
+PZM 配置名   字符   data
+PATHNAME    FTP存放地址 字符  接口调用方生成</p>
+
+<p>数据示例:
+字段名   数据1 数据2 数据3
+STATUS  0   0   0
+ATTR    0   0   0
+ATTREX  0   0   0
+CREATOR ROOT    ROOT    ROOT
+DID 25  26  29
+PID 1034    1034    278
+EFILENAME   {B7B1E-9fes2-C05B78942A57}.pdf  {334E-4472-C05B784322A57}.pdf   {F531E-9fes-2278-9A257}.pdf
+TITLE   交办函   <strong>案件    有关</strong>的说明
+EXT pdf doc pdf
+PZM Data    Data    Data
+PATHNAME    0001\E_File0\2009824    文件\2010414  0002\E_File0\2010414</p>
+
+<p>说明: 
+1.  PATHNAME这里存放地址表示为 全宗号\电子文件表名\当天日期, 接口调用方可以自己生成相应目录.不与这里一直也可以.建议:OA\公文类型\YYYY-MM-DD\
+2.  PID相同指一个文件级别下挂接多分电子文件</p>
+
+<p>备注： 具体电子文件可以参考实际档案数据库的电子文件表里面的数据。</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
