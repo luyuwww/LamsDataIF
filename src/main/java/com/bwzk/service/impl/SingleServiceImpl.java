@@ -68,7 +68,7 @@ public class SingleServiceImpl extends BaseService implements SingleService {
                 switch (field.getFieldtype()) {
                     case 11:
                         if (theValue.equals("")) {
-                            values.append("getSysdate(),");
+                            values.append(getSysdate() + ",");
                         } else {
                             values.append(generateTimeToSQLDate(theValue)).append(",");
                         }
@@ -151,7 +151,7 @@ public class SingleServiceImpl extends BaseService implements SingleService {
                 switch (field.getFieldtype()) {
                     case 11:
                         if (theValue.equals("")) {
-                            values.append("getSysdate(),");
+                            values.append(getSysdate() + ",");
                         } else {
                             values.append(generateTimeToSQLDate(theValue)).append(",");
                         }
@@ -242,7 +242,7 @@ public class SingleServiceImpl extends BaseService implements SingleService {
                 switch (field.getFieldtype()) {
                     case 11:
                         if (theValue.equals("")) {
-                            values.append("getSysdate(),");
+                            values.append(getSysdate() + ",");
                         } else {
                             values.append(generateTimeToSQLDate(theValue)).append(",");
                         }
