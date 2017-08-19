@@ -500,9 +500,9 @@ public class BaseService {
         if (maxDid.equals(-1)) {
             maxDid = sUserMapper.getMaxDid(tableName);
             maxDid = (maxDid == null ? 1 : maxDid++);
-            maxDid++;
+
         }
-        return maxDid;
+        return maxDid++;
     }
 
     protected String insertUser4Map(Map<String, String> map, String dept_zj,
