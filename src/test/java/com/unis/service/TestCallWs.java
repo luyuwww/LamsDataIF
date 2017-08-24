@@ -2,6 +2,7 @@ package com.unis.service;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
 
@@ -20,7 +21,7 @@ public class TestCallWs {
 //		map.put("JH", "4");
 //		map.put("TITLE", "这是个提名");
 //		map.put("F13", "1986-06-19");
-//		ObjectMapper mapper = new ObjectMapper(); 
+//		ObjectMapper mapper = new ObjectMapper();
 //		mapper.writeValue(sw, map);
 ////		
 //		System.out.println(ws.fileReciveJson("D_FILE8.xml", sw.toString().toString(), "jiamy"));
