@@ -633,4 +633,8 @@ public class GlobalFinalAttr implements Serializable {
 
     }
 
+    public static final String RSP_SUCCESS = "SUCCESS";
+    public static final String RSP_FAIL = "FAIL";
+
+
 }

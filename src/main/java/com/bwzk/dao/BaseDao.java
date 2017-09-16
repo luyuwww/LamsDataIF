@@ -65,7 +65,7 @@ public interface BaseDao {
     @Select("select * from ${tableName}")
     List<FDTable> getFtableList(@Param("tableName") String tableName);
 
-    @Select("select * from s_dalx ")
+    @Select("select * from s_dalx where status=0")
     List<SDalx> getAllDalxList();
 
     @Select("select * from w_wjkgl ")

@@ -68,7 +68,8 @@
     <!-- CXF -->
     <jaxws:endpoint id="arcServicePublish" implementor="#arcServcieImpl" address="/ArcDataWs"/>
     <jaxws:endpoint id="arcDataServiceWS" implementor="#arcDataService" address="/ArcDataWsSingle"/>
-    <jaxws:endpoint id="BaseDataWS" implementor="#baseDataServiceImpl" address="/BaseDataWS"/>
+    <!--<jaxws:endpoint id="BaseDataWS" implementor="#baseDataServiceImpl" address="/BaseDataWS"/>-->
+    <jaxws:endpoint id="GlobalSearchService" implementor="#globSearch" address="/GlobalSearchWS"/>
 
     <!-- 事务配置 UNIS-->
     <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
