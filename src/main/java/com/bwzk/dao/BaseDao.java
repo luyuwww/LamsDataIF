@@ -76,4 +76,17 @@ public interface BaseDao {
 
     @Select("SELECT * FROM S_FWQPZ WHERE pzname='${pzm}'")
     SFwqpz getFwqpzByPzm(@Param("pzm") String pzm);
+
+    @Select("SELECT S_ROLE.DID FROM S_USER ,S_ROLE ,S_USERROLE " +
+            "WHERE S_USER.DID=S_USERROLE.YHID AND S_ROLE.DID=S_USERROLE.JSID " +
+            "AND S_USER.USERCODE='${usercode}'")
+    Integer getUserRoleDidsByCode(@Param("usercode") String usercode);
+
+    @Select(" SELECT DID,QZID,CODE,CHNAME,HASPRJ,HASVOL,HASCATTABLE,GLMS,BZ,STATUS," +
+            "CREATOR, CREATETIME,EDITOR,EDITTIME,DELTOR,DELTIME,DATARANGE FROM S_DALX " +
+            "WHERE (GLMS = 6 AND STATUS=0 ) or (STATUS = 0 AND CODE IN " +
+            "(SELECT LIBCODE FROM S_ROLERIGHT WHERE GNID IN(SELECT DID FROM S_XTGN WHERE " +
+            " GNMC='查看所有部门数据' OR GNMC='档案类型权限' ) AND JSID =${jsid}))" +
+            " ORDER BY DID")
+    List<SDalx>  getDalxListByUserCodeIgnoreUnit(@Param("jsid") Integer jsid);
 }

@@ -12,9 +12,13 @@ public interface GlobalSearchService {
      */
     @WebMethod
     @WebResult
-    public String catchData(@WebParam(name = "startTime") String startTime
+    public String GetData(@WebParam(name = "startTime") String startTime
             , @WebParam(name = "endTime") String endTime
             , @WebParam(name = "type") String type
             , @WebParam(name = "page") Integer page
             , @WebParam(name = "pageSize") Integer pageSize);
+
+    @WebMethod
+    @WebResult
+    public String Permission(@WebParam(name = "usercode") String usercode);
 }
