@@ -1,0 +1,12 @@
+服务地址:
+http://10.185.101.4/LamsDataIF/cxf/GlobalSearchWS?wsdl
+
+正式环境如果报错 cxf cannot create a secure xmlinputfactory weblogic
+https://stackoverflow.com/questions/20114945/cxf-web-service-client-cannot-create-a-secure-xmlinputfactory
+After adding this -Dorg.apache.cxf.stax.allowInsecureParser=1 to the JAVA_OPTIONS in setDomainEnv.sh, It is working fine now.
+
+0
+down vote
+1: -Dorg.apache.cxf.stax.allowInsecureParser=1 to the JAVA_OPTIONS
+or
+2: rename woodstox-core-asl-4.4.1.jar -> awoodstox-core-asl-4.4.1.jar

@@ -211,7 +211,11 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
                     db.setQuanzong(MapUtils.getString(dfileMap , "QZH"));
                 }
 
-                db.setUrl("http://www.baidu.com");
+//                http://localhost:81/Lams/rest/restLoadFile?libcode=6&level=2&efiledid=1565285&convertStatus=0
+                db.setUrl("http://"+lamsIP+"/Lams/rest/restLoadFile"
+                                + "?libcode="+dalx.getCode() + "&level=2"
+                                + "&efiledid="+doc.get("EID") + "&convertStatus=0"+dalx.getCode()
+                                + "&randon="+dalx.getCode());
                 datas.add(db);
                 breakFlag++;
             }
@@ -269,6 +273,9 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
     @Autowired
     @Value("${lucene.index.path}")
     private String luceneIndexPath;//luceneIndexPath
+    @Autowired
+    @Value("${lams.ip}")
+    protected String lamsIP;
     private static final String DATE_FMT = "yyyyMMddHHmmss";
     private static final String S_DATE_FMT = "yyyy-MM-dd HH:mm:ss";
     private static final String CREATETIME = "CREATETIME";
