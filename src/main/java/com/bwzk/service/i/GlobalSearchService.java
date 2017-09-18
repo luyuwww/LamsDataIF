@@ -20,5 +20,5 @@ public interface GlobalSearchService {
 
     @WebMethod
     @WebResult
-    public String Permission(@WebParam(name = "usercode") String usercode);
+    public String Permission();
 }

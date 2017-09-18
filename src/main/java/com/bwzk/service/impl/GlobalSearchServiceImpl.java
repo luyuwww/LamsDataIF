@@ -5,6 +5,7 @@ import ch.qos.logback.classic.Logger;
 import com.bwzk.dao.JdbcDaoImpl;
 import com.bwzk.dao.i.SUserMapper;
 import com.bwzk.pojo.SDalx;
+import com.bwzk.pojo.SUser;
 import com.bwzk.pojo.jaxb.Field;
 import com.bwzk.pojo.jaxb.Table;
 import com.bwzk.pojo.searchPojo.DataBean;
@@ -86,8 +87,8 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
 
     @WebMethod
     @WebResult
-    public String Permission(@WebParam(name = "usercode") String usercode){
-        Permission pm = getPermissionByusercode(usercode);
+    public String Permission(){
+        Permission pm = getPermissionByusercode();
         String result = "";
         try {
             result = new ObjectMapper().writeValueAsString(pm);
@@ -97,26 +98,38 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
         return result;
     }
 
-    private Permission getPermissionByusercode(String usercode){
-        Permission pm = new Permission();
+    private Permission getPermissionByusercode(){
         Integer jsid = null;
+        Integer flag = 1;
+        Permission pm = new Permission();
         try {
-            jsid = sUserMapper.getUserRoleDidsByCode(usercode);
-            List<SDalx> dList = sUserMapper.getDalxListByUserCodeIgnoreUnit(jsid);
+            List<SUser> userList = sUserMapper.getAllUserList();
             List<Permission.DataBean> dbs = new ArrayList<>();
-            Permission.DataBean db = new Permission.DataBean();
-            db.setUserid(usercode);
-            String groups = "-1";
-            if(null != dList && dList.size()>=1){
-                for (SDalx d : dList) {
-                    groups+=(","+d.getCode());
+
+            for (SUser user : userList) {
+                if(user.getUsercode().equalsIgnoreCase("ROOT") || user.getPid().equals(-1)){
+                    continue;
+                }else{
+                    jsid = sUserMapper.getUserRoleDidsByCode(user.getUsercode());
+                    if(null != jsid && jsid >= 0){
+                        Permission.DataBean db = new Permission.DataBean();
+                        db.setUserid(user.getUsercode());
+                        List<SDalx> dList = sUserMapper.getDalxListByUserCodeIgnoreUnit(jsid);
+                        String groups = "-1";
+                        if(null != dList && dList.size()>=1){
+                            for (SDalx d : dList) {
+                                groups+=(","+d.getCode());
+                            }
+                        }
+                        db.setGroups(groups.replace("-1," , ""));
+                        dbs.add(db);
+                        flag++;
+                    }
                 }
             }
-            db.setGroups(groups.replace("-1," , ""));
-            dbs.add(db);
 
             pm.setReponse(GlobalFinalAttr.RSP_SUCCESS);
-            pm.setTotal(1);
+            pm.setTotal(flag);
             pm.setData(dbs);
         } catch (Exception e) {
             pm.setReponse(GlobalFinalAttr.RSP_FAIL);
