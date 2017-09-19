@@ -1,10 +1,7 @@
 package com.bwzk.dao.i;
 
 import com.bwzk.dao.BaseDao;
-import com.bwzk.pojo.EFile;
-import com.bwzk.pojo.SUser;
-import com.bwzk.pojo.SUserExample;
-import com.bwzk.pojo.SUserWithBLOBs;
+import com.bwzk.pojo.*;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -78,5 +75,9 @@ public interface SUserMapper extends BaseDao {
 
     @Select("SELECT COUNT(DID) FROM ${dTableName} WHERE ${whereSql}")
     Integer countNumByWhere(@Param("dTableName") String dTableName, @Param("whereSql") String whereSql);
+
+    @Select("SELECT * FROM S_QZH")
+    List<SQzh> listQzh();
+
 
 }

@@ -33,7 +33,7 @@ public class DataBean {
     private String type;
     private Integer permission;
     private String users;
-    private Integer groups;
+    private String groups;
     private String url;
 
     public String getId() {
@@ -116,11 +116,11 @@ public class DataBean {
         this.users = users;
     }
 
-    public Integer getGroups() {
+    public String getGroups() {
         return groups;
     }
 
-    public void setGroups(Integer groups) {
+    public void setGroups(String groups) {
         this.groups = groups;
     }
 

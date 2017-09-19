@@ -5,6 +5,7 @@ import ch.qos.logback.classic.Logger;
 import com.bwzk.dao.JdbcDaoImpl;
 import com.bwzk.dao.i.SUserMapper;
 import com.bwzk.pojo.SDalx;
+import com.bwzk.pojo.SQzh;
 import com.bwzk.pojo.SUser;
 import com.bwzk.pojo.jaxb.Field;
 import com.bwzk.pojo.jaxb.Table;
@@ -67,6 +68,7 @@ import java.util.Map;
 public class GlobalSearchServiceImpl extends BaseService implements GlobalSearchService {
 
     public static List<SDalx> dalxList = null;
+    public static List<SQzh> qzhList = null;
 
     @WebMethod
     @WebResult
@@ -189,7 +191,8 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
                 SDalx dalx = getDalx(doc.get("LIBCODE"));
                 Map<String , Object> dfileMap = queryDfile(doc.get("EID"), doc.get("LIBCODE"));
                 String id = doc.get("TABLENAME")+"_"+ doc.get("DID");
-                db.setTitle(doc.get("TITLE"));
+                db.setId(id);
+                db.setTitle(MapUtils.getString(dfileMap , "TITLE") + " | "+ doc.get("TITLE"));
                 db.setFiletype(doc.get("EXT"));
                 db.setContent(doc.get("CONTEXT"));
                 if(StringUtils.isNotBlank(doc.get("CREATETIME"))){
@@ -201,14 +204,19 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
                     }
                 }
 
+                db.setUsers("");
+                db.setPermission(1);
                 if(null != dalx){
                     db.setType(dalx.getChname());
-                    db.setGroups(dalx.getCode());
+                    db.setGroups(dalx.getCode().toString());
+                }else{
+                    db.setGroups("");
                 }
 
                 if(null != dfileMap){
-                    db.setFanwei(MapUtils.getString(dfileMap , "FLH"));
-                    db.setQuanzong(MapUtils.getString(dfileMap , "QZH"));
+                    db.setFanwei(StringUtils.isNotBlank(MapUtils.getString(dfileMap , "FLNAME"))
+                            ? MapUtils.getString(dfileMap , "FLNAME") : "");
+                    db.setQuanzong(getSQzh(MapUtils.getString(dfileMap , "QZH")).getQzmc());
                 }
 
 //                http://localhost:81/Lams/rest/restLoadFile?libcode=6&level=2&efiledid=1565285&convertStatus=0
@@ -235,11 +243,17 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
         return sd;
     }
 
-    private List<SDalx> getDalxList(){
-        if(null == dalxList){
-            dalxList = sUserMapper.getAllDalxList();
+
+    private Map<String , Object> queryDfile(String eid , String libcode){
+        Map<String , Object> rslt = null;
+        try {
+            rslt = super.queryForMap("SELECT FLH,QZH,TITLE,KEYWORD FROM D_FILE"
+                    +libcode + " WHERE DID = (SELECT PID FROM E_FILE"+libcode
+                    +" WHERE DID="+eid+")");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return dalxList;
+        return rslt;
     }
 
     private SDalx getDalx(String libcode ){
@@ -254,16 +268,30 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
         return d;
     }
 
-    private Map<String , Object> queryDfile(String eid , String libcode){
-        Map<String , Object> rslt = null;
-        try {
-            rslt = super.queryForMap("SELECT FLH,QZH,TITLE,KEYWORD FROM D_FILE"
-                    +libcode + " WHERE DID = (SELECT PID FROM E_FILE"+libcode
-                    +" WHERE DID="+eid+")");
-        } catch (Exception e) {
-            e.printStackTrace();
+    private SQzh getSQzh(String qzhStr){
+        SQzh q = null;
+        List<SQzh> qList = getQzhList();
+        for (SQzh qzh : qList) {
+            if(qzhStr.equalsIgnoreCase(qzh.getQzh())){
+                q = qzh;
+                break;
+            }
         }
-        return rslt;
+        return q;
+    }
+
+    private List<SDalx> getDalxList(){
+        if(null == dalxList){
+            dalxList = sUserMapper.getAllDalxList();
+        }
+        return dalxList;
+    }
+
+    private List<SQzh> getQzhList(){
+        if(null == qzhList){
+            qzhList = sUserMapper.listQzh();
+        }
+        return qzhList;
     }
 
     @Autowired
