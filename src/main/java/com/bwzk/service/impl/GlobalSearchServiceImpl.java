@@ -181,7 +181,7 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
             TopDocs topDocs = null;
             BooleanQuery filterQuery = new BooleanQuery();
             QueryParser filterParse = new QueryParser(LUCEN_VERSION , "DLEVEL" , analyzer);
-            filterQuery.add(filterParse.parse("INDEX_") , BooleanClause.Occur.SHOULD);
+            filterQuery.add(filterParse.parse(type) , BooleanClause.Occur.MUST);
             topDocs = searcher.search(all , new QueryWrapperFilter(filterQuery), mainIndexReader.maxDoc());
             int breakFlag = 0;
             int docID = ((page-1)*pageSize);
@@ -190,7 +190,7 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
                 Document doc = searcher.doc(topDocs.scoreDocs[i].doc);//INDEX_
                 SDalx dalx = getDalx(doc.get("LIBCODE"));
                 Map<String , Object> dfileMap = queryDfile(doc.get("EID"), doc.get("LIBCODE"));
-                String id = doc.get("TABLENAME")+"_"+ doc.get("DID");
+                String id = doc.get("TABLENAME")+"_"+ doc.get("EID");
                 db.setId(id);
                 db.setTitle(MapUtils.getString(dfileMap , "TITLE") + " | "+ doc.get("TITLE"));
                 db.setFiletype(doc.get("EXT"));
@@ -220,10 +220,11 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
                 }
 
 //                http://localhost:81/Lams/rest/restLoadFile?libcode=6&level=2&efiledid=1565285&convertStatus=0
-                db.setUrl("http://"+lamsIP+"/Lams/rest/restLoadFile"
-                                + "?libcode="+dalx.getCode() + "&level=2"
-                                + "&efiledid="+doc.get("EID") + "&convertStatus=0"+dalx.getCode()
-                                + "&randon="+dalx.getCode());
+                db.setUrl("http://"+lamsIP+"/Lams/globalSearch/singleViewEfile"
+                                + "?libcode="+dalx.getCode()
+                                + "&efiledid="+doc.get("EID")
+                                + "&randon=" + Math.random()
+                                + "&usercode=");
                 datas.add(db);
                 breakFlag++;
             }
