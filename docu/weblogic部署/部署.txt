@@ -10,3 +10,8 @@ down vote
 1: -Dorg.apache.cxf.stax.allowInsecureParser=1 to the JAVA_OPTIONS
 or
 2: rename woodstox-core-asl-4.4.1.jar -> awoodstox-core-asl-4.4.1.jar
+
+3. D:\Oracle\Middleware\modules 下面的commons-io.jar换成2.4的版本并改名为 com.bea.core.apache.commons.io_1.0.0.0_1-4.jar
+    解决 java.lang.NoSuchMethodError: org.apache.commons.io.FileUtils.writeStringToFile(java/io/File;Ljava/lang/String;Ljava/lang/String;Z)V
+
+4. 错误 Caused by: java.lang.NoClassDefFoundError: Could not initialize class org.apache.poi.POIXMLTypeLoader
