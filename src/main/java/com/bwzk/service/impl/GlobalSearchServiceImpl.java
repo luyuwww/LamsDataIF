@@ -194,7 +194,11 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
                 db.setId(id);
                 db.setTitle(MapUtils.getString(dfileMap , "TITLE") + " | "+ doc.get("TITLE"));
                 db.setFiletype(doc.get("EXT"));
-                db.setContent(doc.get("CONTEXT"));
+                if(StringUtils.isNotBlank(doc.get("CONTEXT"))){
+                    db.setContent(doc.get("CONTEXT").replaceAll("[ 　\n\b\r\t\u0000]",""));
+                }else{
+                    db.setContent("");
+                }
                 if(StringUtils.isNotBlank(doc.get("CREATETIME"))){
                     try {
                         db.setDate(new DateTime(Long.parseLong(doc.get("CREATETIME")))
