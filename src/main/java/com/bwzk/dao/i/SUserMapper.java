@@ -79,5 +79,10 @@ public interface SUserMapper extends BaseDao {
     @Select("SELECT * FROM S_QZH")
     List<SQzh> listQzh();
 
+    @Select("SELECT DID, LIBNAME,SRCID,SRCTENNAME FROM S_HSZ " +
+            "WHERE LB='删除' AND SRCTENNAME LIKE 'E_FILE%' AND LIBNAME LIKE '${type}' " +
+            "AND DELTIME > TO_DATE('${starTime}' ,'YYYY-MM-DD  HH24:MI:SS') " +
+            "AND DELTIME < TO_DATE('${endTime}'  , 'YYYY-MM-DD  HH24:MI:SS')")
+    List<SHsz> queryHsz(@Param("type") String type , @Param("starTime") String starTime, @Param("endTime") String endTime);
 
 }

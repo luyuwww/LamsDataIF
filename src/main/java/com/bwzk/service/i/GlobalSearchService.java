@@ -17,6 +17,22 @@ public interface GlobalSearchService {
             , @WebParam(name = "type") String type
             , @WebParam(name = "page") Integer page
             , @WebParam(name = "pageSize") Integer pageSize);
+    /**
+     * <p>Title: 获取删除数据接口</p>
+     */
+    @WebMethod
+    @WebResult
+    public String getDelData(@WebParam(name = "type") String type
+            , @WebParam(name = "startTime") String startTime
+            , @WebParam(name = "endTime") String endTime);
+
+    /**
+     * <p>Title: 获取删除数据接口</p>
+     */
+    @WebMethod
+    @WebResult
+    public String getDelDataIgnoreType(@WebParam(name = "startTime") String startTime
+            , @WebParam(name = "endTime") String endTime);
 
     @WebMethod
     @WebResult

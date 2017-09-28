@@ -5,13 +5,12 @@ import ch.qos.logback.classic.Logger;
 import com.bwzk.dao.JdbcDaoImpl;
 import com.bwzk.dao.i.SUserMapper;
 import com.bwzk.pojo.SDalx;
+import com.bwzk.pojo.SHsz;
 import com.bwzk.pojo.SQzh;
 import com.bwzk.pojo.SUser;
 import com.bwzk.pojo.jaxb.Field;
 import com.bwzk.pojo.jaxb.Table;
-import com.bwzk.pojo.searchPojo.DataBean;
-import com.bwzk.pojo.searchPojo.Permission;
-import com.bwzk.pojo.searchPojo.SearchData;
+import com.bwzk.pojo.searchPojo.*;
 import com.bwzk.service.BaseService;
 import com.bwzk.service.i.GlobalSearchService;
 import com.bwzk.service.i.SingleService;
@@ -87,6 +86,16 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
         return result;
     }
 
+    @Override
+    public String getDelData(String type, String startTime, String endTime) {
+        return getDelDates(type , startTime , endTime);
+    }
+
+    @Override
+    public String getDelDataIgnoreType(String startTime, String endTime) {
+        return getDelDates("%" , startTime , endTime);
+    }
+
     @WebMethod
     @WebResult
     public String Permission(){
@@ -94,6 +103,50 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
         String result = "";
         try {
             result = new ObjectMapper().writeValueAsString(pm);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 从回收站获取删除的电子文件数据
+     * @param type
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    private String getDelDates(String type , String startTime , String endTime){
+        String result = "";
+        DelDatas dds = new DelDatas();
+        List<DelBean> dbList = new ArrayList<>();
+        if(StringUtils.isNotBlank(type) && StringUtils.isNotBlank(startTime) &&
+                StringUtils.isNotBlank(endTime)){
+            try {
+                List<SHsz> hszLsit = sUserMapper.queryHsz(type , startTime , endTime);
+                dds.setTotal(hszLsit.size());
+                dds.setReponse(GlobalFinalAttr.RSP_SUCCESS);
+                for (SHsz hsz : hszLsit) {
+                    DelBean db = new DelBean();
+                    db.setId(hsz.getSrctenname()+"_"+hsz.getSrcid());
+                    db.setType(hsz.getLibname());
+                    db.setDate(new DateTime(hsz.getDeltime()).toString(S_DATE_FMT));
+                    dbList.add(db);
+                }
+                dds.setData(dbList);
+            } catch (Exception e) {
+                dds.setTotal(0);
+                dds.setReponse(GlobalFinalAttr.RSP_FAIL);
+                dds.setData(dbList);
+                e.printStackTrace();
+            }
+        }else{
+            dds.setTotal(0);
+            dds.setReponse(GlobalFinalAttr.RSP_FAIL);
+            dds.setData(dbList);
+        }
+        try {
+            result = new ObjectMapper().writeValueAsString(dds);
         } catch (IOException e) {
             e.printStackTrace();
         }
