@@ -76,7 +76,7 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
             , @WebParam(name = "type") String type
             , @WebParam(name = "page") Integer page
             , @WebParam(name = "pageSize") Integer pageSize) {
-        SearchData sd = search(startTime , endTime , type , page ,pageSize);
+        SearchData sd = search(startTime, endTime, type, page, pageSize);
         String result = "";
         try {
             result = new ObjectMapper().writeValueAsString(sd);
@@ -88,17 +88,17 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
 
     @Override
     public String getDelData(String type, String startTime, String endTime) {
-        return getDelDates(type , startTime , endTime);
+        return getDelDates(type, startTime, endTime);
     }
 
     @Override
     public String getDelDataIgnoreType(String startTime, String endTime) {
-        return getDelDates("%" , startTime , endTime);
+        return getDelDates("%", startTime, endTime);
     }
 
     @WebMethod
     @WebResult
-    public String Permission(){
+    public String Permission() {
         Permission pm = getPermissionByusercode();
         String result = "";
         try {
@@ -111,24 +111,25 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
 
     /**
      * 从回收站获取删除的电子文件数据
+     *
      * @param type
      * @param startTime
      * @param endTime
      * @return
      */
-    private String getDelDates(String type , String startTime , String endTime){
+    private String getDelDates(String type, String startTime, String endTime) {
         String result = "";
         DelDatas dds = new DelDatas();
         List<DelBean> dbList = new ArrayList<>();
-        if(StringUtils.isNotBlank(type) && StringUtils.isNotBlank(startTime) &&
-                StringUtils.isNotBlank(endTime)){
+        if (StringUtils.isNotBlank(type) && StringUtils.isNotBlank(startTime) &&
+                StringUtils.isNotBlank(endTime)) {
             try {
-                List<SHsz> hszLsit = sUserMapper.queryHsz(type , startTime , endTime);
+                List<SHsz> hszLsit = sUserMapper.queryHsz(type, startTime, endTime);
                 dds.setTotal(hszLsit.size());
                 dds.setReponse(GlobalFinalAttr.RSP_SUCCESS);
                 for (SHsz hsz : hszLsit) {
                     DelBean db = new DelBean();
-                    db.setId(hsz.getSrctenname()+"_"+hsz.getSrcid());
+                    db.setId(hsz.getSrctenname() + "_" + hsz.getSrcid());
                     db.setType(hsz.getLibname());
                     db.setDate(new DateTime(hsz.getDeltime()).toString(S_DATE_FMT));
                     dbList.add(db);
@@ -140,7 +141,7 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
                 dds.setData(dbList);
                 e.printStackTrace();
             }
-        }else{
+        } else {
             dds.setTotal(0);
             dds.setReponse(GlobalFinalAttr.RSP_FAIL);
             dds.setData(dbList);
@@ -153,7 +154,7 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
         return result;
     }
 
-    private Permission getPermissionByusercode(){
+    private Permission getPermissionByusercode() {
         Integer jsid = null;
         Integer flag = 1;
         Permission pm = new Permission();
@@ -162,21 +163,21 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
             List<Permission.DataBean> dbs = new ArrayList<>();
 
             for (SUser user : userList) {
-                if(user.getUsercode().equalsIgnoreCase("ROOT") || user.getPid().equals(-1)){
+                if (user.getUsercode().equalsIgnoreCase("ROOT") || user.getPid().equals(-1)) {
                     continue;
-                }else{
+                } else {
                     jsid = sUserMapper.getUserRoleDidsByCode(user.getUsercode());
-                    if(null != jsid && jsid >= 0){
+                    if (null != jsid && jsid >= 0) {
                         Permission.DataBean db = new Permission.DataBean();
                         db.setUserid(user.getUsercode());
                         List<SDalx> dList = sUserMapper.getDalxListByUserCodeIgnoreUnit(jsid);
                         String groups = "-1";
-                        if(null != dList && dList.size()>=1){
+                        if (null != dList && dList.size() >= 1) {
                             for (SDalx d : dList) {
-                                groups+=(","+d.getCode());
+                                groups += ("," + d.getCode());
                             }
                         }
-                        db.setGroups(groups.replace("-1," , ""));
+                        db.setGroups(groups.replace("-1,", ""));
                         dbs.add(db);
                         flag++;
                     }
@@ -193,12 +194,12 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
         return pm;
     }
 
-    private SearchData search(String startTime , String endTime , String type
-            , Integer page , Integer pageSize){
+    private SearchData search(String startTime, String endTime, String type
+            , Integer page, Integer pageSize) {
         SearchData sd = new SearchData();
 
-        Long sL =  new DateTime(DateUtil.strToDate(startTime , S_DATE_FMT)).getMillis();
-        Long eL =  new DateTime(DateUtil.strToDate(endTime , S_DATE_FMT)).getMillis();
+        Long sL = new DateTime(DateUtil.strToDate(startTime, S_DATE_FMT)).getMillis();
+        Long eL = new DateTime(DateUtil.strToDate(endTime, S_DATE_FMT)).getMillis();
 
         List<DataBean> datas = new ArrayList<>();
         IndexSearcher searcher = null;
@@ -207,10 +208,10 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
         StandardAnalyzer analyzer = new StandardAnalyzer(LUCEN_VERSION);
         QueryBuilder searchQueryBuilder = new QueryBuilder(analyzer);
         try {
-            mainIndexReader = DirectoryReader.open(FSDirectory.open(new File( luceneIndexPath+"mainIndex")));
+            mainIndexReader = DirectoryReader.open(FSDirectory.open(new File(luceneIndexPath + "mainIndex")));
             searcher = new IndexSearcher(mainIndexReader);
-            NumericRangeQuery nq = NumericRangeQuery.newLongRange(CREATETIME, sL ,
-                            eL , false ,true);
+            NumericRangeQuery nq = NumericRangeQuery.newLongRange(CREATETIME, sL,
+                    eL, false, true);
 
 
             BooleanQuery all = new BooleanQuery();
@@ -223,67 +224,96 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
             List<SDalx> dalxList = getDalxList();
 
             for (SDalx dalx : dalxList) {
-                parser = new QueryParser(LUCEN_VERSION  , "LIBCODE" , analyzer);
+                parser = new QueryParser(LUCEN_VERSION, "LIBCODE", analyzer);
                 //判断是OR还是AND来生产不同的解析式
                 parser.setDefaultOperator(QueryParser.OR_OPERATOR);
-                dalxQuery.add( parser.parse(dalx.getCode().toString()), BooleanClause.Occur.SHOULD);
+                dalxQuery.add(parser.parse(dalx.getCode().toString()), BooleanClause.Occur.SHOULD);
             }
-            all.add(new BooleanClause(dalxQuery , BooleanClause.Occur.MUST));
-            all.add(new BooleanClause(nq , BooleanClause.Occur.MUST));
+            all.add(new BooleanClause(dalxQuery, BooleanClause.Occur.MUST));
+            all.add(new BooleanClause(nq, BooleanClause.Occur.MUST));
 
             TopDocs topDocs = null;
             BooleanQuery filterQuery = new BooleanQuery();
-            QueryParser filterParse = new QueryParser(LUCEN_VERSION , "DLEVEL" , analyzer);
-            filterQuery.add(filterParse.parse(type) , BooleanClause.Occur.MUST);
-            topDocs = searcher.search(all , new QueryWrapperFilter(filterQuery), mainIndexReader.maxDoc());
+            QueryParser filterParse = new QueryParser(LUCEN_VERSION, "DLEVEL", analyzer);
+            filterQuery.add(filterParse.parse(type), BooleanClause.Occur.MUST);
+            SortField sortField = new SortField(CREATETIME, SortField.Type.STRING);
+            topDocs = searcher.search(all, new QueryWrapperFilter(filterQuery), mainIndexReader.maxDoc() ,
+                    new Sort(new SortField(null,  SortField.Type.DOC,false)));
             int breakFlag = 0;
-            int docID = ((page-1)*pageSize);
-            for(int i =  docID == 0 ? 0 : docID ; breakFlag < pageSize && i<topDocs.totalHits  ;i++) {
+            int docID = ((page - 1) * pageSize);
+            for (int i = docID; (breakFlag < pageSize && i < topDocs.totalHits); i++) {
+                Document doc = null;
                 DataBean db = new DataBean();
-                Document doc = searcher.doc(topDocs.scoreDocs[i].doc);//INDEX_
-                SDalx dalx = getDalx(doc.get("LIBCODE"));
-                Map<String , Object> dfileMap = queryDfile(doc.get("EID"), doc.get("LIBCODE"));
-                String id = doc.get("TABLENAME")+"_"+ doc.get("EID");
-                db.setId(id);
-                db.setTitle(MapUtils.getString(dfileMap , "TITLE") + " | "+ doc.get("TITLE"));
-                db.setFiletype(doc.get("EXT"));
-                if(StringUtils.isNotBlank(doc.get("CONTEXT"))){
-                    db.setContent(doc.get("CONTEXT").replaceAll("[ 　\n\b\r\t\u0000]",""));
-                }else{
-                    db.setContent("");
-                }
-                if(StringUtils.isNotBlank(doc.get("CREATETIME"))){
-                    try {
-                        db.setDate(new DateTime(Long.parseLong(doc.get("CREATETIME")))
-                                .toString(S_DATE_FMT));
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
+                try {
+                    doc = searcher.doc(topDocs.scoreDocs[i].doc);//INDEX_
+                    SDalx dalx = getDalx(doc.get("LIBCODE"));
+                    Map<String, Object> dfileMap = queryDfile(doc.get("EID"), doc.get("LIBCODE"));
+                    String id = doc.get("TABLENAME") + "_" + doc.get("EID");
+                    db.setId(id);
+                    db.setTitle(MapUtils.getString(dfileMap, "TITLE") + " | " + doc.get("TITLE"));
+                    db.setFiletype(doc.get("EXT"));
+                    if (StringUtils.isNotBlank(doc.get("CONTEXT"))) {
+                        //如果文档是压缩文件 就返回一个开头给搜索引擎
+                        if (StringUtils.isNotBlank(doc.get("EXT")) &&
+                                (doc.get("EXT").toLowerCase().equals("zip")
+                                        || doc.get("EXT").toLowerCase().equals("ios")
+                                        || doc.get("EXT").toLowerCase().equals("rar")
+                                        || doc.get("EXT").toLowerCase().equals("tar")
+                                )
+                                ) {
+                            db.setContent(doc.get("CONTEXT").substring(0, 1024).replaceAll("[ 　\n\b\r\t\u0000]", ""));
+                        } else {
+                            if(doc.toString().length()  > (1024*1024*3)){
+                                db.setContent(doc.get("CONTEXT").substring(0 , (1024*1024*1))
+                                        .replaceAll("[ 　\n\b\r\t\u0000]", ""));
+                            }else{
+                                db.setContent(doc.get("CONTEXT").replaceAll("[ 　\n\b\r\t\u0000]", ""));
+                            }
+                        }
+                    } else {
+                        db.setContent("");
                     }
-                }
+                    if (StringUtils.isNotBlank(doc.get("CREATETIME"))) {
+                        try {
+                            db.setDate(new DateTime(Long.parseLong(doc.get("CREATETIME")))
+                                    .toString(S_DATE_FMT));
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
+                    }
 
-                db.setUsers("");
-                db.setPermission(1);
-                if(null != dalx){
-                    db.setType(dalx.getChname());
-                    db.setGroups(dalx.getCode().toString());
-                }else{
-                    db.setGroups("");
-                }
+                    db.setUsers("");
+                    db.setPermission(1);
+                    if (null != dalx) {
+                        db.setType(dalx.getChname());
+                        db.setGroups(dalx.getCode().toString());
+                    } else {
+                        db.setGroups("");
+                    }
 
-                if(null != dfileMap){
-                    db.setFanwei(StringUtils.isNotBlank(MapUtils.getString(dfileMap , "FLNAME"))
-                            ? MapUtils.getString(dfileMap , "FLNAME") : "");
-                    db.setQuanzong(getSQzh(MapUtils.getString(dfileMap , "QZH")).getQzmc());
-                }
+                    if (null != dfileMap) {
+                        db.setFanwei(StringUtils.isNotBlank(MapUtils.getString(dfileMap, "FLNAME"))
+                                ? MapUtils.getString(dfileMap, "FLNAME") : "");
+                        if (StringUtils.isNotBlank(MapUtils.getString(dfileMap, "QZH"))) {
+                            db.setQuanzong(getSQzh(MapUtils.getString(dfileMap, "QZH")).getQzmc());
+                        } else {
+                            db.setQuanzong("");
+                        }
+
+                    }
 
 //                http://localhost:81/Lams/rest/restLoadFile?libcode=6&level=2&efiledid=1565285&convertStatus=0
-                db.setUrl("http://"+lamsIP+"/Lams/globalSearch/singleViewEfile"
-                                + "?libcode="+dalx.getCode()
-                                + "&efiledid="+doc.get("EID")
-                                + "&randon=" + Math.random()
-                                + "&usercode=");
-                datas.add(db);
-                breakFlag++;
+                    db.setUrl("http://" + lamsIP + "/Lams/globalSearch/singleViewEfile"
+                            + "?libcode=" + dalx.getCode()
+                            + "&efiledid=" + doc.get("EID")
+                            + "&randon=" + Math.random()
+                            + "&usercode=");
+                    datas.add(db);
+                    breakFlag++;
+                } catch (Error e) {
+                    System.out.println(i);
+                    e.printStackTrace();
+                }
             }
             sd.setTotal(topDocs.totalHits);
             sd.setData(datas);
@@ -291,10 +321,10 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
         } catch (Exception e) {
             sd.setReponse(GlobalFinalAttr.RSP_FAIL);
             e.printStackTrace();
-        }finally{
+        } finally {
             try {
                 mainIndexReader.close();
-            } catch (Exception e){
+            } catch (Exception e) {
                 log.error("这里需要处理释放的资源异常");
             }
         }
@@ -302,23 +332,29 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
     }
 
 
-    private Map<String , Object> queryDfile(String eid , String libcode){
-        Map<String , Object> rslt = null;
+    private Map<String, Object> queryDfile(String eid, String libcode) {
+        Map<String, Object> rslt = null;
+        String sql = "SELECT FLNAME,QZH,TITLE,KEYWORD FROM D_FILE"
+                + libcode + " WHERE DID = (SELECT PID FROM E_FILE" + libcode
+                + " WHERE DID=" + eid + ")";
         try {
-            rslt = super.queryForMap("SELECT FLH,QZH,TITLE,KEYWORD FROM D_FILE"
-                    +libcode + " WHERE DID = (SELECT PID FROM E_FILE"+libcode
-                    +" WHERE DID="+eid+")");
+            if (super.existColumn("D_FILE" + libcode, "FLNAME") && !libcode.equals("15")) {
+                rslt = super.queryForMap(sql);
+            } else {
+                rslt = new HashMap<>();
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage() + ": " + sql);
+            rslt = new HashMap<>();
         }
         return rslt;
     }
 
-    private SDalx getDalx(String libcode ){
+    private SDalx getDalx(String libcode) {
         SDalx d = null;
         List<SDalx> dList = getDalxList();
         for (SDalx sDalx : dList) {
-            if(libcode.equalsIgnoreCase(sDalx.getCode().toString())){
+            if (libcode.equalsIgnoreCase(sDalx.getCode().toString())) {
                 d = sDalx;
                 break;
             }
@@ -326,11 +362,11 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
         return d;
     }
 
-    private SQzh getSQzh(String qzhStr){
+    private SQzh getSQzh(String qzhStr) {
         SQzh q = null;
         List<SQzh> qList = getQzhList();
         for (SQzh qzh : qList) {
-            if(qzhStr.equalsIgnoreCase(qzh.getQzh())){
+            if (qzhStr.equalsIgnoreCase(qzh.getQzh())) {
                 q = qzh;
                 break;
             }
@@ -338,15 +374,15 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
         return q;
     }
 
-    private List<SDalx> getDalxList(){
-        if(null == dalxList){
+    private List<SDalx> getDalxList() {
+        if (null == dalxList) {
             dalxList = sUserMapper.getAllDalxList();
         }
         return dalxList;
     }
 
-    private List<SQzh> getQzhList(){
-        if(null == qzhList){
+    private List<SQzh> getQzhList() {
+        if (null == qzhList) {
             qzhList = sUserMapper.listQzh();
         }
         return qzhList;
