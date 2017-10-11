@@ -221,15 +221,15 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
 
             /**************************************************************/
 
-            List<SDalx> dalxList = getDalxList();
-
-            for (SDalx dalx : dalxList) {
-                parser = new QueryParser(LUCEN_VERSION, "LIBCODE", analyzer);
-                //判断是OR还是AND来生产不同的解析式
-                parser.setDefaultOperator(QueryParser.OR_OPERATOR);
-                dalxQuery.add(parser.parse(dalx.getCode().toString()), BooleanClause.Occur.SHOULD);
-            }
-            all.add(new BooleanClause(dalxQuery, BooleanClause.Occur.MUST));
+//            List<SDalx> dalxList = getDalxList();
+//
+//            for (SDalx dalx : dalxList) {
+//                parser = new QueryParser(LUCEN_VERSION, "LIBCODE", analyzer);
+//                //判断是OR还是AND来生产不同的解析式
+//                parser.setDefaultOperator(QueryParser.OR_OPERATOR);
+//                dalxQuery.add(parser.parse(dalx.getCode().toString()), BooleanClause.Occur.SHOULD);
+//            }
+//            all.add(new BooleanClause(dalxQuery, BooleanClause.Occur.MUST));
             all.add(new BooleanClause(nq, BooleanClause.Occur.MUST));
 
             TopDocs topDocs = null;
@@ -295,13 +295,16 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
                         db.setFanwei(StringUtils.isNotBlank(MapUtils.getString(dfileMap, "FLNAME"))
                                 ? MapUtils.getString(dfileMap, "FLNAME") : "");
                         if (StringUtils.isNotBlank(MapUtils.getString(dfileMap, "QZH"))) {
-                            db.setQuanzong(getSQzh(MapUtils.getString(dfileMap, "QZH")).getQzmc());
+                            SQzh sqzh = getSQzh(MapUtils.getString(dfileMap, "QZH"));
+                            if(sqzh != null){
+                                db.setQuanzong(sqzh.getQzmc());
+                            }else{
+                                db.setQuanzong("THAMS");
+                            }
                         } else {
                             db.setQuanzong("");
                         }
-
                     }
-
 //                http://localhost:81/Lams/rest/restLoadFile?libcode=6&level=2&efiledid=1565285&convertStatus=0
                     db.setUrl("http://" + lamsIP + "/Lams/globalSearch/singleViewEfile"
                             + "?libcode=" + dalx.getCode()
