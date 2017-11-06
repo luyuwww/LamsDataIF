@@ -337,14 +337,14 @@ public class GlobalSearchServiceImpl extends BaseService implements GlobalSearch
 
     private Map<String, Object> queryDfile(String eid, String libcode) {
         Map<String, Object> rslt = null;
-        String sql = "SELECT FLNAME,QZH,TITLE,KEYWORD FROM D_FILE"
+        String sql = "QZH,TITLE,KEYWORD FROM D_FILE"
                 + libcode + " WHERE DID = (SELECT PID FROM E_FILE" + libcode
                 + " WHERE DID=" + eid + ")";
         try {
             if (super.existColumn("D_FILE" + libcode, "FLNAME") && !libcode.equals("15")) {
-                rslt = super.queryForMap(sql);
+                rslt = super.queryForMap("SELECT FLNAME," + sql);
             } else {
-                rslt = new HashMap<>();
+                rslt = super.queryForMap("SELECT " + sql);
             }
         } catch (Exception e) {
             log.error(e.getMessage() + ": " + sql);
