@@ -1,11 +1,12 @@
-package com.bwzk.dao.i;
+package com.bwzk.dao.i.oa;
 
+import com.bwzk.dao.BaseDao4OA;
 import com.bwzk.pojo.OaUser;
 import com.bwzk.pojo.OaUserExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-public interface OaUserMapper {
+public interface OaUserMapper extends BaseDao4OA {
     int countByExample(OaUserExample example);
 
     int deleteByExample(OaUserExample example);

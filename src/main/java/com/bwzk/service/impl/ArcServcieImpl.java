@@ -2,9 +2,9 @@ package com.bwzk.service.impl;
 
 import ch.qos.logback.classic.Logger;
 import com.bwzk.dao.JdbcDao;
-import com.bwzk.dao.i.SGroupMapper;
-import com.bwzk.dao.i.SUserMapper;
-import com.bwzk.dao.i.SUserroleMapper;
+import com.bwzk.dao.i.da.SGroupMapper;
+import com.bwzk.dao.i.da.SUserMapper;
+import com.bwzk.dao.i.da.SUserroleMapper;
 import com.bwzk.pojo.SUser;
 import com.bwzk.service.BaseService;
 import com.bwzk.service.i.ArcService;

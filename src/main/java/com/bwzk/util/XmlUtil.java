@@ -1,7 +1,7 @@
 package com.bwzk.util;
 
 import ch.qos.logback.classic.Logger;
-import com.bwzk.dao.i.SGroupMapper;
+import com.bwzk.dao.i.da.SGroupMapper;
 import com.bwzk.pojo.FDTable;
 import com.bwzk.pojo.SDalx;
 import com.bwzk.pojo.WWjkgl;

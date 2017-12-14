@@ -1,7 +1,7 @@
 package com.bwzk.context;
 
 import ch.qos.logback.classic.Logger;
-import com.bwzk.dao.i.SGroupMapper;
+import com.bwzk.dao.i.da.SGroupMapper;
 import com.bwzk.util.XmlUtil;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;

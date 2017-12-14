@@ -1,13 +1,13 @@
-package com.bwzk.dao.i;
+package com.bwzk.dao.i.da;
 
-import com.bwzk.dao.BaseDao;
+import com.bwzk.dao.BaseDao4DA;
 import com.bwzk.pojo.SUserrole;
 import com.bwzk.pojo.SUserroleExample;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface SUserroleMapper extends BaseDao {
+public interface SUserroleMapper extends BaseDao4DA {
     int countByExample(SUserroleExample example);
 
     int deleteByExample(SUserroleExample example);

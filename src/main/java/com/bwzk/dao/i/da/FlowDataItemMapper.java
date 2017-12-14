@@ -1,4 +1,4 @@
-package com.bwzk.dao.i;
+package com.bwzk.dao.i.da;
 
 import com.bwzk.pojo.FlowDataItem;
 import com.bwzk.pojo.FlowDataItemExample;

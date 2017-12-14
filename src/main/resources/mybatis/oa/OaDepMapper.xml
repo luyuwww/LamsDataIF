@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.bwzk.dao.i.OaDepMapper" >
+<mapper namespace="com.bwzk.dao.i.oa.OaDepMapper" >
   <resultMap id="BaseResultMap" type="com.bwzk.pojo.OaDep" >
     <result column="id" property="id" jdbcType="VARCHAR" />
     <result column="departmentname" property="departmentname" jdbcType="VARCHAR" />

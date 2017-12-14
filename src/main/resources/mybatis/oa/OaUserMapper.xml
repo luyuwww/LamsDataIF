@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.bwzk.dao.i.OaUserMapper" >
+<mapper namespace="com.bwzk.dao.i.oa.OaUserMapper" >
   <resultMap id="BaseResultMap" type="com.bwzk.pojo.OaUser" >
     <result column="loginid" property="loginid" jdbcType="VARCHAR" />
     <result column="lastname" property="lastname" jdbcType="VARCHAR" />

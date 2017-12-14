@@ -1,7 +1,7 @@
 package com.bwzk.service.impl;
 
 import ch.qos.logback.classic.Logger;
-import com.bwzk.dao.i.SUserMapper;
+import com.bwzk.dao.i.da.SUserMapper;
 import com.bwzk.pojo.jaxb.Field;
 import com.bwzk.pojo.jaxb.Table;
 import com.bwzk.service.BaseService;

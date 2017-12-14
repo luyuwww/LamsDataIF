@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bwzk.dao.i.SQzhMapper">
+<mapper namespace="com.bwzk.dao.i.da.SQzhMapper">
     <resultMap id="BaseResultMap" type="com.bwzk.pojo.SQzh">
         <id column="DID" jdbcType="INTEGER" property="did"/>
         <result column="QZH" jdbcType="VARCHAR" property="qzh"/>

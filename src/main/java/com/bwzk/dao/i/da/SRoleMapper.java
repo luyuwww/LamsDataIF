@@ -1,13 +1,13 @@
-package com.bwzk.dao.i;
+package com.bwzk.dao.i.da;
 
-import com.bwzk.dao.BaseDao;
+import com.bwzk.dao.BaseDao4DA;
 import com.bwzk.pojo.SRole;
 import com.bwzk.pojo.SRoleExample;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface SRoleMapper extends BaseDao {
+public interface SRoleMapper extends BaseDao4DA {
     int countByExample(SRoleExample example);
 
     int deleteByExample(SRoleExample example);

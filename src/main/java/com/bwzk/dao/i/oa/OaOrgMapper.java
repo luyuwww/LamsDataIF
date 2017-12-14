@@ -1,11 +1,12 @@
-package com.bwzk.dao.i;
+package com.bwzk.dao.i.oa;
 
+import com.bwzk.dao.BaseDao4OA;
 import com.bwzk.pojo.OaOrg;
 import com.bwzk.pojo.OaOrgExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-public interface OaOrgMapper {
+public interface OaOrgMapper extends BaseDao4OA {
     int countByExample(OaOrgExample example);
 
     int deleteByExample(OaOrgExample example);

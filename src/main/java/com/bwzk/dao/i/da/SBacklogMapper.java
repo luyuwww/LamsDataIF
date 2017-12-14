@@ -1,6 +1,6 @@
-package com.bwzk.dao.i;
+package com.bwzk.dao.i.da;
 
-import com.bwzk.dao.BaseDao;
+import com.bwzk.dao.BaseDao4DA;
 import com.bwzk.pojo.SBacklog;
 import com.bwzk.pojo.SBacklogExample;
 import org.apache.ibatis.annotations.Param;
@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
-public interface SBacklogMapper extends BaseDao {
+public interface SBacklogMapper extends BaseDao4DA {
     int countByExample(SBacklogExample example);
 
     int deleteByExample(SBacklogExample example);

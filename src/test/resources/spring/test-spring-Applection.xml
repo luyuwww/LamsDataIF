@@ -54,7 +54,7 @@
     </bean>
     <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.bwzk.dao.i"/>
-        <property name="markerInterface" value="com.bwzk.dao.BaseDao"/>
+        <property name="markerInterface" value="com.bwzk.dao.BaseDao4DA"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
 

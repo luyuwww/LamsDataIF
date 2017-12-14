@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.bwzk.dao.i.SBacklogMapper">
+<mapper namespace="com.bwzk.dao.i.da.SBacklogMapper">
     <resultMap id="BaseResultMap" type="com.bwzk.pojo.SBacklog">
         <id column="DID" property="did" jdbcType="INTEGER"/>
         <result column="URGENCY" property="urgency" jdbcType="INTEGER"/>
