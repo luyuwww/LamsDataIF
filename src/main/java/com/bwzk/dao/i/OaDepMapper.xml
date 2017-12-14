@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bwzk.dao.i.OaDepMapper" >
+  <resultMap id="BaseResultMap" type="com.bwzk.pojo.OaDep" >
+    <result column="id" property="id" jdbcType="VARCHAR" />
+    <result column="departmentname" property="departmentname" jdbcType="VARCHAR" />
+    <result column="supdepid" property="supdepid" jdbcType="VARCHAR" />
+    <result column="subcompanyid1" property="subcompanyid1" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, departmentname, supdepid, subcompanyid1
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bwzk.pojo.OaDepExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from oa_dep_hr_bmxx
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.bwzk.pojo.OaDepExample" >
+    delete from oa_dep_hr_bmxx
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bwzk.pojo.OaDep" >
+    insert into oa_dep_hr_bmxx (id, departmentname, supdepid, 
+      subcompanyid1)
+    values (#{id,jdbcType=VARCHAR}, #{departmentname,jdbcType=VARCHAR}, #{supdepid,jdbcType=VARCHAR}, 
+      #{subcompanyid1,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bwzk.pojo.OaDep" >
+    insert into oa_dep_hr_bmxx
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="departmentname != null" >
+        departmentname,
+      </if>
+      <if test="supdepid != null" >
+        supdepid,
+      </if>
+      <if test="subcompanyid1 != null" >
+        subcompanyid1,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentname != null" >
+        #{departmentname,jdbcType=VARCHAR},
+      </if>
+      <if test="supdepid != null" >
+        #{supdepid,jdbcType=VARCHAR},
+      </if>
+      <if test="subcompanyid1 != null" >
+        #{subcompanyid1,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bwzk.pojo.OaDepExample" resultType="java.lang.Integer" >
+    select count(*) from oa_dep_hr_bmxx
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update oa_dep_hr_bmxx
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.departmentname != null" >
+        departmentname = #{record.departmentname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.supdepid != null" >
+        supdepid = #{record.supdepid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subcompanyid1 != null" >
+        subcompanyid1 = #{record.subcompanyid1,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update oa_dep_hr_bmxx
+    set id = #{record.id,jdbcType=VARCHAR},
+      departmentname = #{record.departmentname,jdbcType=VARCHAR},
+      supdepid = #{record.supdepid,jdbcType=VARCHAR},
+      subcompanyid1 = #{record.subcompanyid1,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>

@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bwzk.dao.i.FlowMainMapper" >
+  <resultMap id="BaseResultMap" type="com.bwzk.pojo.FlowMain" >
+    <id column="id" property="id" jdbcType="OTHER" />
+    <result column="fid" property="fid" jdbcType="OTHER" />
+    <result column="title" property="title" jdbcType="OTHER" />
+    <result column="applyauth" property="applyauth" jdbcType="OTHER" />
+    <result column="applytype" property="applytype" jdbcType="OTHER" />
+    <result column="applytimes" property="applytimes" jdbcType="DECIMAL" />
+    <result column="stardate" property="stardate" jdbcType="DATE" />
+    <result column="enddate" property="enddate" jdbcType="DATE" />
+    <result column="requesttime" property="requesttime" jdbcType="DATE" />
+    <result column="userid" property="userid" jdbcType="OTHER" />
+    <result column="usercode" property="usercode" jdbcType="OTHER" />
+    <result column="username" property="username" jdbcType="OTHER" />
+    <result column="memo" property="memo" jdbcType="OTHER" />
+    <result column="status" property="status" jdbcType="DECIMAL" />
+    <result column="result" property="result" jdbcType="DECIMAL" />
+    <result column="msg" property="msg" jdbcType="OTHER" />
+    <result column="requestid" property="requestid" jdbcType="OTHER" />
+    <result column="ftriggerflag" property="ftriggerflag" jdbcType="OTHER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, fid, title, applyauth, applytype, applytimes, stardate, enddate, requesttime, 
+    userid, usercode, username, memo, status, result, msg, requestid, ftriggerflag
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bwzk.pojo.FlowMainExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from FLOW_MID_MAIN
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Object" >
+    select 
+    <include refid="Base_Column_List" />
+    from FLOW_MID_MAIN
+    where id = #{id,jdbcType=OTHER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Object" >
+    delete from FLOW_MID_MAIN
+    where id = #{id,jdbcType=OTHER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.bwzk.pojo.FlowMainExample" >
+    delete from FLOW_MID_MAIN
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.bwzk.pojo.FlowMain" >
+    insert into FLOW_MID_MAIN (id, fid, title, applyauth, 
+      applytype, applytimes, stardate, 
+      enddate, requesttime, userid, 
+      usercode, username, memo, 
+      status, result, msg, 
+      requestid, ftriggerflag)
+    values (#{id,jdbcType=OTHER}, #{fid,jdbcType=OTHER}, #{title,jdbcType=OTHER}, #{applyauth,jdbcType=OTHER}, 
+      #{applytype,jdbcType=OTHER}, #{applytimes,jdbcType=DECIMAL}, #{stardate,jdbcType=DATE}, 
+      #{enddate,jdbcType=DATE}, #{requesttime,jdbcType=DATE}, #{userid,jdbcType=OTHER}, 
+      #{usercode,jdbcType=OTHER}, #{username,jdbcType=OTHER}, #{memo,jdbcType=OTHER}, 
+      #{status,jdbcType=DECIMAL}, #{result,jdbcType=DECIMAL}, #{msg,jdbcType=OTHER}, 
+      #{requestid,jdbcType=OTHER}, #{ftriggerflag,jdbcType=OTHER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bwzk.pojo.FlowMain" >
+    insert into FLOW_MID_MAIN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="applyauth != null" >
+        applyauth,
+      </if>
+      <if test="applytype != null" >
+        applytype,
+      </if>
+      <if test="applytimes != null" >
+        applytimes,
+      </if>
+      <if test="stardate != null" >
+        stardate,
+      </if>
+      <if test="enddate != null" >
+        enddate,
+      </if>
+      <if test="requesttime != null" >
+        requesttime,
+      </if>
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="usercode != null" >
+        usercode,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="result != null" >
+        result,
+      </if>
+      <if test="msg != null" >
+        msg,
+      </if>
+      <if test="requestid != null" >
+        requestid,
+      </if>
+      <if test="ftriggerflag != null" >
+        ftriggerflag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=OTHER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=OTHER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=OTHER},
+      </if>
+      <if test="applyauth != null" >
+        #{applyauth,jdbcType=OTHER},
+      </if>
+      <if test="applytype != null" >
+        #{applytype,jdbcType=OTHER},
+      </if>
+      <if test="applytimes != null" >
+        #{applytimes,jdbcType=DECIMAL},
+      </if>
+      <if test="stardate != null" >
+        #{stardate,jdbcType=DATE},
+      </if>
+      <if test="enddate != null" >
+        #{enddate,jdbcType=DATE},
+      </if>
+      <if test="requesttime != null" >
+        #{requesttime,jdbcType=DATE},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=OTHER},
+      </if>
+      <if test="usercode != null" >
+        #{usercode,jdbcType=OTHER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=OTHER},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=OTHER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="result != null" >
+        #{result,jdbcType=DECIMAL},
+      </if>
+      <if test="msg != null" >
+        #{msg,jdbcType=OTHER},
+      </if>
+      <if test="requestid != null" >
+        #{requestid,jdbcType=OTHER},
+      </if>
+      <if test="ftriggerflag != null" >
+        #{ftriggerflag,jdbcType=OTHER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.bwzk.pojo.FlowMainExample" resultType="java.lang.Integer" >
+    select count(*) from FLOW_MID_MAIN
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update FLOW_MID_MAIN
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=OTHER},
+      </if>
+      <if test="record.fid != null" >
+        fid = #{record.fid,jdbcType=OTHER},
+      </if>
+      <if test="record.title != null" >
+        title = #{record.title,jdbcType=OTHER},
+      </if>
+      <if test="record.applyauth != null" >
+        applyauth = #{record.applyauth,jdbcType=OTHER},
+      </if>
+      <if test="record.applytype != null" >
+        applytype = #{record.applytype,jdbcType=OTHER},
+      </if>
+      <if test="record.applytimes != null" >
+        applytimes = #{record.applytimes,jdbcType=DECIMAL},
+      </if>
+      <if test="record.stardate != null" >
+        stardate = #{record.stardate,jdbcType=DATE},
+      </if>
+      <if test="record.enddate != null" >
+        enddate = #{record.enddate,jdbcType=DATE},
+      </if>
+      <if test="record.requesttime != null" >
+        requesttime = #{record.requesttime,jdbcType=DATE},
+      </if>
+      <if test="record.userid != null" >
+        userid = #{record.userid,jdbcType=OTHER},
+      </if>
+      <if test="record.usercode != null" >
+        usercode = #{record.usercode,jdbcType=OTHER},
+      </if>
+      <if test="record.username != null" >
+        username = #{record.username,jdbcType=OTHER},
+      </if>
+      <if test="record.memo != null" >
+        memo = #{record.memo,jdbcType=OTHER},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=DECIMAL},
+      </if>
+      <if test="record.result != null" >
+        result = #{record.result,jdbcType=DECIMAL},
+      </if>
+      <if test="record.msg != null" >
+        msg = #{record.msg,jdbcType=OTHER},
+      </if>
+      <if test="record.requestid != null" >
+        requestid = #{record.requestid,jdbcType=OTHER},
+      </if>
+      <if test="record.ftriggerflag != null" >
+        ftriggerflag = #{record.ftriggerflag,jdbcType=OTHER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update FLOW_MID_MAIN
+    set id = #{record.id,jdbcType=OTHER},
+      fid = #{record.fid,jdbcType=OTHER},
+      title = #{record.title,jdbcType=OTHER},
+      applyauth = #{record.applyauth,jdbcType=OTHER},
+      applytype = #{record.applytype,jdbcType=OTHER},
+      applytimes = #{record.applytimes,jdbcType=DECIMAL},
+      stardate = #{record.stardate,jdbcType=DATE},
+      enddate = #{record.enddate,jdbcType=DATE},
+      requesttime = #{record.requesttime,jdbcType=DATE},
+      userid = #{record.userid,jdbcType=OTHER},
+      usercode = #{record.usercode,jdbcType=OTHER},
+      username = #{record.username,jdbcType=OTHER},
+      memo = #{record.memo,jdbcType=OTHER},
+      status = #{record.status,jdbcType=DECIMAL},
+      result = #{record.result,jdbcType=DECIMAL},
+      msg = #{record.msg,jdbcType=OTHER},
+      requestid = #{record.requestid,jdbcType=OTHER},
+      ftriggerflag = #{record.ftriggerflag,jdbcType=OTHER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bwzk.pojo.FlowMain" >
+    update FLOW_MID_MAIN
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=OTHER},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=OTHER},
+      </if>
+      <if test="applyauth != null" >
+        applyauth = #{applyauth,jdbcType=OTHER},
+      </if>
+      <if test="applytype != null" >
+        applytype = #{applytype,jdbcType=OTHER},
+      </if>
+      <if test="applytimes != null" >
+        applytimes = #{applytimes,jdbcType=DECIMAL},
+      </if>
+      <if test="stardate != null" >
+        stardate = #{stardate,jdbcType=DATE},
+      </if>
+      <if test="enddate != null" >
+        enddate = #{enddate,jdbcType=DATE},
+      </if>
+      <if test="requesttime != null" >
+        requesttime = #{requesttime,jdbcType=DATE},
+      </if>
+      <if test="userid != null" >
+        userid = #{userid,jdbcType=OTHER},
+      </if>
+      <if test="usercode != null" >
+        usercode = #{usercode,jdbcType=OTHER},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=OTHER},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=OTHER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="result != null" >
+        result = #{result,jdbcType=DECIMAL},
+      </if>
+      <if test="msg != null" >
+        msg = #{msg,jdbcType=OTHER},
+      </if>
+      <if test="requestid != null" >
+        requestid = #{requestid,jdbcType=OTHER},
+      </if>
+      <if test="ftriggerflag != null" >
+        ftriggerflag = #{ftriggerflag,jdbcType=OTHER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=OTHER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bwzk.pojo.FlowMain" >
+    update FLOW_MID_MAIN
+    set fid = #{fid,jdbcType=OTHER},
+      title = #{title,jdbcType=OTHER},
+      applyauth = #{applyauth,jdbcType=OTHER},
+      applytype = #{applytype,jdbcType=OTHER},
+      applytimes = #{applytimes,jdbcType=DECIMAL},
+      stardate = #{stardate,jdbcType=DATE},
+      enddate = #{enddate,jdbcType=DATE},
+      requesttime = #{requesttime,jdbcType=DATE},
+      userid = #{userid,jdbcType=OTHER},
+      usercode = #{usercode,jdbcType=OTHER},
+      username = #{username,jdbcType=OTHER},
+      memo = #{memo,jdbcType=OTHER},
+      status = #{status,jdbcType=DECIMAL},
+      result = #{result,jdbcType=DECIMAL},
+      msg = #{msg,jdbcType=OTHER},
+      requestid = #{requestid,jdbcType=OTHER},
+      ftriggerflag = #{ftriggerflag,jdbcType=OTHER}
+    where id = #{id,jdbcType=OTHER}
+  </update>
+</mapper>
