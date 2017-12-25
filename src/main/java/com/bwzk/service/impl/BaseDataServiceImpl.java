@@ -563,12 +563,22 @@ public class BaseDataServiceImpl extends BaseService implements BaseDataService 
 	@WebMethod
 	public String updateUserByJson(
 			@WebParam(name = "dataJson") String dataJson,
-			@WebParam(name = "primaryKey") String primaryKey) {
+			@WebParam(name = "primaryKey") String primaryKey,
+			@WebParam(name = "deptPk") String deptPk) {
+		Integer pid = null;
 		String result = "0";
 		try {
+			SGroup group = sGroupMapper.getGroupByGfzj(deptPk);
+			if (group == null) {
+				pid = defaultYhGroup;
+			} else {
+				pid = group.getDid();
+			}
 			ObjectMapper mapper = new ObjectMapper();
 			Map<String, String> vars = null;
 			vars = mapper.readValue(dataJson, Map.class);
+			vars.put("PID" , pid.toString());
+			vars.remove("PASSWD");
 			result = updateUser4Map(vars, primaryKey);
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -1107,7 +1117,7 @@ public class BaseDataServiceImpl extends BaseService implements BaseDataService 
 				}
 				SUser user = sUserMapper.getUserByEsbid(primaryKey);
 				if (user != null) {
-					updateUserByJson(dataJson, primaryKey);
+					updateUserByJson(dataJson, primaryKey , deptPk);
 				} else {
 					SGroup group = sGroupMapper.getGroupByGfzj(deptPk);
 					if (group == null) {

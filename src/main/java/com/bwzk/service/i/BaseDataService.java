@@ -148,7 +148,8 @@ public interface BaseDataService {
     @WebMethod
     public String updateUserByJson(
             @WebParam(name = "dataJson") String dataJson,
-            @WebParam(name = "primaryKey") String primaryKey);
+            @WebParam(name = "primaryKey") String primaryKey,
+            @WebParam(name = "deptPk") String deptPk);
 
     /**
      * <p>
