@@ -142,52 +142,62 @@ public class FlowMainExample {
             return (Criteria) this;
         }
 
-        public Criteria andIdEqualTo(Object value) {
+        public Criteria andIdEqualTo(String value) {
             addCriterion("id =", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdNotEqualTo(Object value) {
+        public Criteria andIdNotEqualTo(String value) {
             addCriterion("id <>", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdGreaterThan(Object value) {
+        public Criteria andIdGreaterThan(String value) {
             addCriterion("id >", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdGreaterThanOrEqualTo(Object value) {
+        public Criteria andIdGreaterThanOrEqualTo(String value) {
             addCriterion("id >=", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdLessThan(Object value) {
+        public Criteria andIdLessThan(String value) {
             addCriterion("id <", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdLessThanOrEqualTo(Object value) {
+        public Criteria andIdLessThanOrEqualTo(String value) {
             addCriterion("id <=", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdIn(List<Object> values) {
+        public Criteria andIdLike(String value) {
+            addCriterion("id like", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdNotLike(String value) {
+            addCriterion("id not like", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdIn(List<String> values) {
             addCriterion("id in", values, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdNotIn(List<Object> values) {
+        public Criteria andIdNotIn(List<String> values) {
             addCriterion("id not in", values, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdBetween(Object value1, Object value2) {
+        public Criteria andIdBetween(String value1, String value2) {
             addCriterion("id between", value1, value2, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdNotBetween(Object value1, Object value2) {
+        public Criteria andIdNotBetween(String value1, String value2) {
             addCriterion("id not between", value1, value2, "id");
             return (Criteria) this;
         }
@@ -202,52 +212,62 @@ public class FlowMainExample {
             return (Criteria) this;
         }
 
-        public Criteria andFidEqualTo(Object value) {
+        public Criteria andFidEqualTo(String value) {
             addCriterion("fid =", value, "fid");
             return (Criteria) this;
         }
 
-        public Criteria andFidNotEqualTo(Object value) {
+        public Criteria andFidNotEqualTo(String value) {
             addCriterion("fid <>", value, "fid");
             return (Criteria) this;
         }
 
-        public Criteria andFidGreaterThan(Object value) {
+        public Criteria andFidGreaterThan(String value) {
             addCriterion("fid >", value, "fid");
             return (Criteria) this;
         }
 
-        public Criteria andFidGreaterThanOrEqualTo(Object value) {
+        public Criteria andFidGreaterThanOrEqualTo(String value) {
             addCriterion("fid >=", value, "fid");
             return (Criteria) this;
         }
 
-        public Criteria andFidLessThan(Object value) {
+        public Criteria andFidLessThan(String value) {
             addCriterion("fid <", value, "fid");
             return (Criteria) this;
         }
 
-        public Criteria andFidLessThanOrEqualTo(Object value) {
+        public Criteria andFidLessThanOrEqualTo(String value) {
             addCriterion("fid <=", value, "fid");
             return (Criteria) this;
         }
 
-        public Criteria andFidIn(List<Object> values) {
+        public Criteria andFidLike(String value) {
+            addCriterion("fid like", value, "fid");
+            return (Criteria) this;
+        }
+
+        public Criteria andFidNotLike(String value) {
+            addCriterion("fid not like", value, "fid");
+            return (Criteria) this;
+        }
+
+        public Criteria andFidIn(List<String> values) {
             addCriterion("fid in", values, "fid");
             return (Criteria) this;
         }
 
-        public Criteria andFidNotIn(List<Object> values) {
+        public Criteria andFidNotIn(List<String> values) {
             addCriterion("fid not in", values, "fid");
             return (Criteria) this;
         }
 
-        public Criteria andFidBetween(Object value1, Object value2) {
+        public Criteria andFidBetween(String value1, String value2) {
             addCriterion("fid between", value1, value2, "fid");
             return (Criteria) this;
         }
 
-        public Criteria andFidNotBetween(Object value1, Object value2) {
+        public Criteria andFidNotBetween(String value1, String value2) {
             addCriterion("fid not between", value1, value2, "fid");
             return (Criteria) this;
         }
@@ -262,52 +282,62 @@ public class FlowMainExample {
             return (Criteria) this;
         }
 
-        public Criteria andTitleEqualTo(Object value) {
+        public Criteria andTitleEqualTo(String value) {
             addCriterion("title =", value, "title");
             return (Criteria) this;
         }
 
-        public Criteria andTitleNotEqualTo(Object value) {
+        public Criteria andTitleNotEqualTo(String value) {
             addCriterion("title <>", value, "title");
             return (Criteria) this;
         }
 
-        public Criteria andTitleGreaterThan(Object value) {
+        public Criteria andTitleGreaterThan(String value) {
             addCriterion("title >", value, "title");
             return (Criteria) this;
         }
 
-        public Criteria andTitleGreaterThanOrEqualTo(Object value) {
+        public Criteria andTitleGreaterThanOrEqualTo(String value) {
             addCriterion("title >=", value, "title");
             return (Criteria) this;
         }
 
-        public Criteria andTitleLessThan(Object value) {
+        public Criteria andTitleLessThan(String value) {
             addCriterion("title <", value, "title");
             return (Criteria) this;
         }
 
-        public Criteria andTitleLessThanOrEqualTo(Object value) {
+        public Criteria andTitleLessThanOrEqualTo(String value) {
             addCriterion("title <=", value, "title");
             return (Criteria) this;
         }
 
-        public Criteria andTitleIn(List<Object> values) {
+        public Criteria andTitleLike(String value) {
+            addCriterion("title like", value, "title");
+            return (Criteria) this;
+        }
+
+        public Criteria andTitleNotLike(String value) {
+            addCriterion("title not like", value, "title");
+            return (Criteria) this;
+        }
+
+        public Criteria andTitleIn(List<String> values) {
             addCriterion("title in", values, "title");
             return (Criteria) this;
         }
 
-        public Criteria andTitleNotIn(List<Object> values) {
+        public Criteria andTitleNotIn(List<String> values) {
             addCriterion("title not in", values, "title");
             return (Criteria) this;
         }
 
-        public Criteria andTitleBetween(Object value1, Object value2) {
+        public Criteria andTitleBetween(String value1, String value2) {
             addCriterion("title between", value1, value2, "title");
             return (Criteria) this;
         }
 
-        public Criteria andTitleNotBetween(Object value1, Object value2) {
+        public Criteria andTitleNotBetween(String value1, String value2) {
             addCriterion("title not between", value1, value2, "title");
             return (Criteria) this;
         }
@@ -322,52 +352,62 @@ public class FlowMainExample {
             return (Criteria) this;
         }
 
-        public Criteria andApplyauthEqualTo(Object value) {
+        public Criteria andApplyauthEqualTo(String value) {
             addCriterion("applyauth =", value, "applyauth");
             return (Criteria) this;
         }
 
-        public Criteria andApplyauthNotEqualTo(Object value) {
+        public Criteria andApplyauthNotEqualTo(String value) {
             addCriterion("applyauth <>", value, "applyauth");
             return (Criteria) this;
         }
 
-        public Criteria andApplyauthGreaterThan(Object value) {
+        public Criteria andApplyauthGreaterThan(String value) {
             addCriterion("applyauth >", value, "applyauth");
             return (Criteria) this;
         }
 
-        public Criteria andApplyauthGreaterThanOrEqualTo(Object value) {
+        public Criteria andApplyauthGreaterThanOrEqualTo(String value) {
             addCriterion("applyauth >=", value, "applyauth");
             return (Criteria) this;
         }
 
-        public Criteria andApplyauthLessThan(Object value) {
+        public Criteria andApplyauthLessThan(String value) {
             addCriterion("applyauth <", value, "applyauth");
             return (Criteria) this;
         }
 
-        public Criteria andApplyauthLessThanOrEqualTo(Object value) {
+        public Criteria andApplyauthLessThanOrEqualTo(String value) {
             addCriterion("applyauth <=", value, "applyauth");
             return (Criteria) this;
         }
 
-        public Criteria andApplyauthIn(List<Object> values) {
+        public Criteria andApplyauthLike(String value) {
+            addCriterion("applyauth like", value, "applyauth");
+            return (Criteria) this;
+        }
+
+        public Criteria andApplyauthNotLike(String value) {
+            addCriterion("applyauth not like", value, "applyauth");
+            return (Criteria) this;
+        }
+
+        public Criteria andApplyauthIn(List<String> values) {
             addCriterion("applyauth in", values, "applyauth");
             return (Criteria) this;
         }
 
-        public Criteria andApplyauthNotIn(List<Object> values) {
+        public Criteria andApplyauthNotIn(List<String> values) {
             addCriterion("applyauth not in", values, "applyauth");
             return (Criteria) this;
         }
 
-        public Criteria andApplyauthBetween(Object value1, Object value2) {
+        public Criteria andApplyauthBetween(String value1, String value2) {
             addCriterion("applyauth between", value1, value2, "applyauth");
             return (Criteria) this;
         }
 
-        public Criteria andApplyauthNotBetween(Object value1, Object value2) {
+        public Criteria andApplyauthNotBetween(String value1, String value2) {
             addCriterion("applyauth not between", value1, value2, "applyauth");
             return (Criteria) this;
         }
@@ -382,52 +422,62 @@ public class FlowMainExample {
             return (Criteria) this;
         }
 
-        public Criteria andApplytypeEqualTo(Object value) {
+        public Criteria andApplytypeEqualTo(String value) {
             addCriterion("applytype =", value, "applytype");
             return (Criteria) this;
         }
 
-        public Criteria andApplytypeNotEqualTo(Object value) {
+        public Criteria andApplytypeNotEqualTo(String value) {
             addCriterion("applytype <>", value, "applytype");
             return (Criteria) this;
         }
 
-        public Criteria andApplytypeGreaterThan(Object value) {
+        public Criteria andApplytypeGreaterThan(String value) {
             addCriterion("applytype >", value, "applytype");
             return (Criteria) this;
         }
 
-        public Criteria andApplytypeGreaterThanOrEqualTo(Object value) {
+        public Criteria andApplytypeGreaterThanOrEqualTo(String value) {
             addCriterion("applytype >=", value, "applytype");
             return (Criteria) this;
         }
 
-        public Criteria andApplytypeLessThan(Object value) {
+        public Criteria andApplytypeLessThan(String value) {
             addCriterion("applytype <", value, "applytype");
             return (Criteria) this;
         }
 
-        public Criteria andApplytypeLessThanOrEqualTo(Object value) {
+        public Criteria andApplytypeLessThanOrEqualTo(String value) {
             addCriterion("applytype <=", value, "applytype");
             return (Criteria) this;
         }
 
-        public Criteria andApplytypeIn(List<Object> values) {
+        public Criteria andApplytypeLike(String value) {
+            addCriterion("applytype like", value, "applytype");
+            return (Criteria) this;
+        }
+
+        public Criteria andApplytypeNotLike(String value) {
+            addCriterion("applytype not like", value, "applytype");
+            return (Criteria) this;
+        }
+
+        public Criteria andApplytypeIn(List<String> values) {
             addCriterion("applytype in", values, "applytype");
             return (Criteria) this;
         }
 
-        public Criteria andApplytypeNotIn(List<Object> values) {
+        public Criteria andApplytypeNotIn(List<String> values) {
             addCriterion("applytype not in", values, "applytype");
             return (Criteria) this;
         }
 
-        public Criteria andApplytypeBetween(Object value1, Object value2) {
+        public Criteria andApplytypeBetween(String value1, String value2) {
             addCriterion("applytype between", value1, value2, "applytype");
             return (Criteria) this;
         }
 
-        public Criteria andApplytypeNotBetween(Object value1, Object value2) {
+        public Criteria andApplytypeNotBetween(String value1, String value2) {
             addCriterion("applytype not between", value1, value2, "applytype");
             return (Criteria) this;
         }
@@ -442,52 +492,52 @@ public class FlowMainExample {
             return (Criteria) this;
         }
 
-        public Criteria andApplytimesEqualTo(Long value) {
+        public Criteria andApplytimesEqualTo(Integer value) {
             addCriterion("applytimes =", value, "applytimes");
             return (Criteria) this;
         }
 
-        public Criteria andApplytimesNotEqualTo(Long value) {
+        public Criteria andApplytimesNotEqualTo(Integer value) {
             addCriterion("applytimes <>", value, "applytimes");
             return (Criteria) this;
         }
 
-        public Criteria andApplytimesGreaterThan(Long value) {
+        public Criteria andApplytimesGreaterThan(Integer value) {
             addCriterion("applytimes >", value, "applytimes");
             return (Criteria) this;
         }
 
-        public Criteria andApplytimesGreaterThanOrEqualTo(Long value) {
+        public Criteria andApplytimesGreaterThanOrEqualTo(Integer value) {
             addCriterion("applytimes >=", value, "applytimes");
             return (Criteria) this;
         }
 
-        public Criteria andApplytimesLessThan(Long value) {
+        public Criteria andApplytimesLessThan(Integer value) {
             addCriterion("applytimes <", value, "applytimes");
             return (Criteria) this;
         }
 
-        public Criteria andApplytimesLessThanOrEqualTo(Long value) {
+        public Criteria andApplytimesLessThanOrEqualTo(Integer value) {
             addCriterion("applytimes <=", value, "applytimes");
             return (Criteria) this;
         }
 
-        public Criteria andApplytimesIn(List<Long> values) {
+        public Criteria andApplytimesIn(List<Integer> values) {
             addCriterion("applytimes in", values, "applytimes");
             return (Criteria) this;
         }
 
-        public Criteria andApplytimesNotIn(List<Long> values) {
+        public Criteria andApplytimesNotIn(List<Integer> values) {
             addCriterion("applytimes not in", values, "applytimes");
             return (Criteria) this;
         }
 
-        public Criteria andApplytimesBetween(Long value1, Long value2) {
+        public Criteria andApplytimesBetween(Integer value1, Integer value2) {
             addCriterion("applytimes between", value1, value2, "applytimes");
             return (Criteria) this;
         }
 
-        public Criteria andApplytimesNotBetween(Long value1, Long value2) {
+        public Criteria andApplytimesNotBetween(Integer value1, Integer value2) {
             addCriterion("applytimes not between", value1, value2, "applytimes");
             return (Criteria) this;
         }
@@ -682,52 +732,62 @@ public class FlowMainExample {
             return (Criteria) this;
         }
 
-        public Criteria andUseridEqualTo(Object value) {
+        public Criteria andUseridEqualTo(String value) {
             addCriterion("userid =", value, "userid");
             return (Criteria) this;
         }
 
-        public Criteria andUseridNotEqualTo(Object value) {
+        public Criteria andUseridNotEqualTo(String value) {
             addCriterion("userid <>", value, "userid");
             return (Criteria) this;
         }
 
-        public Criteria andUseridGreaterThan(Object value) {
+        public Criteria andUseridGreaterThan(String value) {
             addCriterion("userid >", value, "userid");
             return (Criteria) this;
         }
 
-        public Criteria andUseridGreaterThanOrEqualTo(Object value) {
+        public Criteria andUseridGreaterThanOrEqualTo(String value) {
             addCriterion("userid >=", value, "userid");
             return (Criteria) this;
         }
 
-        public Criteria andUseridLessThan(Object value) {
+        public Criteria andUseridLessThan(String value) {
             addCriterion("userid <", value, "userid");
             return (Criteria) this;
         }
 
-        public Criteria andUseridLessThanOrEqualTo(Object value) {
+        public Criteria andUseridLessThanOrEqualTo(String value) {
             addCriterion("userid <=", value, "userid");
             return (Criteria) this;
         }
 
-        public Criteria andUseridIn(List<Object> values) {
+        public Criteria andUseridLike(String value) {
+            addCriterion("userid like", value, "userid");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseridNotLike(String value) {
+            addCriterion("userid not like", value, "userid");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseridIn(List<String> values) {
             addCriterion("userid in", values, "userid");
             return (Criteria) this;
         }
 
-        public Criteria andUseridNotIn(List<Object> values) {
+        public Criteria andUseridNotIn(List<String> values) {
             addCriterion("userid not in", values, "userid");
             return (Criteria) this;
         }
 
-        public Criteria andUseridBetween(Object value1, Object value2) {
+        public Criteria andUseridBetween(String value1, String value2) {
             addCriterion("userid between", value1, value2, "userid");
             return (Criteria) this;
         }
 
-        public Criteria andUseridNotBetween(Object value1, Object value2) {
+        public Criteria andUseridNotBetween(String value1, String value2) {
             addCriterion("userid not between", value1, value2, "userid");
             return (Criteria) this;
         }
@@ -742,52 +802,62 @@ public class FlowMainExample {
             return (Criteria) this;
         }
 
-        public Criteria andUsercodeEqualTo(Object value) {
+        public Criteria andUsercodeEqualTo(String value) {
             addCriterion("usercode =", value, "usercode");
             return (Criteria) this;
         }
 
-        public Criteria andUsercodeNotEqualTo(Object value) {
+        public Criteria andUsercodeNotEqualTo(String value) {
             addCriterion("usercode <>", value, "usercode");
             return (Criteria) this;
         }
 
-        public Criteria andUsercodeGreaterThan(Object value) {
+        public Criteria andUsercodeGreaterThan(String value) {
             addCriterion("usercode >", value, "usercode");
             return (Criteria) this;
         }
 
-        public Criteria andUsercodeGreaterThanOrEqualTo(Object value) {
+        public Criteria andUsercodeGreaterThanOrEqualTo(String value) {
             addCriterion("usercode >=", value, "usercode");
             return (Criteria) this;
         }
 
-        public Criteria andUsercodeLessThan(Object value) {
+        public Criteria andUsercodeLessThan(String value) {
             addCriterion("usercode <", value, "usercode");
             return (Criteria) this;
         }
 
-        public Criteria andUsercodeLessThanOrEqualTo(Object value) {
+        public Criteria andUsercodeLessThanOrEqualTo(String value) {
             addCriterion("usercode <=", value, "usercode");
             return (Criteria) this;
         }
 
-        public Criteria andUsercodeIn(List<Object> values) {
+        public Criteria andUsercodeLike(String value) {
+            addCriterion("usercode like", value, "usercode");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsercodeNotLike(String value) {
+            addCriterion("usercode not like", value, "usercode");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsercodeIn(List<String> values) {
             addCriterion("usercode in", values, "usercode");
             return (Criteria) this;
         }
 
-        public Criteria andUsercodeNotIn(List<Object> values) {
+        public Criteria andUsercodeNotIn(List<String> values) {
             addCriterion("usercode not in", values, "usercode");
             return (Criteria) this;
         }
 
-        public Criteria andUsercodeBetween(Object value1, Object value2) {
+        public Criteria andUsercodeBetween(String value1, String value2) {
             addCriterion("usercode between", value1, value2, "usercode");
             return (Criteria) this;
         }
 
-        public Criteria andUsercodeNotBetween(Object value1, Object value2) {
+        public Criteria andUsercodeNotBetween(String value1, String value2) {
             addCriterion("usercode not between", value1, value2, "usercode");
             return (Criteria) this;
         }
@@ -802,52 +872,62 @@ public class FlowMainExample {
             return (Criteria) this;
         }
 
-        public Criteria andUsernameEqualTo(Object value) {
+        public Criteria andUsernameEqualTo(String value) {
             addCriterion("username =", value, "username");
             return (Criteria) this;
         }
 
-        public Criteria andUsernameNotEqualTo(Object value) {
+        public Criteria andUsernameNotEqualTo(String value) {
             addCriterion("username <>", value, "username");
             return (Criteria) this;
         }
 
-        public Criteria andUsernameGreaterThan(Object value) {
+        public Criteria andUsernameGreaterThan(String value) {
             addCriterion("username >", value, "username");
             return (Criteria) this;
         }
 
-        public Criteria andUsernameGreaterThanOrEqualTo(Object value) {
+        public Criteria andUsernameGreaterThanOrEqualTo(String value) {
             addCriterion("username >=", value, "username");
             return (Criteria) this;
         }
 
-        public Criteria andUsernameLessThan(Object value) {
+        public Criteria andUsernameLessThan(String value) {
             addCriterion("username <", value, "username");
             return (Criteria) this;
         }
 
-        public Criteria andUsernameLessThanOrEqualTo(Object value) {
+        public Criteria andUsernameLessThanOrEqualTo(String value) {
             addCriterion("username <=", value, "username");
             return (Criteria) this;
         }
 
-        public Criteria andUsernameIn(List<Object> values) {
+        public Criteria andUsernameLike(String value) {
+            addCriterion("username like", value, "username");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsernameNotLike(String value) {
+            addCriterion("username not like", value, "username");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsernameIn(List<String> values) {
             addCriterion("username in", values, "username");
             return (Criteria) this;
         }
 
-        public Criteria andUsernameNotIn(List<Object> values) {
+        public Criteria andUsernameNotIn(List<String> values) {
             addCriterion("username not in", values, "username");
             return (Criteria) this;
         }
 
-        public Criteria andUsernameBetween(Object value1, Object value2) {
+        public Criteria andUsernameBetween(String value1, String value2) {
             addCriterion("username between", value1, value2, "username");
             return (Criteria) this;
         }
 
-        public Criteria andUsernameNotBetween(Object value1, Object value2) {
+        public Criteria andUsernameNotBetween(String value1, String value2) {
             addCriterion("username not between", value1, value2, "username");
             return (Criteria) this;
         }
@@ -862,52 +942,62 @@ public class FlowMainExample {
             return (Criteria) this;
         }
 
-        public Criteria andMemoEqualTo(Object value) {
+        public Criteria andMemoEqualTo(String value) {
             addCriterion("memo =", value, "memo");
             return (Criteria) this;
         }
 
-        public Criteria andMemoNotEqualTo(Object value) {
+        public Criteria andMemoNotEqualTo(String value) {
             addCriterion("memo <>", value, "memo");
             return (Criteria) this;
         }
 
-        public Criteria andMemoGreaterThan(Object value) {
+        public Criteria andMemoGreaterThan(String value) {
             addCriterion("memo >", value, "memo");
             return (Criteria) this;
         }
 
-        public Criteria andMemoGreaterThanOrEqualTo(Object value) {
+        public Criteria andMemoGreaterThanOrEqualTo(String value) {
             addCriterion("memo >=", value, "memo");
             return (Criteria) this;
         }
 
-        public Criteria andMemoLessThan(Object value) {
+        public Criteria andMemoLessThan(String value) {
             addCriterion("memo <", value, "memo");
             return (Criteria) this;
         }
 
-        public Criteria andMemoLessThanOrEqualTo(Object value) {
+        public Criteria andMemoLessThanOrEqualTo(String value) {
             addCriterion("memo <=", value, "memo");
             return (Criteria) this;
         }
 
-        public Criteria andMemoIn(List<Object> values) {
+        public Criteria andMemoLike(String value) {
+            addCriterion("memo like", value, "memo");
+            return (Criteria) this;
+        }
+
+        public Criteria andMemoNotLike(String value) {
+            addCriterion("memo not like", value, "memo");
+            return (Criteria) this;
+        }
+
+        public Criteria andMemoIn(List<String> values) {
             addCriterion("memo in", values, "memo");
             return (Criteria) this;
         }
 
-        public Criteria andMemoNotIn(List<Object> values) {
+        public Criteria andMemoNotIn(List<String> values) {
             addCriterion("memo not in", values, "memo");
             return (Criteria) this;
         }
 
-        public Criteria andMemoBetween(Object value1, Object value2) {
+        public Criteria andMemoBetween(String value1, String value2) {
             addCriterion("memo between", value1, value2, "memo");
             return (Criteria) this;
         }
 
-        public Criteria andMemoNotBetween(Object value1, Object value2) {
+        public Criteria andMemoNotBetween(String value1, String value2) {
             addCriterion("memo not between", value1, value2, "memo");
             return (Criteria) this;
         }
@@ -922,52 +1012,52 @@ public class FlowMainExample {
             return (Criteria) this;
         }
 
-        public Criteria andStatusEqualTo(Long value) {
+        public Criteria andStatusEqualTo(Integer value) {
             addCriterion("status =", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotEqualTo(Long value) {
+        public Criteria andStatusNotEqualTo(Integer value) {
             addCriterion("status <>", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThan(Long value) {
+        public Criteria andStatusGreaterThan(Integer value) {
             addCriterion("status >", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThanOrEqualTo(Long value) {
+        public Criteria andStatusGreaterThanOrEqualTo(Integer value) {
             addCriterion("status >=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThan(Long value) {
+        public Criteria andStatusLessThan(Integer value) {
             addCriterion("status <", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThanOrEqualTo(Long value) {
+        public Criteria andStatusLessThanOrEqualTo(Integer value) {
             addCriterion("status <=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusIn(List<Long> values) {
+        public Criteria andStatusIn(List<Integer> values) {
             addCriterion("status in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotIn(List<Long> values) {
+        public Criteria andStatusNotIn(List<Integer> values) {
             addCriterion("status not in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusBetween(Long value1, Long value2) {
+        public Criteria andStatusBetween(Integer value1, Integer value2) {
             addCriterion("status between", value1, value2, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotBetween(Long value1, Long value2) {
+        public Criteria andStatusNotBetween(Integer value1, Integer value2) {
             addCriterion("status not between", value1, value2, "status");
             return (Criteria) this;
         }
@@ -982,52 +1072,52 @@ public class FlowMainExample {
             return (Criteria) this;
         }
 
-        public Criteria andResultEqualTo(Long value) {
+        public Criteria andResultEqualTo(Integer value) {
             addCriterion("result =", value, "result");
             return (Criteria) this;
         }
 
-        public Criteria andResultNotEqualTo(Long value) {
+        public Criteria andResultNotEqualTo(Integer value) {
             addCriterion("result <>", value, "result");
             return (Criteria) this;
         }
 
-        public Criteria andResultGreaterThan(Long value) {
+        public Criteria andResultGreaterThan(Integer value) {
             addCriterion("result >", value, "result");
             return (Criteria) this;
         }
 
-        public Criteria andResultGreaterThanOrEqualTo(Long value) {
+        public Criteria andResultGreaterThanOrEqualTo(Integer value) {
             addCriterion("result >=", value, "result");
             return (Criteria) this;
         }
 
-        public Criteria andResultLessThan(Long value) {
+        public Criteria andResultLessThan(Integer value) {
             addCriterion("result <", value, "result");
             return (Criteria) this;
         }
 
-        public Criteria andResultLessThanOrEqualTo(Long value) {
+        public Criteria andResultLessThanOrEqualTo(Integer value) {
             addCriterion("result <=", value, "result");
             return (Criteria) this;
         }
 
-        public Criteria andResultIn(List<Long> values) {
+        public Criteria andResultIn(List<Integer> values) {
             addCriterion("result in", values, "result");
             return (Criteria) this;
         }
 
-        public Criteria andResultNotIn(List<Long> values) {
+        public Criteria andResultNotIn(List<Integer> values) {
             addCriterion("result not in", values, "result");
             return (Criteria) this;
         }
 
-        public Criteria andResultBetween(Long value1, Long value2) {
+        public Criteria andResultBetween(Integer value1, Integer value2) {
             addCriterion("result between", value1, value2, "result");
             return (Criteria) this;
         }
 
-        public Criteria andResultNotBetween(Long value1, Long value2) {
+        public Criteria andResultNotBetween(Integer value1, Integer value2) {
             addCriterion("result not between", value1, value2, "result");
             return (Criteria) this;
         }
@@ -1042,52 +1132,62 @@ public class FlowMainExample {
             return (Criteria) this;
         }
 
-        public Criteria andMsgEqualTo(Object value) {
+        public Criteria andMsgEqualTo(String value) {
             addCriterion("msg =", value, "msg");
             return (Criteria) this;
         }
 
-        public Criteria andMsgNotEqualTo(Object value) {
+        public Criteria andMsgNotEqualTo(String value) {
             addCriterion("msg <>", value, "msg");
             return (Criteria) this;
         }
 
-        public Criteria andMsgGreaterThan(Object value) {
+        public Criteria andMsgGreaterThan(String value) {
             addCriterion("msg >", value, "msg");
             return (Criteria) this;
         }
 
-        public Criteria andMsgGreaterThanOrEqualTo(Object value) {
+        public Criteria andMsgGreaterThanOrEqualTo(String value) {
             addCriterion("msg >=", value, "msg");
             return (Criteria) this;
         }
 
-        public Criteria andMsgLessThan(Object value) {
+        public Criteria andMsgLessThan(String value) {
             addCriterion("msg <", value, "msg");
             return (Criteria) this;
         }
 
-        public Criteria andMsgLessThanOrEqualTo(Object value) {
+        public Criteria andMsgLessThanOrEqualTo(String value) {
             addCriterion("msg <=", value, "msg");
             return (Criteria) this;
         }
 
-        public Criteria andMsgIn(List<Object> values) {
+        public Criteria andMsgLike(String value) {
+            addCriterion("msg like", value, "msg");
+            return (Criteria) this;
+        }
+
+        public Criteria andMsgNotLike(String value) {
+            addCriterion("msg not like", value, "msg");
+            return (Criteria) this;
+        }
+
+        public Criteria andMsgIn(List<String> values) {
             addCriterion("msg in", values, "msg");
             return (Criteria) this;
         }
 
-        public Criteria andMsgNotIn(List<Object> values) {
+        public Criteria andMsgNotIn(List<String> values) {
             addCriterion("msg not in", values, "msg");
             return (Criteria) this;
         }
 
-        public Criteria andMsgBetween(Object value1, Object value2) {
+        public Criteria andMsgBetween(String value1, String value2) {
             addCriterion("msg between", value1, value2, "msg");
             return (Criteria) this;
         }
 
-        public Criteria andMsgNotBetween(Object value1, Object value2) {
+        public Criteria andMsgNotBetween(String value1, String value2) {
             addCriterion("msg not between", value1, value2, "msg");
             return (Criteria) this;
         }
@@ -1102,52 +1202,62 @@ public class FlowMainExample {
             return (Criteria) this;
         }
 
-        public Criteria andRequestidEqualTo(Object value) {
+        public Criteria andRequestidEqualTo(String value) {
             addCriterion("requestid =", value, "requestid");
             return (Criteria) this;
         }
 
-        public Criteria andRequestidNotEqualTo(Object value) {
+        public Criteria andRequestidNotEqualTo(String value) {
             addCriterion("requestid <>", value, "requestid");
             return (Criteria) this;
         }
 
-        public Criteria andRequestidGreaterThan(Object value) {
+        public Criteria andRequestidGreaterThan(String value) {
             addCriterion("requestid >", value, "requestid");
             return (Criteria) this;
         }
 
-        public Criteria andRequestidGreaterThanOrEqualTo(Object value) {
+        public Criteria andRequestidGreaterThanOrEqualTo(String value) {
             addCriterion("requestid >=", value, "requestid");
             return (Criteria) this;
         }
 
-        public Criteria andRequestidLessThan(Object value) {
+        public Criteria andRequestidLessThan(String value) {
             addCriterion("requestid <", value, "requestid");
             return (Criteria) this;
         }
 
-        public Criteria andRequestidLessThanOrEqualTo(Object value) {
+        public Criteria andRequestidLessThanOrEqualTo(String value) {
             addCriterion("requestid <=", value, "requestid");
             return (Criteria) this;
         }
 
-        public Criteria andRequestidIn(List<Object> values) {
+        public Criteria andRequestidLike(String value) {
+            addCriterion("requestid like", value, "requestid");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequestidNotLike(String value) {
+            addCriterion("requestid not like", value, "requestid");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequestidIn(List<String> values) {
             addCriterion("requestid in", values, "requestid");
             return (Criteria) this;
         }
 
-        public Criteria andRequestidNotIn(List<Object> values) {
+        public Criteria andRequestidNotIn(List<String> values) {
             addCriterion("requestid not in", values, "requestid");
             return (Criteria) this;
         }
 
-        public Criteria andRequestidBetween(Object value1, Object value2) {
+        public Criteria andRequestidBetween(String value1, String value2) {
             addCriterion("requestid between", value1, value2, "requestid");
             return (Criteria) this;
         }
 
-        public Criteria andRequestidNotBetween(Object value1, Object value2) {
+        public Criteria andRequestidNotBetween(String value1, String value2) {
             addCriterion("requestid not between", value1, value2, "requestid");
             return (Criteria) this;
         }
@@ -1162,53 +1272,123 @@ public class FlowMainExample {
             return (Criteria) this;
         }
 
-        public Criteria andFtriggerflagEqualTo(Object value) {
+        public Criteria andFtriggerflagEqualTo(String value) {
             addCriterion("ftriggerflag =", value, "ftriggerflag");
             return (Criteria) this;
         }
 
-        public Criteria andFtriggerflagNotEqualTo(Object value) {
+        public Criteria andFtriggerflagNotEqualTo(String value) {
             addCriterion("ftriggerflag <>", value, "ftriggerflag");
             return (Criteria) this;
         }
 
-        public Criteria andFtriggerflagGreaterThan(Object value) {
+        public Criteria andFtriggerflagGreaterThan(String value) {
             addCriterion("ftriggerflag >", value, "ftriggerflag");
             return (Criteria) this;
         }
 
-        public Criteria andFtriggerflagGreaterThanOrEqualTo(Object value) {
+        public Criteria andFtriggerflagGreaterThanOrEqualTo(String value) {
             addCriterion("ftriggerflag >=", value, "ftriggerflag");
             return (Criteria) this;
         }
 
-        public Criteria andFtriggerflagLessThan(Object value) {
+        public Criteria andFtriggerflagLessThan(String value) {
             addCriterion("ftriggerflag <", value, "ftriggerflag");
             return (Criteria) this;
         }
 
-        public Criteria andFtriggerflagLessThanOrEqualTo(Object value) {
+        public Criteria andFtriggerflagLessThanOrEqualTo(String value) {
             addCriterion("ftriggerflag <=", value, "ftriggerflag");
             return (Criteria) this;
         }
 
-        public Criteria andFtriggerflagIn(List<Object> values) {
+        public Criteria andFtriggerflagLike(String value) {
+            addCriterion("ftriggerflag like", value, "ftriggerflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andFtriggerflagNotLike(String value) {
+            addCriterion("ftriggerflag not like", value, "ftriggerflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andFtriggerflagIn(List<String> values) {
             addCriterion("ftriggerflag in", values, "ftriggerflag");
             return (Criteria) this;
         }
 
-        public Criteria andFtriggerflagNotIn(List<Object> values) {
+        public Criteria andFtriggerflagNotIn(List<String> values) {
             addCriterion("ftriggerflag not in", values, "ftriggerflag");
             return (Criteria) this;
         }
 
-        public Criteria andFtriggerflagBetween(Object value1, Object value2) {
+        public Criteria andFtriggerflagBetween(String value1, String value2) {
             addCriterion("ftriggerflag between", value1, value2, "ftriggerflag");
             return (Criteria) this;
         }
 
-        public Criteria andFtriggerflagNotBetween(Object value1, Object value2) {
+        public Criteria andFtriggerflagNotBetween(String value1, String value2) {
             addCriterion("ftriggerflag not between", value1, value2, "ftriggerflag");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdLikeInsensitive(String value) {
+            addCriterion("upper(id) like", value.toUpperCase(), "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andFidLikeInsensitive(String value) {
+            addCriterion("upper(fid) like", value.toUpperCase(), "fid");
+            return (Criteria) this;
+        }
+
+        public Criteria andTitleLikeInsensitive(String value) {
+            addCriterion("upper(title) like", value.toUpperCase(), "title");
+            return (Criteria) this;
+        }
+
+        public Criteria andApplyauthLikeInsensitive(String value) {
+            addCriterion("upper(applyauth) like", value.toUpperCase(), "applyauth");
+            return (Criteria) this;
+        }
+
+        public Criteria andApplytypeLikeInsensitive(String value) {
+            addCriterion("upper(applytype) like", value.toUpperCase(), "applytype");
+            return (Criteria) this;
+        }
+
+        public Criteria andUseridLikeInsensitive(String value) {
+            addCriterion("upper(userid) like", value.toUpperCase(), "userid");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsercodeLikeInsensitive(String value) {
+            addCriterion("upper(usercode) like", value.toUpperCase(), "usercode");
+            return (Criteria) this;
+        }
+
+        public Criteria andUsernameLikeInsensitive(String value) {
+            addCriterion("upper(username) like", value.toUpperCase(), "username");
+            return (Criteria) this;
+        }
+
+        public Criteria andMemoLikeInsensitive(String value) {
+            addCriterion("upper(memo) like", value.toUpperCase(), "memo");
+            return (Criteria) this;
+        }
+
+        public Criteria andMsgLikeInsensitive(String value) {
+            addCriterion("upper(msg) like", value.toUpperCase(), "msg");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequestidLikeInsensitive(String value) {
+            addCriterion("upper(requestid) like", value.toUpperCase(), "requestid");
+            return (Criteria) this;
+        }
+
+        public Criteria andFtriggerflagLikeInsensitive(String value) {
+            addCriterion("upper(ftriggerflag) like", value.toUpperCase(), "ftriggerflag");
             return (Criteria) this;
         }
     }

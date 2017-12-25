@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.bwzk.dao.i.da.FlowDataItemMapper" >
   <resultMap id="BaseResultMap" type="com.bwzk.pojo.FlowDataItem" >
-    <id column="id" property="id" jdbcType="OTHER" />
-    <result column="pid" property="pid" jdbcType="OTHER" />
-    <result column="tablename" property="tablename" jdbcType="OTHER" />
-    <result column="keyword" property="keyword" jdbcType="OTHER" />
-    <result column="title" property="title" jdbcType="OTHER" />
-    <result column="mj" property="mj" jdbcType="OTHER" />
-    <result column="bgqx" property="bgqx" jdbcType="OTHER" />
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="pid" property="pid" jdbcType="VARCHAR" />
+    <result column="tablename" property="tablename" jdbcType="VARCHAR" />
+    <result column="keyword" property="keyword" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="mj" property="mj" jdbcType="VARCHAR" />
+    <result column="bgqx" property="bgqx" jdbcType="VARCHAR" />
     <result column="arcid" property="arcid" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -86,15 +86,15 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Object" >
-    select 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
     <include refid="Base_Column_List" />
     from FLOW_MID_DATA_ITEM
-    where id = #{id,jdbcType=OTHER}
+    where id = #{id,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Object" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from FLOW_MID_DATA_ITEM
-    where id = #{id,jdbcType=OTHER}
+    where id = #{id,jdbcType=VARCHAR}
   </delete>
   <delete id="deleteByExample" parameterType="com.bwzk.pojo.FlowDataItemExample" >
     delete from FLOW_MID_DATA_ITEM
@@ -103,12 +103,12 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.bwzk.pojo.FlowDataItem" >
-    insert into FLOW_MID_DATA_ITEM (id, pid, tablename, 
-      keyword, title, mj, bgqx, 
-      arcid)
-    values (#{id,jdbcType=OTHER}, #{pid,jdbcType=OTHER}, #{tablename,jdbcType=OTHER}, 
-      #{keyword,jdbcType=OTHER}, #{title,jdbcType=OTHER}, #{mj,jdbcType=OTHER}, #{bgqx,jdbcType=OTHER}, 
-      #{arcid,jdbcType=DECIMAL})
+    insert into FLOW_MID_DATA_ITEM (id, pid, tablename,
+    keyword, title, mj,
+    bgqx, arcid)
+    values (#{id,jdbcType=VARCHAR}, #{pid,jdbcType=VARCHAR}, #{tablename,jdbcType=VARCHAR},
+    #{keyword,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{mj,jdbcType=VARCHAR},
+    #{bgqx,jdbcType=VARCHAR}, #{arcid,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.bwzk.pojo.FlowDataItem" >
     insert into FLOW_MID_DATA_ITEM
@@ -140,25 +140,25 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
-        #{id,jdbcType=OTHER},
+        #{id,jdbcType=VARCHAR},
       </if>
       <if test="pid != null" >
-        #{pid,jdbcType=OTHER},
+        #{pid,jdbcType=VARCHAR},
       </if>
       <if test="tablename != null" >
-        #{tablename,jdbcType=OTHER},
+        #{tablename,jdbcType=VARCHAR},
       </if>
       <if test="keyword != null" >
-        #{keyword,jdbcType=OTHER},
+        #{keyword,jdbcType=VARCHAR},
       </if>
       <if test="title != null" >
-        #{title,jdbcType=OTHER},
+        #{title,jdbcType=VARCHAR},
       </if>
       <if test="mj != null" >
-        #{mj,jdbcType=OTHER},
+        #{mj,jdbcType=VARCHAR},
       </if>
       <if test="bgqx != null" >
-        #{bgqx,jdbcType=OTHER},
+        #{bgqx,jdbcType=VARCHAR},
       </if>
       <if test="arcid != null" >
         #{arcid,jdbcType=DECIMAL},
@@ -175,25 +175,25 @@
     update FLOW_MID_DATA_ITEM
     <set >
       <if test="record.id != null" >
-        id = #{record.id,jdbcType=OTHER},
+        id = #{record.id,jdbcType=VARCHAR},
       </if>
       <if test="record.pid != null" >
-        pid = #{record.pid,jdbcType=OTHER},
+        pid = #{record.pid,jdbcType=VARCHAR},
       </if>
       <if test="record.tablename != null" >
-        tablename = #{record.tablename,jdbcType=OTHER},
+        tablename = #{record.tablename,jdbcType=VARCHAR},
       </if>
       <if test="record.keyword != null" >
-        keyword = #{record.keyword,jdbcType=OTHER},
+        keyword = #{record.keyword,jdbcType=VARCHAR},
       </if>
       <if test="record.title != null" >
-        title = #{record.title,jdbcType=OTHER},
+        title = #{record.title,jdbcType=VARCHAR},
       </if>
       <if test="record.mj != null" >
-        mj = #{record.mj,jdbcType=OTHER},
+        mj = #{record.mj,jdbcType=VARCHAR},
       </if>
       <if test="record.bgqx != null" >
-        bgqx = #{record.bgqx,jdbcType=OTHER},
+        bgqx = #{record.bgqx,jdbcType=VARCHAR},
       </if>
       <if test="record.arcid != null" >
         arcid = #{record.arcid,jdbcType=DECIMAL},
@@ -205,14 +205,14 @@
   </update>
   <update id="updateByExample" parameterType="map" >
     update FLOW_MID_DATA_ITEM
-    set id = #{record.id,jdbcType=OTHER},
-      pid = #{record.pid,jdbcType=OTHER},
-      tablename = #{record.tablename,jdbcType=OTHER},
-      keyword = #{record.keyword,jdbcType=OTHER},
-      title = #{record.title,jdbcType=OTHER},
-      mj = #{record.mj,jdbcType=OTHER},
-      bgqx = #{record.bgqx,jdbcType=OTHER},
-      arcid = #{record.arcid,jdbcType=DECIMAL}
+    set id = #{record.id,jdbcType=VARCHAR},
+    pid = #{record.pid,jdbcType=VARCHAR},
+    tablename = #{record.tablename,jdbcType=VARCHAR},
+    keyword = #{record.keyword,jdbcType=VARCHAR},
+    title = #{record.title,jdbcType=VARCHAR},
+    mj = #{record.mj,jdbcType=VARCHAR},
+    bgqx = #{record.bgqx,jdbcType=VARCHAR},
+    arcid = #{record.arcid,jdbcType=DECIMAL}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -221,38 +221,38 @@
     update FLOW_MID_DATA_ITEM
     <set >
       <if test="pid != null" >
-        pid = #{pid,jdbcType=OTHER},
+        pid = #{pid,jdbcType=VARCHAR},
       </if>
       <if test="tablename != null" >
-        tablename = #{tablename,jdbcType=OTHER},
+        tablename = #{tablename,jdbcType=VARCHAR},
       </if>
       <if test="keyword != null" >
-        keyword = #{keyword,jdbcType=OTHER},
+        keyword = #{keyword,jdbcType=VARCHAR},
       </if>
       <if test="title != null" >
-        title = #{title,jdbcType=OTHER},
+        title = #{title,jdbcType=VARCHAR},
       </if>
       <if test="mj != null" >
-        mj = #{mj,jdbcType=OTHER},
+        mj = #{mj,jdbcType=VARCHAR},
       </if>
       <if test="bgqx != null" >
-        bgqx = #{bgqx,jdbcType=OTHER},
+        bgqx = #{bgqx,jdbcType=VARCHAR},
       </if>
       <if test="arcid != null" >
         arcid = #{arcid,jdbcType=DECIMAL},
       </if>
     </set>
-    where id = #{id,jdbcType=OTHER}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.bwzk.pojo.FlowDataItem" >
     update FLOW_MID_DATA_ITEM
-    set pid = #{pid,jdbcType=OTHER},
-      tablename = #{tablename,jdbcType=OTHER},
-      keyword = #{keyword,jdbcType=OTHER},
-      title = #{title,jdbcType=OTHER},
-      mj = #{mj,jdbcType=OTHER},
-      bgqx = #{bgqx,jdbcType=OTHER},
+    set pid = #{pid,jdbcType=VARCHAR},
+      tablename = #{tablename,jdbcType=VARCHAR},
+      keyword = #{keyword,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      mj = #{mj,jdbcType=VARCHAR},
+      bgqx = #{bgqx,jdbcType=VARCHAR},
       arcid = #{arcid,jdbcType=DECIMAL}
-    where id = #{id,jdbcType=OTHER}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

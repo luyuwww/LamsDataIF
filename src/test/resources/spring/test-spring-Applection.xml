@@ -6,9 +6,6 @@
        xmlns:jaxws="http://cxf.apache.org/jaxws"
        xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-
-
-
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
 	http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
 
@@ -29,7 +26,7 @@
     <import resource="classpath:META-INF/cxf/cxf.xml"/>
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
 
-    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+    <bean id="dataSource4DataIF" class="com.alibaba.druid.pool.DruidDataSource">
         <property name="name" value="${druid.datasource.name}"/>
         <property name="username" value="${druid.datasource.username}"/>
         <property name="url" value="${druid.datasource.url}"/>
@@ -48,32 +45,66 @@
         <property name="poolPreparedStatements" value="${druid.datasource.poolPreparedStatements}"/>
     </bean>
 
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="mapperLocations" value="classpath:mybatis/*.xml"></property>
+    <bean id="dataSource4OA" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="name" value="${druid.datasource.oa.name}"/>
+        <property name="username" value="${druid.datasource.oa.username}"/>
+        <property name="url" value="${druid.datasource.oa.url}"/>
+        <property name="password" value="${druid.datasource.oa.password}"/>
+        <property name="filters" value="${druid.datasource.filters}"/>
+        <property name="maxActive" value="${druid.datasource.maxActive}"/>
+        <property name="initialSize" value="${druid.datasource.initialSize}"/>
+        <property name="maxWait" value="${druid.datasource.maxWait}"/>
+        <property name="minIdle" value="${druid.datasource.minIdle}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${druid.datasource.timeBetweenEvictionRunsMillis}"/>
+        <property name="minEvictableIdleTimeMillis" value="${druid.datasource.minEvictableIdleTimeMillis}"/>
+        <property name="validationQuery" value="${druid.datasource.validationQuery}"/>
+        <property name="testWhileIdle" value="${druid.datasource.testWhileIdle}"/>
+        <property name="testOnBorrow" value="${druid.datasource.testOnBorrow}"/>
+        <property name="testOnReturn" value="${druid.datasource.testOnReturn}"/>
+        <property name="poolPreparedStatements" value="${druid.datasource.poolPreparedStatements}"/>
     </bean>
-    <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.bwzk.dao.i"/>
+
+    <bean id="sqlSessionFactory4DA" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource4DataIF"/>
+        <property name="mapperLocations" value="classpath:mybatis/da/*.xml"></property>
+    </bean>
+    <bean id="sqlSessionFactory4OA" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource4OA"/>
+        <property name="mapperLocations" value="classpath:mybatis/oa/*.xml"></property>
+    </bean>
+
+    <bean id="mapperScannerConfigurer4DA" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.bwzk.dao.i.da"/>
         <property name="markerInterface" value="com.bwzk.dao.BaseDao4DA"/>
-        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory4DA"/>
+    </bean>
+    <bean id="mapperScannerConfigurer4OA" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.bwzk.dao.i.oa"/>
+        <property name="markerInterface" value="com.bwzk.dao.BaseDao4OA"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory4OA"/>
     </bean>
 
     <!-- jdbcTemplate -->
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource" ref="dataSource"/>
+        <property name="dataSource" ref="dataSource4DataIF"/>
+    </bean>
+
+    <!-- jdbcTemplate -->
+    <bean id="jdbcTemplate4OA" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource4OA"/>
     </bean>
 
     <!-- dao -->
     <!-- service -->
     <!-- CXF -->
-    <jaxws:endpoint id="arcServicePublish" implementor="#arcServcieImpl" address="/ArcService"/>
+    <jaxws:endpoint id="arcDataServiceWS" implementor="#arcDataService" address="/ArcDataWsSingle"/>
 
     <!-- 事务配置 UNIS-->
     <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"/>
-        <qualifier value="thamsTX"/>
+        <property name="dataSource" ref="dataSource4DataIF"/>
+        <!--<qualifier value="thamsTX"/>-->
     </bean>
-    <tx:annotation-driven transaction-manager="txManager"/>
+    <!--<tx:annotation-driven transaction-manager="txManager"/>-->
 
     <!-- 下面是显示定时相关配置
     <task:scheduled-tasks>

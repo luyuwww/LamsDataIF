@@ -17,16 +17,7 @@ public interface NoticeService {
     public void sendActivitiMsg(String userCodes, String varsJson, String actTaskID);
 
     /**
-     * 得到个人待办
-     *
-     * @param usercode
+     * 同步流程信息,并反向更新到lams
      */
-    public String toDoList(String usercode);
-
-    /**
-     * 测试 得到用户代办列表
-     *
-     * @param usercode
-     */
-    public List<SBacklog> allBacklog(String usercode);
+    public void syncTaskInfo();
 }

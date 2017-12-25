@@ -1000,9 +1000,9 @@ public class BaseService {
     @Autowired
     protected JdbcDao jdbcDao;
     @Autowired
-    protected SGroupMapper sGroupMapper;
-    @Autowired
     protected SUserMapper sUserMapper;
+    @Autowired
+    protected SGroupMapper sGroupMapper;
     @Autowired
     protected SQzhMapper sQzhMapper;
     @Autowired

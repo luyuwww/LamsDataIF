@@ -25,23 +25,15 @@
 <body>
 <div class="container theme-showcase">
     <p>
-        <!--
-			<button class="btn btn-lg btn-warning" onclick="submitSyncUserGroup()">同步用户和部门</button>
-			<br>
-			<a class="btn btn-lg btn-default"
-				href="${pageContext.request.contextPath}/gepsCtl/testGeps">查看项目个数 (测试)</a>
-			<br>
-			<a class="btn btn-lg btn-danger"
-				href="${pageContext.request.contextPath}/initMapping">初始化接口代码表</a><br>
-			<a class="btn btn-lg btn-info"
-				href="${pageContext.request.contextPath}/gepsSync">接收项目档案数据</a>
-			 -->
         <a class="btn btn-lg btn-primary"
            href="${pageContext.request.contextPath}/viewLogList">查看日志</a>
         <a class="btn btn-lg btn-danger"
            href="${pageContext.request.contextPath}/viewXMLList">查看XML</a>
+        <br>
         <a class="btn btn-lg btn-success"
-           href="${pageContext.request.contextPath}/getUsers">列出所有用户</a>
+           href="${pageContext.request.contextPath}/listDaUsers">列出所有档案用户</a>
+        <a class="btn btn-lg btn-info"
+           href="${pageContext.request.contextPath}/listOAUsers">列出所有OA用户</a>
         <a class="btn btn-lg btn-warning"
            href="${pageContext.request.contextPath}/cxf">查看服务</a>
     </p>

@@ -1,16 +1,18 @@
 package com.bwzk.dao.i.da;
 
+import com.bwzk.dao.BaseDao4DA;
 import com.bwzk.pojo.FlowDataItem;
 import com.bwzk.pojo.FlowDataItemExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-public interface FlowDataItemMapper {
-    int countByExample(FlowDataItemExample example);
+import java.util.List;
+
+public interface FlowDataItemMapper extends BaseDao4DA {
+        int countByExample(FlowDataItemExample example);
 
     int deleteByExample(FlowDataItemExample example);
 
-    int deleteByPrimaryKey(Object id);
+    int deleteByPrimaryKey(String id);
 
     int insert(FlowDataItem record);
 
@@ -18,7 +20,7 @@ public interface FlowDataItemMapper {
 
     List<FlowDataItem> selectByExample(FlowDataItemExample example);
 
-    FlowDataItem selectByPrimaryKey(Object id);
+    FlowDataItem selectByPrimaryKey(String id);
 
     int updateByExampleSelective(@Param("record") FlowDataItem record, @Param("example") FlowDataItemExample example);
 

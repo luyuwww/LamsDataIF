@@ -1,15 +1,25 @@
 package com.bwzk.service.impl;
 
 import ch.qos.logback.classic.Logger;
+import com.bwzk.dao.i.da.FlowDataItemMapper;
+import com.bwzk.dao.i.da.FlowMainMapper;
 import com.bwzk.dao.i.da.SBacklogMapper;
 import com.bwzk.dao.i.da.SUserMapper;
-import com.bwzk.pojo.SBacklog;
-import com.bwzk.pojo.SBacklogExample;
+import com.bwzk.pojo.FlowDataItem;
+import com.bwzk.pojo.FlowMain;
+import com.bwzk.pojo.FlowMainExample;
 import com.bwzk.pojo.SUser;
 import com.bwzk.service.BaseService;
 import com.bwzk.service.i.NoticeService;
-import com.bwzk.util.SeriKeyOper;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.HttpClientUtils;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +29,11 @@ import org.springframework.core.io.support.EncodedResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +61,16 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
             sqyy = (vars.get("sqyy") == null ? "" : vars.get("sqyy").toString());
             sqtype = (vars.get("sqtype") == null ? "" : vars.get("sqtype").toString());
             mj = (vars.get("mj") == null ? "" : vars.get("mj").toString());
+
+
+            //写流程包
+
+
+
+
+
+
+
             for (String userCode : userCodeList) {
                 user = sUserMapper.getUserByUsercode(userCode);
                 if (user != null) {
@@ -65,6 +89,9 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
                     content = content.replace("@fqrUsername", user.getUsername());
                     content = content.replace("@gotoLamsUrl", url);
                     System.out.println(content);
+
+//                    sendMsg2Lams("http://" + lamsIP + "/Lams/activiti/completeTask",
+//                            taskId, sw.toString(), Boolean.FALSE.toString());
                 }
             }
         } catch (Exception e) {
@@ -72,61 +99,98 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
         }
     }
 
-    @Override
-    public String toDoList(String usercode) {
-        String result = "";
-        Integer todoNum = sBacklogMapper.getBackLogNum(" OPERMODULEOWNER='izerui' AND OPERMODULEZH='任务列表'"
-                + " AND ISOPER=0 AND USERCODE ='" + usercode + "'");
-        if (todoNum > 0) {
-            try {
-                SUser user = sUserMapper.getUserByUsercode(usercode);
-                if (user != null) {
-                    String title = "档案系统审批: 待处理" + todoNum + "条数据";
-                    String url = generatUrl(user, "任务列表", "izerui");
-                    System.out.println(title);
-                    System.out.println(url);
-                }
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-            }
+    public void syncTaskInfo(){
+        FlowMainExample fEx = new FlowMainExample();
+        fEx.createCriteria().andStatusEqualTo(0).andResultNotEqualTo(0);
+        List<FlowMain> flowMainList = flowMainMapper.selectByExample(fEx);
+        for (FlowMain flowMain : flowMainList) {
+            //todo 发送
+            //得到结果 反写状态
+            //失败 记录入职 status 写 2
+            // 成功 result写1
         }
-        return result;
-    }
-
-    @Override
-    public List<SBacklog> allBacklog(String usercode) {
-        SBacklogExample ex = new SBacklogExample();
-        ex.createCriteria().andUsercodeEqualTo("chenli");
-        List<SBacklog> backLoList = sBacklogMapper.selectByExample(ex);
-        return backLoList;
-    }
-
-    /**
-     * 得到登录Lams并且进入相应模块的URL
-     *
-     * @param user     用户
-     * @param modName  模块中文名称
-     * @param modOwner 模块所属者
-     */
-    private String generatUrl(SUser user, String modName, String modOwner) {
-        StringBuffer sb = new StringBuffer();
-        sb.append("http://").append(lamsIP).append("/Lams/autoLogin?card=").append(SeriKeyOper.encrypt(user.getUsercode()));
-        sb.append("&serikey=").append(SeriKeyOper.encrypt(user.getPasswd())).append("&moduleName=");
-        sb.append(SeriKeyOper.encrypt(modName)).append("&moduleOwner=").append(SeriKeyOper.encrypt(modOwner));
-        sb.append("&random=").append(Math.random());
-        return sb.toString();
     }
 
     public NoticeServiceImpl() {
         try {
             EncodedResource todoRes = new EncodedResource(new ClassPathResource("vm/todo.vm"), "UTF-8");
             msgVM = FileCopyUtils.copyToString(todoRes.getReader());
-//			System.out.println(msgVM);
+            System.out.println(msgVM);
         } catch (IOException e) {
             log.error(e.getMessage());
             System.out.println("系统初始化错误");
             System.exit(0);
         }
+    }
+
+    /**
+     * 发动请求到 Lams
+     *
+     * @param url
+     * @param taskId
+     * @param varsJson
+     * @param cancelSubmit
+     * @return
+     */
+    private Integer sendMsg2Lams(String url, String taskId, String varsJson,
+                            String cancelSubmit) {
+        HttpPost post = null;
+        HttpClient client = null;
+        Integer status = 0;
+        try {
+            post = new HttpPost(url);
+            client = new DefaultHttpClient();
+            // 填充表单
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("taskId", taskId));
+            params.add(new BasicNameValuePair("varsJson", varsJson));
+            params.add(new BasicNameValuePair("cancelSubmit", cancelSubmit));
+            post.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+            status = client.execute(post).getStatusLine().getStatusCode();
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        } finally {
+            HttpClientUtils.closeQuietly(client);
+        }
+        return status;
+    }
+
+
+    private String receiveMsg(String taskId, String status, String borrowsStatus) {
+        try {
+            File tempFIle = new File("c:/" + System.currentTimeMillis());
+            FileUtils.writeStringToFile(tempFIle, taskId, true);
+            FileUtils.writeStringToFile(tempFIle, status, true);
+            FileUtils.writeStringToFile(tempFIle, borrowsStatus, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String wsRslt = "1";
+        Map<String, Object> map = null;
+        if (StringUtils.isNotBlank(taskId) && StringUtils.isNotBlank(status)) {
+            map = new HashMap<String, Object>();
+            map.put("OutSystemFqrCode", "ROOT");
+            map.put("spjg",
+                    status.contains("true") || status.contains("成功") ? "true"
+                            : "false");
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                StringWriter sw = new StringWriter();
+                mapper.writeValue(sw, map);
+                // http://localhost/Lams/activiti/completeTask
+                sendMsg2Lams("http://" + lamsIP + "/Lams/activiti/completeTask",
+                        taskId, sw.toString(), Boolean.FALSE.toString());
+                System.out.println("call lams.activiti status: " + status);
+                wsRslt = "0";
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                wsRslt = wsRslt + "[" + e.getMessage() + "]";
+            }
+        } else {
+            wsRslt = wsRslt + "[taskid 或者 result为空]";
+        }
+        return wsRslt;
     }
 
     private String msgVM;
@@ -135,6 +199,11 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
     private SUserMapper sUserMapper;
     @Autowired
     private SBacklogMapper sBacklogMapper;
+    @Autowired
+    private FlowDataItemMapper flowDataItemMapper;
+    @Autowired
+    private FlowMainMapper flowMainMapper;
+
     @Autowired
     @Value("${sendinfo.todo.title}")
     private String sendInfoTitle;

@@ -4,17 +4,17 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class FlowMain implements Serializable {
-    private Object id;
+    private String id;
 
-    private Object fid;
+    private String fid;
 
-    private Object title;
+    private String title;
 
-    private Object applyauth;
+    private String applyauth;
 
-    private Object applytype;
+    private String applytype;
 
-    private Long applytimes;
+    private Integer applytimes;
 
     private Date stardate;
 
@@ -22,71 +22,69 @@ public class FlowMain implements Serializable {
 
     private Date requesttime;
 
-    private Object userid;
+    private String userid;
 
-    private Object usercode;
+    private String usercode;
 
-    private Object username;
+    private String username;
 
-    private Object memo;
+    private String memo;
 
-    private Long status;
+    private Integer status;
 
-    private Long result;
+    private Integer result;
 
-    private Object msg;
+    private String msg;
 
-    private Object requestid;
+    private String requestid;
 
-    private Object ftriggerflag;
+    private String ftriggerflag;
 
-    private static final long serialVersionUID = 1L;
-
-    public Object getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Object id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = id == null ? null : id.trim();
     }
 
-    public Object getFid() {
+    public String getFid() {
         return fid;
     }
 
-    public void setFid(Object fid) {
-        this.fid = fid;
+    public void setFid(String fid) {
+        this.fid = fid == null ? null : fid.trim();
     }
 
-    public Object getTitle() {
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(Object title) {
-        this.title = title;
+    public void setTitle(String title) {
+        this.title = title == null ? null : title.trim();
     }
 
-    public Object getApplyauth() {
+    public String getApplyauth() {
         return applyauth;
     }
 
-    public void setApplyauth(Object applyauth) {
-        this.applyauth = applyauth;
+    public void setApplyauth(String applyauth) {
+        this.applyauth = applyauth == null ? null : applyauth.trim();
     }
 
-    public Object getApplytype() {
+    public String getApplytype() {
         return applytype;
     }
 
-    public void setApplytype(Object applytype) {
-        this.applytype = applytype;
+    public void setApplytype(String applytype) {
+        this.applytype = applytype == null ? null : applytype.trim();
     }
 
-    public Long getApplytimes() {
+    public Integer getApplytimes() {
         return applytimes;
     }
 
-    public void setApplytimes(Long applytimes) {
+    public void setApplytimes(Integer applytimes) {
         this.applytimes = applytimes;
     }
 
@@ -114,75 +112,75 @@ public class FlowMain implements Serializable {
         this.requesttime = requesttime;
     }
 
-    public Object getUserid() {
+    public String getUserid() {
         return userid;
     }
 
-    public void setUserid(Object userid) {
-        this.userid = userid;
+    public void setUserid(String userid) {
+        this.userid = userid == null ? null : userid.trim();
     }
 
-    public Object getUsercode() {
+    public String getUsercode() {
         return usercode;
     }
 
-    public void setUsercode(Object usercode) {
-        this.usercode = usercode;
+    public void setUsercode(String usercode) {
+        this.usercode = usercode == null ? null : usercode.trim();
     }
 
-    public Object getUsername() {
+    public String getUsername() {
         return username;
     }
 
-    public void setUsername(Object username) {
-        this.username = username;
+    public void setUsername(String username) {
+        this.username = username == null ? null : username.trim();
     }
 
-    public Object getMemo() {
+    public String getMemo() {
         return memo;
     }
 
-    public void setMemo(Object memo) {
-        this.memo = memo;
+    public void setMemo(String memo) {
+        this.memo = memo == null ? null : memo.trim();
     }
 
-    public Long getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Long status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public Long getResult() {
+    public Integer getResult() {
         return result;
     }
 
-    public void setResult(Long result) {
+    public void setResult(Integer result) {
         this.result = result;
     }
 
-    public Object getMsg() {
+    public String getMsg() {
         return msg;
     }
 
-    public void setMsg(Object msg) {
-        this.msg = msg;
+    public void setMsg(String msg) {
+        this.msg = msg == null ? null : msg.trim();
     }
 
-    public Object getRequestid() {
+    public String getRequestid() {
         return requestid;
     }
 
-    public void setRequestid(Object requestid) {
-        this.requestid = requestid;
+    public void setRequestid(String requestid) {
+        this.requestid = requestid == null ? null : requestid.trim();
     }
 
-    public Object getFtriggerflag() {
+    public String getFtriggerflag() {
         return ftriggerflag;
     }
 
-    public void setFtriggerflag(Object ftriggerflag) {
-        this.ftriggerflag = ftriggerflag;
+    public void setFtriggerflag(String ftriggerflag) {
+        this.ftriggerflag = ftriggerflag == null ? null : ftriggerflag.trim();
     }
 }

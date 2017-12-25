@@ -1,8 +1,8 @@
 package com.bwzk.action;
 
 import ch.qos.logback.classic.Logger;
-import com.bwzk.service.i.ArcService;
 import com.bwzk.service.i.NoticeService;
+import com.bwzk.service.i.OrgService;
 import com.bwzk.util.GlobalFinalAttr;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -107,12 +107,20 @@ public class CommonCtler {
     }
 
     /**
-     * 列出所有用户 测试方法
+     * 列出所有档案用户 测试方法
      */
-    @RequestMapping(value = "/getUsers", method = RequestMethod.GET)
-    public String userList(Model model) {
-        model.addAttribute("userlist", arcServcieImpl.listAllUser());
-        return "userlist.jsp";
+    @RequestMapping(value = "/listDaUsers", method = RequestMethod.GET)
+    public String listDaUsers(Model model) {
+        model.addAttribute("userlist", orgServiceImpl.listDaUsers());
+        return "daUserlist.jsp";
+    }
+    /**
+     * 列出所有OA用户 测试方法
+     */
+    @RequestMapping(value = "/listOAUsers", method = RequestMethod.GET)
+    public String listOAUsers(Model model) {
+        model.addAttribute("userlist", orgServiceImpl.listOaUsersLess4());
+        return "oaUserlist.jsp";
     }
 
     /**
@@ -120,15 +128,7 @@ public class CommonCtler {
      */
     @RequestMapping(value = "/sso", method = RequestMethod.GET)
     public String sso(@RequestParam String usercode, @RequestParam String token) {
-        String lamsUrl = "http://" + arcServcieImpl.getLamsIP() + "/Lams/directLogin?usercode=";
-        Boolean result = judgeSSO(usercode, token);
-        if (result) {//返回0 表示成功
-            lamsUrl = lamsUrl + usercode;
-            log.error("验证成功可以登录档案系统!");
-        } else {
-            log.error("验证失败!");
-        }
-        return "redirect:" + lamsUrl;
+        return "redirect:" ;
     }
 
 
@@ -151,7 +151,7 @@ public class CommonCtler {
     }
 
     @Autowired
-    private ArcService arcServcieImpl;
+    private OrgService orgServiceImpl;
     @Autowired
     private NoticeService noticeServiceImpl;
     @Autowired

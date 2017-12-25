@@ -3,85 +3,83 @@ package com.bwzk.pojo;
 import java.io.Serializable;
 
 public class FlowDataItem implements Serializable {
-    private Object id;
+    private String id;
 
-    private Object pid;
+    private String pid;
 
-    private Object tablename;
+    private String tablename;
 
-    private Object keyword;
+    private String keyword;
 
-    private Object title;
+    private String title;
 
-    private Object mj;
+    private String mj;
 
-    private Object bgqx;
+    private String bgqx;
 
-    private Long arcid;
+    private Integer arcid;
 
-    private static final long serialVersionUID = 1L;
-
-    public Object getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Object id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = id == null ? null : id.trim();
     }
 
-    public Object getPid() {
+    public String getPid() {
         return pid;
     }
 
-    public void setPid(Object pid) {
-        this.pid = pid;
+    public void setPid(String pid) {
+        this.pid = pid == null ? null : pid.trim();
     }
 
-    public Object getTablename() {
+    public String getTablename() {
         return tablename;
     }
 
-    public void setTablename(Object tablename) {
-        this.tablename = tablename;
+    public void setTablename(String tablename) {
+        this.tablename = tablename == null ? null : tablename.trim();
     }
 
-    public Object getKeyword() {
+    public String getKeyword() {
         return keyword;
     }
 
-    public void setKeyword(Object keyword) {
-        this.keyword = keyword;
+    public void setKeyword(String keyword) {
+        this.keyword = keyword == null ? null : keyword.trim();
     }
 
-    public Object getTitle() {
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(Object title) {
-        this.title = title;
+    public void setTitle(String title) {
+        this.title = title == null ? null : title.trim();
     }
 
-    public Object getMj() {
+    public String getMj() {
         return mj;
     }
 
-    public void setMj(Object mj) {
-        this.mj = mj;
+    public void setMj(String mj) {
+        this.mj = mj == null ? null : mj.trim();
     }
 
-    public Object getBgqx() {
+    public String getBgqx() {
         return bgqx;
     }
 
-    public void setBgqx(Object bgqx) {
-        this.bgqx = bgqx;
+    public void setBgqx(String bgqx) {
+        this.bgqx = bgqx == null ? null : bgqx.trim();
     }
 
-    public Long getArcid() {
+    public Integer getArcid() {
         return arcid;
     }
 
-    public void setArcid(Long arcid) {
+    public void setArcid(Integer arcid) {
         this.arcid = arcid;
     }
 }
