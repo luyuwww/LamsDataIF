@@ -7,6 +7,10 @@ import java.util.List;
 
 public interface OrgService {
     /**
+     * 同步用户和部门
+     */
+    public void sync();
+    /**
      * 列出所有用户
      */
     public List<SUser> listDaUsers();
@@ -21,8 +25,5 @@ public interface OrgService {
      */
     public List<OaUser> listOaUsersLess4();
 
-    /**
-     * 同步用户和部门
-     */
-    public void sync();
+
 }

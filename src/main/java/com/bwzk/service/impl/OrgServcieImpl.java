@@ -1,7 +1,10 @@
 package com.bwzk.service.impl;
 
 import ch.qos.logback.classic.Logger;
+import com.bwzk.dao.i.oa.OaDepMapper;
+import com.bwzk.dao.i.oa.OaOrgMapper;
 import com.bwzk.dao.i.oa.OaUserMapper;
+import com.bwzk.pojo.OaDep;
 import com.bwzk.pojo.OaUser;
 import com.bwzk.pojo.OaUserExample;
 import com.bwzk.pojo.SUser;
@@ -9,6 +12,7 @@ import com.bwzk.service.BaseService;
 import com.bwzk.service.i.OrgService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -16,9 +20,17 @@ import java.util.List;
 
 @Service("orgServiceImpl")
 public class OrgServcieImpl extends BaseService implements OrgService {
+    public void sync(){
+        syncGroup();
+        syncUser();
+    }
 
-    @Autowired
-    private OaUserMapper oaUserMapper;
+    private void syncGroup(){
+
+    }
+    private void syncUser(){
+
+    }
 
     private Logger log = (Logger) LoggerFactory.getLogger(this.getClass());
 
@@ -44,15 +56,19 @@ public class OrgServcieImpl extends BaseService implements OrgService {
         return resultr;
     }
 
-    public void sync(){
-        syncGroup();
-        syncUser();
+    private List<OaDep> listOaDel(){
+//        defaultQzh
+//        oaDepMapper.selectByExample()
+        return null;
     }
 
-    private void syncGroup(){
 
-    }
-    private void syncUser(){
+    @Autowired
+    private OaOrgMapper oaOrgMapper;
+    @Autowired
+    private OaDepMapper oaDepMapper;
+    @Autowired
+    private OaUserMapper oaUserMapper;
 
-    }
+
 }

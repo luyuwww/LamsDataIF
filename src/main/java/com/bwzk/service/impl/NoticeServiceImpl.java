@@ -113,9 +113,9 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
 
     public NoticeServiceImpl() {
         try {
-            EncodedResource todoRes = new EncodedResource(new ClassPathResource("vm/todo.vm"), "UTF-8");
+            EncodedResource todoRes = new EncodedResource(
+                    new ClassPathResource("vm/todo.vm"), "UTF-8");
             msgVM = FileCopyUtils.copyToString(todoRes.getReader());
-            System.out.println(msgVM);
         } catch (IOException e) {
             log.error(e.getMessage());
             System.out.println("系统初始化错误");

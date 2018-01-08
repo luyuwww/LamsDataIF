@@ -730,7 +730,7 @@ public class BaseService {
                     new IsExistDepOrUser().isDeptExist(group);
                     String deptQzh = getQzhByKey(qzh_zj);
                     SGroup parent = sGroupMapper.getGroupByGfzj(parent_org_no);
-                    qzh = (deptQzh == null ? defaultDeptQzh : deptQzh);
+                    qzh = (deptQzh == null ? defaultQzh : deptQzh);
                     pid = (parent == null ? defaultDeptPid : parent.getDid());
                     fields.append("did,pid,qzh,gfzj,depcode");
                     values.append(maxdid).append(",").append(pid).append(",'")
@@ -898,7 +898,7 @@ public class BaseService {
             new IsExistDepOrUser().isDeptExist(group);
             String deptQzh = getQzhByKey(qzh_zj);
             SGroup parent = sGroupMapper.getGroupByGfzj(parent_org_no);
-            qzh = (deptQzh == null ? defaultDeptQzh : deptQzh);
+            qzh = (deptQzh == null ? defaultQzh : deptQzh);
             pid = (parent == null ? defaultDeptPid : parent.getDid());
             sgroup.setDid(maxdid);
             sgroup.setPid(pid);
@@ -1030,12 +1030,7 @@ public class BaseService {
     @Autowired
     @Value("${default.dept.pid}")
     protected Integer defaultDeptPid;
-    /**
-     * 默认部门全宗号
-     */
-    @Autowired
-    @Value("${default.dept.qzh}")
-    protected String defaultDeptQzh;
+
     @Autowired
     @Value("${lams.dfile.attrex}")
     protected Integer attrex;// 移交接收状态
