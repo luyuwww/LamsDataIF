@@ -1,12 +1,11 @@
 package com.bwzk.dao;
 
-import com.bwzk.pojo.FDTable;
-import com.bwzk.pojo.SDalx;
-import com.bwzk.pojo.SFwqpz;
-import com.bwzk.pojo.WWjkgl;
+import com.bwzk.pojo.*;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -14,6 +13,7 @@ import java.util.List;
 
 @Repository
 public interface BaseDao {
+
     /**
      * 得到最大的did
      */
@@ -76,4 +76,8 @@ public interface BaseDao {
 
     @Select("SELECT * FROM S_FWQPZ WHERE pzname='${pzm}'")
     SFwqpz getFwqpzByPzm(@Param("pzm") String pzm);
+
+    @Select("SELECT * FROM ${tableName} WHERE LIBCODE=${libcode}")
+    List<DClassifyZjk> listFlh(@Param("tableName") String tableName ,
+                                     @Param("libcode") Integer libcode);
 }

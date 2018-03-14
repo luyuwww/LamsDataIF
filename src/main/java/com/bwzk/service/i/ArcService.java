@@ -35,4 +35,6 @@ public interface ArcService {
     public String getBmidStrByUserCode(String userCode);
 
     public String getLamsIP();
+
+    public String syncDclassfy(Integer libcode);
 }

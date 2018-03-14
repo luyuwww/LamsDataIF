@@ -44,6 +44,8 @@
            href="${pageContext.request.contextPath}/getUsers">列出所有用户</a>
         <a class="btn btn-lg btn-warning"
            href="${pageContext.request.contextPath}/cxf">查看服务</a>
+        <a class="btn btn-lg btn-info"
+           href="${pageContext.request.contextPath}/syncDclassfy?libcode=32">同步分类表</a>
     </p>
 </div>
 </body>
