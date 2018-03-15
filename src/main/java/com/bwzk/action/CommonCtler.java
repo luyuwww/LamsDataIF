@@ -143,6 +143,32 @@ public class CommonCtler {
     }
 
     /**
+     * 查看日志
+     */
+    @RequestMapping("/syncDclassfy")
+    public void syncDclassfy(@RequestParam Integer libcode ,  HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            response.setContentType("text/html;charset=GBK ");
+            out = response.getWriter();
+            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+            out.println("<HTML>");
+            out.println("<BODY>");
+            out.println("<XMP>");
+            out.println(arcServcieImpl.syncDclassfy(libcode));
+            out.println("</XMP>");
+            out.println("</BODY>");
+            out.println("</HTML>");
+        } catch (Exception e) {
+            out.println("读取日志错误" + e.getMessage());
+            log.error("读取日志错误" + e.getMessage());
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
+
+    /**
      * 内部调用 判断是否是允许用户 ture是的
      */
     private Boolean judgeSSO(String usercode, String token) {
