@@ -193,6 +193,11 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
         return wsRslt;
     }
 
+    public String syncFLowBean(){
+        String msg = "flow info ok 好的";
+        return msg;
+    }
+
     private String msgVM;
 
     @Autowired

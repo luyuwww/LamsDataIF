@@ -8,10 +8,8 @@
         <result column="GID" property="gid" jdbcType="INTEGER"/>
         <result column="GNAME" property="gname" jdbcType="VARCHAR"/>
         <result column="BZ" property="bz" jdbcType="VARCHAR"/>
-        <result column="DEPCODE" property="depcode" jdbcType="VARCHAR"/>
         <result column="DEPID" property="depid" jdbcType="VARCHAR"/>
         <result column="GFZJ" property="gfzj" jdbcType="VARCHAR"/>
-        <result column="BH" property="bh" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Example_Where_Clause">
@@ -75,7 +73,7 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-        DID, PID, QZH, GID, GNAME, BZ, BH, GFZJ, DEPCODE, DEPID
+        DID, PID, QZH, GID, GNAME, BZ, GFZJ, DEPID
     </sql>
     <select id="selectByExample" parameterType="com.bwzk.pojo.SGroupExample" resultMap="BaseResultMap">
         select
@@ -109,12 +107,12 @@
     </delete>
     <insert id="insert" parameterType="com.bwzk.pojo.SGroup">
         insert into S_GROUP (DID, PID, QZH,
-        GID, GNAME, BZ, BH,
-        GFZJ, DEPCODE, DEPID
+        GID, GNAME, BZ,
+        GFZJ,  DEPID
         )
         values (#{did,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, #{qzh,jdbcType=VARCHAR},
-        #{gid,jdbcType=INTEGER}, #{gname,jdbcType=VARCHAR}, #{bz,jdbcType=VARCHAR}, #{bh,jdbcType=VARCHAR},
-        #{gfzj,jdbcType=VARCHAR}, #{depcode,jdbcType=VARCHAR}, #{depid,jdbcType=VARCHAR}
+        #{gid,jdbcType=INTEGER}, #{gname,jdbcType=VARCHAR}, #{bz,jdbcType=VARCHAR},
+        #{gfzj,jdbcType=VARCHAR}, #{depid,jdbcType=VARCHAR}
         )
     </insert>
     <insert id="insertSelective" parameterType="com.bwzk.pojo.SGroup">
@@ -138,14 +136,9 @@
             <if test="bz != null">
                 BZ,
             </if>
-            <if test="bh != null">
-                BH,
-            </if>
+
             <if test="gfzj != null">
                 GFZJ,
-            </if>
-            <if test="depcode != null">
-                DEPCODE,
             </if>
             <if test="depid != null">
                 DEPID,
@@ -170,14 +163,8 @@
             <if test="bz != null">
                 #{bz,jdbcType=VARCHAR},
             </if>
-            <if test="bh != null">
-                #{bh,jdbcType=VARCHAR},
-            </if>
             <if test="gfzj != null">
                 #{gfzj,jdbcType=VARCHAR},
-            </if>
-            <if test="depcode != null">
-                #{depcode,jdbcType=VARCHAR},
             </if>
             <if test="depid != null">
                 #{depid,jdbcType=VARCHAR},
@@ -211,14 +198,8 @@
             <if test="record.bz != null">
                 BZ = #{record.bz,jdbcType=VARCHAR},
             </if>
-            <if test="record.bh != null">
-                BH = #{record.bh,jdbcType=VARCHAR},
-            </if>
             <if test="record.gfzj != null">
                 GFZJ = #{record.gfzj,jdbcType=VARCHAR},
-            </if>
-            <if test="record.depcode != null">
-                DEPCODE = #{record.depcode,jdbcType=VARCHAR},
             </if>
             <if test="record.depid != null">
                 DEPID = #{record.depid,jdbcType=VARCHAR},
@@ -236,9 +217,7 @@
         GID = #{record.gid,jdbcType=INTEGER},
         GNAME = #{record.gname,jdbcType=VARCHAR},
         BZ = #{record.bz,jdbcType=VARCHAR},
-        BH = #{record.bh,jdbcType=VARCHAR},
         GFZJ = #{record.gfzj,jdbcType=VARCHAR},
-        DEPCODE = #{record.depcode,jdbcType=VARCHAR},
         DEPID = #{record.depid,jdbcType=VARCHAR}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
@@ -262,9 +241,6 @@
             <if test="bz != null">
                 BZ = #{bz,jdbcType=VARCHAR},
             </if>
-            <if test="bh != null">
-                BH = #{bh,jdbcType=VARCHAR},
-            </if>
             <if test="gfzj != null">
                 GFZJ = #{gfzj,jdbcType=VARCHAR},
             </if>
@@ -284,9 +260,7 @@
         GID = #{gid,jdbcType=INTEGER},
         GNAME = #{gname,jdbcType=VARCHAR},
         BZ = #{bz,jdbcType=VARCHAR},
-        BH = #{bh,jdbcType=VARCHAR},
         GFZJ = #{gfzj,jdbcType=VARCHAR},
-        DEPCODE = #{depcode,jdbcType=VARCHAR},
         DEPID = #{depid,jdbcType=VARCHAR}
         where DID = #{did,jdbcType=INTEGER}
     </update>

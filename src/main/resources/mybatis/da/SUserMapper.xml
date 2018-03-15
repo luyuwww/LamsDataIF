@@ -636,9 +636,6 @@
       YXZZRQ = #{yxzzrq,jdbcType=TIMESTAMP},
       MACINFO = #{macinfo,jdbcType=VARCHAR},
       CHECKMAC = #{checkmac,jdbcType=INTEGER},
-      ISEMPOWER = #{isempower,jdbcType=INTEGER},
-      FQJS = #{fqjs,jdbcType=VARCHAR},
-      MANAGEDEP = #{managedep,jdbcType=VARCHAR},
       MJ = #{mj,jdbcType=VARCHAR},
       ESBID = #{esbid,jdbcType=VARCHAR},
       ESBCODE = #{esbcode,jdbcType=VARCHAR}
@@ -658,17 +655,7 @@
       ADDR_H = #{addrH,jdbcType=VARCHAR},
       QQ = #{qq,jdbcType=VARCHAR},
       BZ = #{bz,jdbcType=VARCHAR},
-      ISLSYH = #{islsyh,jdbcType=INTEGER},
-      YXQSRQ = #{yxqsrq,jdbcType=TIMESTAMP},
-      YXZZRQ = #{yxzzrq,jdbcType=TIMESTAMP},
-      MACINFO = #{macinfo,jdbcType=VARCHAR},
-      CHECKMAC = #{checkmac,jdbcType=INTEGER},
-      ISEMPOWER = #{isempower,jdbcType=INTEGER},
-      FQJS = #{fqjs,jdbcType=VARCHAR},
-      MANAGEDEP = #{managedep,jdbcType=VARCHAR},
-      MJ = #{mj,jdbcType=VARCHAR},
-      INI = #{ini,jdbcType=BLOB},
-      INIXML = #{inixml,jdbcType=BLOB}
+
     where ESBID = #{esbid,jdbcType=VARCHAR}
   </update>
     <select id="listPageDFileByWhere" parameterType="map" resultMap="dFile">

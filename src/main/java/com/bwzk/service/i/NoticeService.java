@@ -20,4 +20,10 @@ public interface NoticeService {
      * 同步流程信息,并反向更新到lams
      */
     public void syncTaskInfo();
+
+    /**
+     * 同步流程数据
+     * @return
+     */
+    public String syncFLowBean();
 }

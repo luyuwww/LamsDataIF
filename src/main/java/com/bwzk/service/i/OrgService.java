@@ -9,7 +9,7 @@ public interface OrgService {
     /**
      * 同步用户和部门
      */
-    public void sync();
+    public String syncUserGroup();
     /**
      * 列出所有用户
      */

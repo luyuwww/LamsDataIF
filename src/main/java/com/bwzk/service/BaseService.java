@@ -904,7 +904,6 @@ public class BaseService {
             sgroup.setPid(pid);
             sgroup.setQzh(qzh);
             sgroup.setGfzj(gfzj);
-            sgroup.setDepcode(parent_org_no);
             sGroupMapper.insert(sgroup);
             result = "0";
             log.error("增加一个部门. " + gfzj);
@@ -1044,6 +1043,7 @@ public class BaseService {
     @Autowired
     @Value("${lams.dfile.status}")
     protected Integer status;//状态
+
 
     private String sysdate = null;
     private Logger log = (Logger) LoggerFactory.getLogger(this.getClass());

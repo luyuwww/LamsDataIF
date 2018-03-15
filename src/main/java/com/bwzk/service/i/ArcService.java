@@ -37,4 +37,6 @@ public interface ArcService {
     public String getLamsIP();
 
     public String syncDclassfy(Integer libcode);
+
+    public String syncOaData();
 }

@@ -1,6 +1,7 @@
 package com.bwzk.action;
 
 import ch.qos.logback.classic.Logger;
+import com.bwzk.service.i.ArcService;
 import com.bwzk.service.i.NoticeService;
 import com.bwzk.service.i.OrgService;
 import com.bwzk.util.GlobalFinalAttr;
@@ -169,6 +170,87 @@ public class CommonCtler {
     }
 
     /**
+     * 同步组织机构
+     */
+    @RequestMapping("/syncUserGroup")
+    public void syncUserGroup(HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            response.setContentType("text/html;charset=GBK ");
+            out = response.getWriter();
+            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+            out.println("<HTML>");
+            out.println("<BODY>");
+            out.println("<XMP>");
+            out.println(orgServiceImpl.syncUserGroup());
+            out.println("</XMP>");
+            out.println("</BODY>");
+            out.println("</HTML>");
+        } catch (Exception e) {
+            e.printStackTrace();
+            out.println("读取日志错误" + e.getMessage());
+            log.error("读取日志错误" + e.getMessage());
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
+
+
+    /**
+     * 同步OA数据
+     */
+    @RequestMapping("/syncOaData")
+    public void syncOaData(HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            response.setContentType("text/html;charset=GBK ");
+            out = response.getWriter();
+            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+            out.println("<HTML>");
+            out.println("<BODY>");
+            out.println("<XMP>");
+            out.println(arcServcieImpl.syncOaData());
+            out.println("</XMP>");
+            out.println("</BODY>");
+            out.println("</HTML>");
+        } catch (Exception e) {
+            out.println("读取日志错误" + e.getMessage());
+            log.error("读取日志错误" + e.getMessage());
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
+
+
+    /**
+     * 同步流程数据
+     */
+    @RequestMapping("/syncFlowData")
+    public void syncFlowData(HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            response.setContentType("text/html;charset=GBK ");
+            out = response.getWriter();
+            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+            out.println("<HTML>");
+            out.println("<BODY>");
+            out.println("<XMP>");
+            out.println(noticeServiceImpl.syncFLowBean());
+            out.println("</XMP>");
+            out.println("</BODY>");
+            out.println("</HTML>");
+        } catch (Exception e) {
+            out.println("读取日志错误" + e.getMessage());
+            log.error("读取日志错误" + e.getMessage());
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
+
+    /**
      * 内部调用 判断是否是允许用户 ture是的
      */
     private Boolean judgeSSO(String usercode, String token) {
@@ -180,6 +262,8 @@ public class CommonCtler {
     private OrgService orgServiceImpl;
     @Autowired
     private NoticeService noticeServiceImpl;
+    @Autowired
+    private ArcService arcServcieImpl;
     @Autowired
     @Value("${interface.log.home.address}")
     private String logHomeAdd;

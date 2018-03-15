@@ -307,7 +307,7 @@ public class BaseDataServiceImpl extends BaseService implements BaseDataService 
 				new IsExistDepOrUser().isDeptExist(group);
 				String deptQzh = getQzhByKey(orgPk);
 				SGroup parent = sGroupMapper.getGroupByGfzj(parentPk);
-				qzh = (deptQzh == null ? defaultDeptQzh : deptQzh);
+				qzh = (deptQzh == null ? defaultQzh : deptQzh);
 				pid = (parent == null ? defaultDeptPid : parent.getDid());
 				fields.append("did,pid,qzh,gfzj,depcode");
 				values.append(maxdid).append(",").append(pid).append(",'")
@@ -824,7 +824,7 @@ public class BaseDataServiceImpl extends BaseService implements BaseDataService 
 			} else {
 				String deptQzh = getQzhByKey(orgPk);
 				SGroup parent = sGroupMapper.getGroupByGfzj(parentPk);
-				qzh = (deptQzh == null ? defaultDeptQzh : deptQzh);
+				qzh = (deptQzh == null ? defaultQzh : deptQzh);
 				pid = (parent == null ? defaultDeptPid : parent.getDid());
 				fields.append("did,pid,qzh,gfzj,depcode");
 				values.append(maxdid).append(",").append(pid).append(",'")
@@ -1023,7 +1023,7 @@ public class BaseDataServiceImpl extends BaseService implements BaseDataService 
 				} else {
 					String deptQzh = getQzhByKey(orgPk);
 					SGroup parent = sGroupMapper.getGroupByGfzj(parentPk);
-					qzh = (deptQzh == null ? defaultDeptQzh : deptQzh);
+					qzh = (deptQzh == null ? defaultQzh : deptQzh);
 					pid = (parent == null ? defaultDeptPid : parent.getDid());
 					fields.append("did,pid,qzh,gfzj,depcode");
 					values.append(maxdid).append(",").append(pid).append(",'")
@@ -1230,7 +1230,7 @@ public class BaseDataServiceImpl extends BaseService implements BaseDataService 
 				} else {
 					String deptQzh = getQzhByKey(orgPk);
 					SGroup parent = sGroupMapper.getGroupByGfzj(parentPk);
-					qzh = (deptQzh == null ? defaultDeptQzh : deptQzh);
+					qzh = (deptQzh == null ? defaultQzh : deptQzh);
 					pid = (parent == null ? defaultDeptPid : parent.getDid());
 					fields.append("did,pid,qzh,gfzj,depcode");
 					values.append(maxdid).append(",").append(pid).append(",'")

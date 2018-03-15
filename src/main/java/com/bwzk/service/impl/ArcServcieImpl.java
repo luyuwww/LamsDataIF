@@ -2,13 +2,14 @@ package com.bwzk.service.impl;
 
 import ch.qos.logback.classic.Logger;
 import com.bwzk.dao.JdbcDao;
-import com.bwzk.dao.i.SGroupMapper;
-import com.bwzk.dao.i.SUserMapper;
-import com.bwzk.dao.i.SUserroleMapper;
+import com.bwzk.dao.i.da.SGroupMapper;
+import com.bwzk.dao.i.da.SUserMapper;
+import com.bwzk.dao.i.da.SUserroleMapper;
 import com.bwzk.pojo.DClassifyZjk;
 import com.bwzk.pojo.SUser;
 import com.bwzk.service.BaseService;
 import com.bwzk.service.i.ArcService;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
     public String getLamsIP() {
         return super.getLamsIP();
     }
+
     public String syncDclassfy(Integer libcode){
         String msg = "";
         Integer num = 0;
@@ -79,6 +81,11 @@ public class ArcServcieImpl extends BaseService implements ArcService {
         }else{
             msg = "同步事变:中间库中该类型的分类为空";
         }
+        return msg;
+    }
+
+    public String syncOaData(){
+        String msg = "OA data ok 好的";
         return msg;
     }
 
