@@ -1030,6 +1030,14 @@ public class BaseService {
     @Value("${default.dept.pid}")
     protected Integer defaultDeptPid;
 
+    /**
+     * 默认密码
+     */
+    @Autowired
+    @Value("${default.user.password}")
+    protected String defaultPasswd;
+
+
     @Autowired
     @Value("${lams.dfile.attrex}")
     protected Integer attrex;// 移交接收状态

@@ -166,7 +166,6 @@ public class OrgServcieImpl extends BaseService implements OrgService {
     private Boolean dualUser(OaUser oaUser){
         Boolean result = Boolean.FALSE;
         //esbid放用户主键 esbcode 放 dep_部门主键
-
         String esbid = oaUser.getId();//oaid
         String depid = "dep_"+oaUser.getDepartmentid();//oapid
         SUser user = sUserMapper.getUserByEsbid(esbid);
@@ -178,6 +177,7 @@ public class OrgServcieImpl extends BaseService implements OrgService {
             Integer pid = (parent == null ? defaultDeptPid : parent.getDid());
             ssuser.setDid(maxdid);
             ssuser.setPid(pid);
+            ssuser.setPasswd(defaultPasswd);
             ssuser.setUsercode(oaUser.getLoginid());
             ssuser.setUsername(oaUser.getLastname());
             ssuser.setEmail(oaUser.getEmail());
@@ -190,7 +190,6 @@ public class OrgServcieImpl extends BaseService implements OrgService {
             userrole.setJsid(jsid);
             sUserroleMapper.insert(userrole);
             log.error("用户:" + esbid + " 关联角色");
-
             result = Boolean.TRUE;
             log.error("增加一个用户. " + ssuser.getUsercode()+":"+ssuser.getUsername());
         }else{
@@ -206,7 +205,7 @@ public class OrgServcieImpl extends BaseService implements OrgService {
                 user.setEmail(oaUser.getEmail());
                 user.setEsbid(esbid);
                 user.setEsbcode(depid);
-                sUserMapper.updateByPrimaryKey(user);
+                sUserMapper.updateByPrimaryKeySelectivenoblob(user);
                 result = Boolean.TRUE;
                 log.error(user.getUsername() + "更新一个用户.");
             }

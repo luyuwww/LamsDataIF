@@ -586,6 +586,61 @@
         </set>
         where DID = #{did,jdbcType=INTEGER}
     </update>
+
+    <update id="updateByPrimaryKeySelectivenoblob" parameterType="com.bwzk.pojo.SUser">
+        update S_USER
+        <set>
+            <if test="pid != null">
+                PID = #{pid,jdbcType=INTEGER},
+            </if>
+            <if test="usercode != null">
+                USERCODE = #{usercode,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                USERNAME = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="passwd != null">
+                PASSWD = #{passwd,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                EMAIL = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="telO != null">
+                TEL_O = #{telO,jdbcType=VARCHAR},
+            </if>
+            <if test="telH != null">
+                TEL_H = #{telH,jdbcType=VARCHAR},
+            </if>
+            <if test="telM != null">
+                TEL_M = #{telM,jdbcType=VARCHAR},
+            </if>
+            <if test="card != null">
+                CARD = #{card,jdbcType=VARCHAR},
+            </if>
+            <if test="addrO != null">
+                ADDR_O = #{addrO,jdbcType=VARCHAR},
+            </if>
+            <if test="addrH != null">
+                ADDR_H = #{addrH,jdbcType=VARCHAR},
+            </if>
+            <if test="qq != null">
+                QQ = #{qq,jdbcType=VARCHAR},
+            </if>
+            <if test="bz != null">
+                BZ = #{bz,jdbcType=VARCHAR},
+            </if>
+            <if test="islsyh != null">
+                ISLSYH = #{islsyh,jdbcType=INTEGER},
+            </if>
+            <if test="esbid != null">
+                ESBID = #{esbid,jdbcType=VARCHAR},
+            </if>
+            <if test="esbcode != null">
+                ESBCODE = #{esbcode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where DID = #{did,jdbcType=INTEGER}
+    </update>
     <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bwzk.pojo.SUserWithBLOBs">
     update S_USER
     set PID = #{pid,jdbcType=INTEGER},

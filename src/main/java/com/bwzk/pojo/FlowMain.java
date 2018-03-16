@@ -12,15 +12,15 @@ public class FlowMain implements Serializable {
 
     private String applyauth;
 
-    private String applytype;
+    private Integer applytype;
 
     private Integer applytimes;
 
-    private Date stardate;
+    private String stardate;
 
-    private Date enddate;
+    private String enddate;
 
-    private Date requesttime;
+    private String requesttime;
 
     private String userid;
 
@@ -72,12 +72,12 @@ public class FlowMain implements Serializable {
         this.applyauth = applyauth == null ? null : applyauth.trim();
     }
 
-    public String getApplytype() {
+    public Integer getApplytype() {
         return applytype;
     }
 
-    public void setApplytype(String applytype) {
-        this.applytype = applytype == null ? null : applytype.trim();
+    public void setApplytype(Integer applytype) {
+        this.applytype = applytype == null ? null : applytype;
     }
 
     public Integer getApplytimes() {
@@ -88,27 +88,27 @@ public class FlowMain implements Serializable {
         this.applytimes = applytimes;
     }
 
-    public Date getStardate() {
+    public String getStardate() {
         return stardate;
     }
 
-    public void setStardate(Date stardate) {
+    public void setStardate(String stardate) {
         this.stardate = stardate;
     }
 
-    public Date getEnddate() {
+    public String getEnddate() {
         return enddate;
     }
 
-    public void setEnddate(Date enddate) {
+    public void setEnddate(String enddate) {
         this.enddate = enddate;
     }
 
-    public Date getRequesttime() {
+    public String getRequesttime() {
         return requesttime;
     }
 
-    public void setRequesttime(Date requesttime) {
+    public void setRequesttime(String requesttime) {
         this.requesttime = requesttime;
     }
 

@@ -237,7 +237,8 @@ public class CommonCtler {
             out.println("<HTML>");
             out.println("<BODY>");
             out.println("<XMP>");
-            out.println(noticeServiceImpl.syncFLowBean());
+            out.println("进行一次流程同步");
+            noticeServiceImpl.syncTaskInfo();
             out.println("</XMP>");
             out.println("</BODY>");
             out.println("</HTML>");

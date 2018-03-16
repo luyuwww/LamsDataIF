@@ -35,6 +35,8 @@ public interface SUserMapper extends BaseDao4DA {
 
     int updateByPrimaryKeySelective(SUserWithBLOBs record);
 
+    int updateByPrimaryKeySelectivenoblob(SUser record);
+
     int updateByPrimaryKeyWithBLOBs(SUserWithBLOBs record);
 
     int updateByPrimaryKey(SUser record);

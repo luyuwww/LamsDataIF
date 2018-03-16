@@ -11,7 +11,8 @@ import com.bwzk.pojo.FlowMainExample;
 import com.bwzk.pojo.SUser;
 import com.bwzk.service.BaseService;
 import com.bwzk.service.i.NoticeService;
-import org.apache.commons.io.FileUtils;
+import com.bwzk.util.GlobalFinalAttr;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -29,7 +30,6 @@ import org.springframework.core.io.support.EncodedResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -41,12 +41,18 @@ import java.util.Map;
 public class NoticeServiceImpl extends BaseService implements NoticeService {
 
     public void sendActivitiMsg(String userCodes, String varsJson, String actTaskID) {
-        System.out.println(actTaskID + "  ::::");
         String sqrbm = "";
+        String lymd = "";
         String sqrdm = "";
         String sqrxm = "";
         String sqyy = "";
         String sqtype = "";
+        String lylx = "";
+        Integer lylxNum = 1;//默认时间段
+        Integer times = 0;
+        String starTime = "";
+        String endTime = "";
+        String requestTime = "";
         String mj = "";
         SUser user = null;
 
@@ -56,42 +62,73 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
             String[] userCodeList = StringUtils.split(userCodes, "[,]");
             vars = mapper.readValue(varsJson, Map.class);
             sqrxm = (vars.get("sqrxm") == null ? "" : vars.get("sqrxm").toString());
+            lymd = (vars.get("lymd") == null ? "" : vars.get("lymd").toString());
             sqrdm = (vars.get("sqrdm") == null ? "" : vars.get("sqrdm").toString());
             sqrbm = (vars.get("sqrbm") == null ? "" : vars.get("sqrbm").toString());
             sqyy = (vars.get("sqyy") == null ? "" : vars.get("sqyy").toString());
             sqtype = (vars.get("sqtype") == null ? "" : vars.get("sqtype").toString());
+
+            lylx = (vars.get("timeortimes") == null ? "" : vars.get("timeortimes").toString());
+            requestTime = (vars.get("sqrq") == null ? "" : vars.get("sqrq").toString());
+            if (lylx.equals("次数")) {
+                lylxNum = 0;
+                times = MapUtils.getInteger(vars, "times");
+            } else {
+                starTime = (vars.get("startime") == null ? "" : vars.get("startime").toString());
+                endTime = (vars.get("endtime") == null ? "" : vars.get("endtime").toString());
+            }
+
             mj = (vars.get("mj") == null ? "" : vars.get("mj").toString());
+            List<Map<String, Object>> dataList = (List<Map<String, Object>>) vars.get("dataList");
 
-
-            //写流程包
-
-
-
-
-
-
-
+            if (null == dataList || dataList.size() < 1) {
+                log.error("档案系统发送了错误数.dataList为空");
+                return;
+            }
             for (String userCode : userCodeList) {
-                user = sUserMapper.getUserByUsercode(userCode);
-                if (user != null) {
-                    String url = "http://" + lamsIP + "/LamsIFSS/gotoTask";
-                    String content = msgVM;
-                    String todoTitle = sendInfoTitle;
+                SUser sqrUser = sUserMapper.getUserByUsercode(sqrdm);
+                if (sqrUser != null) {
+                    FlowMain fm = new FlowMain();
+                    fm.setId(GlobalFinalAttr.getGuid());
+                    fm.setFid(actTaskID);
+                    fm.setTitle(sqrxm + "[" + sqrbm + "]" + " 提交的" + sqtype + "申请");
+                    fm.setApplyauth(sqtype);
+                    fm.setApplytype(lylxNum);
+                    fm.setApplytimes(times);
+                    fm.setStardate(starTime);
+                    fm.setEnddate(endTime);
+                    fm.setRequesttime(requestTime);
+                    fm.setUserid(sqrUser.getEsbid());//oa用户主键
+                    fm.setUsercode(sqrUser.getUsercode());
+                    fm.setUsername(sqrUser.getUsername());
+                    fm.setMemo(lymd + ":" + sqyy);
 
-                    todoTitle = todoTitle.replace("@sqrUsername", sqrxm);
-                    todoTitle = todoTitle.replace("@sqtype", sqtype);
+                    fm.setStatus(0);//0:有效   1:过期或者失效
+                    fm.setResult(0);//0:未处理(OA没有处理) 1:同意利用  2:否决利用
+                    flowMainMapper.insert(fm);
 
-                    content = content.replace("@sqrGroupName", sqrbm);
-                    content = content.replace("@sqrUsername", sqrxm);
-                    content = content.replace("@sqyy", sqyy);
-                    content = content.replace("@sqtype", sqtype);
-                    content = content.replace("@itemMJ", mj);
-                    content = content.replace("@fqrUsername", user.getUsername());
-                    content = content.replace("@gotoLamsUrl", url);
-                    System.out.println(content);
+                    for (Map<String, Object> map : dataList) {
+                        Integer libcode = MapUtils.getInteger(map, "DALXLIBCODE");
+                        Integer level = MapUtils.getInteger(map, "DALXLEVEL");
+                        Integer itemDid = MapUtils.getInteger(map, "DID");
+                        String itemTbName = GlobalFinalAttr.getTableNameByParam(libcode, level);
+                        String itemMj = (map.get("MJ") == null ? "" : map.get("MJ").toString());
+                        String bgqx = (map.get("BGQX") == null ? "" : map.get("BGQX").toString());
+                        String keyword = (map.get("KEYWORD") == null ? "" : map.get("KEYWORD").toString());
+                        String title = (map.get("TITLE") == null ? "" : map.get("TITLE").toString());
 
-//                    sendMsg2Lams("http://" + lamsIP + "/Lams/activiti/completeTask",
-//                            taskId, sw.toString(), Boolean.FALSE.toString());
+                        FlowDataItem item = new FlowDataItem();
+                        item.setId(GlobalFinalAttr.getGuid());
+                        item.setPid(fm.getId());
+
+                        item.setTablename(itemTbName);
+                        item.setKeyword(keyword);
+                        item.setTitle(title);
+                        item.setMj(itemMj);
+                        item.setBgqx(bgqx);
+                        item.setArcid(itemDid);
+                        flowDataItemMapper.insert(item);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -99,15 +136,21 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
         }
     }
 
-    public void syncTaskInfo(){
+    public void syncTaskInfo() {
         FlowMainExample fEx = new FlowMainExample();
-        fEx.createCriteria().andStatusEqualTo(0).andResultNotEqualTo(0);
+        fEx.createCriteria().andResultNotEqualTo(0);
         List<FlowMain> flowMainList = flowMainMapper.selectByExample(fEx);
-        for (FlowMain flowMain : flowMainList) {
-            //todo 发送
-            //得到结果 反写状态
-            //失败 记录入职 status 写 2
-            // 成功 result写1
+        for (FlowMain fm : flowMainList) {
+            fm.setStatus(2);
+            try {
+                if(receiveMsg(fm.getFid() , fm.getResult() , fm.getMsg())){
+                    fm.setStatus(1);
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage() , e);
+                e.printStackTrace();
+            }
+            flowMainMapper.updateByPrimaryKeySelective(fm);
         }
     }
 
@@ -133,7 +176,7 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
      * @return
      */
     private Integer sendMsg2Lams(String url, String taskId, String varsJson,
-                            String cancelSubmit) {
+                                 String cancelSubmit) {
         HttpPost post = null;
         HttpClient client = null;
         Integer status = 0;
@@ -157,45 +200,34 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
     }
 
 
-    private String receiveMsg(String taskId, String status, String borrowsStatus) {
-        try {
-            File tempFIle = new File("c:/" + System.currentTimeMillis());
-            FileUtils.writeStringToFile(tempFIle, taskId, true);
-            FileUtils.writeStringToFile(tempFIle, status, true);
-            FileUtils.writeStringToFile(tempFIle, borrowsStatus, true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        String wsRslt = "1";
+    /**
+     * 接收Oa流程发来的参数
+     * 0:未处理(OA没有处理) 1:同意利用  2:否决利用
+     *
+     * @param taskId
+     * @param status
+     * @return
+     */
+    protected Boolean receiveMsg(String taskId, Integer result, String spyj) {
+        Boolean wsRslt = Boolean.FALSE;
         Map<String, Object> map = null;
-        if (StringUtils.isNotBlank(taskId) && StringUtils.isNotBlank(status)) {
-            map = new HashMap<String, Object>();
-            map.put("OutSystemFqrCode", "ROOT");
-            map.put("spjg",
-                    status.contains("true") || status.contains("成功") ? "true"
-                            : "false");
-            try {
-                ObjectMapper mapper = new ObjectMapper();
-                StringWriter sw = new StringWriter();
-                mapper.writeValue(sw, map);
-                // http://localhost/Lams/activiti/completeTask
-                sendMsg2Lams("http://" + lamsIP + "/Lams/activiti/completeTask",
-                        taskId, sw.toString(), Boolean.FALSE.toString());
-                System.out.println("call lams.activiti status: " + status);
-                wsRslt = "0";
-            } catch (Exception e) {
-                log.error(e.getMessage());
-                wsRslt = wsRslt + "[" + e.getMessage() + "]";
-            }
-        } else {
-            wsRslt = wsRslt + "[taskid 或者 result为空]";
+        map = new HashMap<String, Object>();
+        map.put("OutSystemFqrCode", "ROOT");
+        map.put("spjg", result.equals(1) ? "true" : "false");//1:同意利用  2:否决利用
+        map.put("spyj", spyj);//审批意见
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            StringWriter sw = new StringWriter();
+            mapper.writeValue(sw, map);
+            // http://localhost/Lams/activiti/completeTask
+            sendMsg2Lams("http://" + lamsIP + "/Lams/activiti/completeTask",
+                    taskId, sw.toString(), Boolean.FALSE.toString());
+            System.out.println("call lams.activiti status: " + status);
+            wsRslt = Boolean.TRUE;
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
         return wsRslt;
-    }
-
-    public String syncFLowBean(){
-        String msg = "flow info ok 好的";
-        return msg;
     }
 
     private String msgVM;
