@@ -165,7 +165,7 @@ public class OrgServcieImpl extends BaseService implements OrgService {
 
     private Boolean dualUser(OaUser oaUser){
         Boolean result = Boolean.FALSE;
-        //OA主键 gfzj放id  depid放supsubcomid/
+        //esbid放用户主键 esbcode 放 dep_部门主键
 
         String esbid = oaUser.getId();//oaid
         String depid = "dep_"+oaUser.getDepartmentid();//oapid
