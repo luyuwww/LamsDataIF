@@ -210,7 +210,7 @@ public class CommonCtler {
             out.println("<HTML>");
             out.println("<BODY>");
             out.println("<XMP>");
-            out.println(arcServcieImpl.syncOaData());
+            out.println("接受了 "+arcServcieImpl.syncOaData()+" 条数据");
             out.println("</XMP>");
             out.println("</BODY>");
             out.println("</HTML>");

@@ -91,7 +91,9 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
                     FlowMain fm = new FlowMain();
                     fm.setId(GlobalFinalAttr.getGuid());
                     fm.setFid(actTaskID);
-                    fm.setTitle(sqrxm + "[" + sqrbm + "]" + " 提交的" + sqtype + "申请");
+                    // @sqrxm(@sqrbm)提交的档案@sqtype的申请
+                    fm.setTitle(sendInfoTitle.replace("@sqrxm" , sqrxm).replace("@sqrbm" , sqrbm)
+                            .replace("@sqtype" , sqtype));
                     fm.setApplyauth(sqtype);
                     fm.setApplytype(lylxNum);
                     fm.setApplytimes(times);
@@ -136,9 +138,12 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
         }
     }
 
+    /**
+     * 将结果流程审批结果同步到lams
+     */
     public void syncTaskInfo() {
         FlowMainExample fEx = new FlowMainExample();
-        fEx.createCriteria().andResultNotEqualTo(0);
+        fEx.createCriteria().andStatusEqualTo(0).andResultNotEqualTo(0);
         List<FlowMain> flowMainList = flowMainMapper.selectByExample(fEx);
         for (FlowMain fm : flowMainList) {
             fm.setStatus(2);
