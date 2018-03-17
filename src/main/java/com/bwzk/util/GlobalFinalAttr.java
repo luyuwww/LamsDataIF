@@ -411,6 +411,7 @@ public class GlobalFinalAttr implements Serializable {
      * @author izerui
      */
     public enum DatabaseType {
+
         ORACLE(0), SQLSERVER(1), MYSQL(2), DB2(3), H2(4);
 
         private int value;
@@ -489,6 +490,10 @@ public class GlobalFinalAttr implements Serializable {
                     break;
             }
             return map.get(property);
+        }
+
+        public String getDateByDb(){
+            return getDatabaseAttribute(sysdatetype);
         }
 
         public String getInstrFunction(String field, String fieldvalue) {

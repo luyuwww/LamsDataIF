@@ -113,9 +113,6 @@ public class EFile implements java.io.Serializable {
     }
 
     public String getPathname() {
-        if (StringUtils.isNotEmpty(pathname) && (!this.pathname.startsWith(File.separator) && !this.pathname.endsWith(File.separator))) {
-            return File.separator + this.pathname + File.separator;
-        }
         return this.pathname;
     }
 

@@ -4,6 +4,8 @@ package com.bwzk.junit;/**
 
 import com.bwzk.dao.i.da.FlowDataItemMapper;
 import com.bwzk.dao.i.da.FlowMainMapper;
+import com.bwzk.dao.i.da.SUserMapper;
+import com.bwzk.page.PageContext;
 import com.bwzk.pojo.FlowDataItem;
 import com.bwzk.pojo.FlowMain;
 import org.junit.Test;
@@ -12,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -22,10 +27,7 @@ import java.util.UUID;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath*:spring/test*.xml"})
 public class TestFlow {
-    @Autowired
-    FlowMainMapper flowMainMapper;
-    @Autowired
-    FlowDataItemMapper flowDataItemMapper;
+
     @Test
     public void test() throws Exception {
         FlowMain fm = new FlowMain();
@@ -77,4 +79,28 @@ public class TestFlow {
     public void testuuid(){
         System.out.println( UUID.randomUUID().toString());
     }
+
+    @Test
+    public void testFy(){
+        PageContext page = PageContext.getContext();
+
+        page.setCurrentPage(1);
+        page.setPageSize(12);
+        page.setPagination(true);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("page", page);
+        map.put("sql", "select * from s_user order by did");
+        List<Map<String, Object>> mapList = sUserMapper.listPageMapQuery(map);
+        Integer step = 1;
+        for (Map<String, Object> ob : mapList) {
+            System.out.println(step++ +"   " + ob.get("DID")+" : "+ ob.get("USERNAME"));
+        }
+    }
+
+    @Autowired
+    FlowMainMapper flowMainMapper;
+    @Autowired
+    FlowDataItemMapper flowDataItemMapper;
+    @Autowired
+    SUserMapper sUserMapper;
 }
