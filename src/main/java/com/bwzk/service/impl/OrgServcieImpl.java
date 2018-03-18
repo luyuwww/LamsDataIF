@@ -11,9 +11,8 @@ import com.bwzk.dao.i.oa.OaUserMapper;
 import com.bwzk.pojo.*;
 import com.bwzk.service.BaseService;
 import com.bwzk.service.i.OrgService;
-import com.bwzk.util.IsExistDepOrUser;
+import com.bwzk.util.CommonUtil;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,8 +51,19 @@ public class OrgServcieImpl extends BaseService implements OrgService {
         for (OaUser oaUser : oaUserLsit) {
             dualUser(oaUser);
         }
+        syncActivitUser();
         msg = "用户同步成功.";
         return msg;
+    }
+
+    private void syncActivitUser(){
+        String urlStr = "http://"+lamsIP+"/Lams/activiti/syn";
+        try {
+            CommonUtil.doHttpGet(urlStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("流程同步用户部门错误");
+        }
     }
 
     private Logger log = (Logger) LoggerFactory.getLogger(this.getClass());
@@ -149,7 +159,8 @@ public class OrgServcieImpl extends BaseService implements OrgService {
                 log.error("没有改变. " + gfzj);
                 result = Boolean.TRUE;
             }else{
-                SGroup parent = sGroupMapper.getGroupByGfzj(depid);
+                SGroup parent = oaDep.getSupdepid().equals("0") ?
+                        sGroupMapper.getGroupByGfzj("org_"+oaDep.getSubcompanyid1()) : sGroupMapper.getGroupByGfzj(depid);
                 Integer pid = (parent == null ? defaultDeptPid : parent.getDid());
                 daDep.setPid(pid);
                 daDep.setGname(oaDep.getDepartmentname());
@@ -185,6 +196,11 @@ public class OrgServcieImpl extends BaseService implements OrgService {
             ssuser.setEsbcode(depid);
             sUserMapper.insert(ssuser);
             SUserrole userrole = new SUserrole();
+            //Param("dTableName") String dTableName, @Param("whereSql") String whereSql);
+            Integer jsNum =  sUserMapper.countNumByWhere("S_USERROLE" , " YHID = "+ maxdid);
+            if( jsNum > 0){
+                execSql("DELETE FROM S_USERROLE WHERE YHID="+maxdid);
+            }
             userrole.setDid(getMaxDid("S_USERROLE"));
             userrole.setYhid(maxdid);
             userrole.setJsid(jsid);

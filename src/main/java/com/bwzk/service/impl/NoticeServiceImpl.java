@@ -41,6 +41,10 @@ import java.util.Map;
 public class NoticeServiceImpl extends BaseService implements NoticeService {
 
     public void sendActivitiMsg(String userCodes, String varsJson, String actTaskID) {
+
+        if(isDebug){
+            log.error(varsJson);
+        }
         String sqrbm = "";
         String lymd = "";
         String sqrdm = "";
@@ -249,5 +253,10 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
     @Autowired
     @Value("${sendinfo.todo.title}")
     private String sendInfoTitle;
+    @Autowired
+    @Value("${lams.flow.debug}")
+    private Boolean isDebug;
+
+
     private Logger log = (Logger) LoggerFactory.getLogger(this.getClass());
 }
