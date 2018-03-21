@@ -77,7 +77,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from oa_users_hr_ryxx
+    from hr_ryxx
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -86,13 +86,13 @@
     </if>
   </select>
   <delete id="deleteByExample" parameterType="com.bwzk.pojo.OaUserExample" >
-    delete from oa_users_hr_ryxx
+    delete from hr_ryxx
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.bwzk.pojo.OaUser" >
-    insert into oa_users_hr_ryxx (loginid, lastname, email, 
+    insert into hr_ryxx (loginid, lastname, email, 
       departmentid, subcompanyid1, status, 
       id)
     values (#{loginid,jdbcType=VARCHAR}, #{lastname,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
@@ -100,7 +100,7 @@
       #{id,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.bwzk.pojo.OaUser" >
-    insert into oa_users_hr_ryxx
+    insert into hr_ryxx
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="loginid != null" >
         loginid,
@@ -149,13 +149,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.bwzk.pojo.OaUserExample" resultType="java.lang.Integer" >
-    select count(*) from oa_users_hr_ryxx
+    select count(*) from hr_ryxx
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update oa_users_hr_ryxx
+    update hr_ryxx
     <set >
       <if test="record.loginid != null" >
         loginid = #{record.loginid,jdbcType=VARCHAR},
@@ -184,7 +184,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update oa_users_hr_ryxx
+    update hr_ryxx
     set loginid = #{record.loginid,jdbcType=VARCHAR},
       lastname = #{record.lastname,jdbcType=VARCHAR},
       email = #{record.email,jdbcType=VARCHAR},

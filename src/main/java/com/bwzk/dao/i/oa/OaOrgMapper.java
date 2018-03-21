@@ -25,9 +25,9 @@ public interface OaOrgMapper extends BaseDao4OA {
 
     int updateByExample(@Param("record") OaOrg record, @Param("example") OaOrgExample example);
 
-    @Select("SELECT * FROM OA_ORG_HR_FBXX ORDER BY SUPSUBCOMID")
+    @Select("SELECT * FROM HR_FBXX ORDER BY SUPSUBCOMID")
     List<OaOrg> listOrg();
 
-    @Select("SELECT * FROM OA_DEP_HR_BMXX ORDER BY SUPDEPID")
+    @Select("SELECT * FROM HR_BMXX ORDER BY SUPDEPID")
     List<OaDep> listDept();
 }

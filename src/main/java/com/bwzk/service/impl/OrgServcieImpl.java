@@ -13,6 +13,7 @@ import com.bwzk.service.BaseService;
 import com.bwzk.service.i.OrgService;
 import com.bwzk.util.CommonUtil;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -178,9 +179,20 @@ public class OrgServcieImpl extends BaseService implements OrgService {
         Boolean result = Boolean.FALSE;
         //esbid放用户主键 esbcode 放 dep_部门主键
         String esbid = oaUser.getId();//oaid
+        if(StringUtils.isBlank(oaUser.getLoginid())){
+            log.error("用户:" + oaUser.getLastname() + " loginid null 忽略同步");
+            return false;
+        }
+
+
+
         String depid = "dep_"+oaUser.getDepartmentid();//oapid
         SUser user = sUserMapper.getUserByEsbid(esbid);
         if(null == user){
+            if(null != sUserMapper.getUserBlobUsercode(oaUser.getLoginid())){
+                log.error("用户:" + oaUser.getLoginid() + " 用户已经存在 忽略同步");
+                return false;
+            }
             SUserWithBLOBs ssuser = new SUserWithBLOBs();
             Integer maxdid = getMaxDid("S_USER");
             

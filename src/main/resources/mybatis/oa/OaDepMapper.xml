@@ -74,7 +74,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from oa_dep_hr_bmxx
+    from hr_bmxx
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -83,19 +83,19 @@
     </if>
   </select>
   <delete id="deleteByExample" parameterType="com.bwzk.pojo.OaDepExample" >
-    delete from oa_dep_hr_bmxx
+    delete from hr_bmxx
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.bwzk.pojo.OaDep" >
-    insert into oa_dep_hr_bmxx (id, departmentname, supdepid, 
+    insert into hr_bmxx (id, departmentname, supdepid, 
       subcompanyid1)
     values (#{id,jdbcType=VARCHAR}, #{departmentname,jdbcType=VARCHAR}, #{supdepid,jdbcType=VARCHAR}, 
       #{subcompanyid1,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.bwzk.pojo.OaDep" >
-    insert into oa_dep_hr_bmxx
+    insert into hr_bmxx
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -126,13 +126,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.bwzk.pojo.OaDepExample" resultType="java.lang.Integer" >
-    select count(*) from oa_dep_hr_bmxx
+    select count(*) from hr_bmxx
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update oa_dep_hr_bmxx
+    update hr_bmxx
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=VARCHAR},
@@ -152,7 +152,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update oa_dep_hr_bmxx
+    update hr_bmxx
     set id = #{record.id,jdbcType=VARCHAR},
       departmentname = #{record.departmentname,jdbcType=VARCHAR},
       supdepid = #{record.supdepid,jdbcType=VARCHAR},
