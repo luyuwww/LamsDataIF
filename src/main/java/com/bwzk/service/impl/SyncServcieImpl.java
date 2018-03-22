@@ -139,14 +139,12 @@ public class SyncServcieImpl extends BaseService implements SyncService {
                 AddItem ai = JSON.parseObject(popMsg.getMessageBody() , AddItem.class);
                 if(StringUtils.isNotBlank(ai.getITEM().getDIRID()) &&
                         StringUtils.isNotBlank(ai.getITEM().getCUSTID())){
-                    log.error("custid or dirid is null");
-
                     String judgeDfileSql = "SELECT DID FROM D_FILE" + ai.getITEM().getLIBCODE()
                             + " WHERE CUSTID='"+ai.getITEM().getCUSTID()+ "' AND DIRID='"
                             + ai.getITEM().getDIRID()+"' AND STATUS=0 AND FILETYPE='"
                             + ai.getITEM().getFILETYPE() + "'";
                     List<Integer> dfileList = jdbcDao.query4List(judgeDfileSql , Integer.class);
-                    if(dfileList.size() > 0){//文件存在 好办了 直接关联
+                    if(dfileList.size() > 0){//文件存在 好办了 直接插入EFILE关联
                         //插入Efile  dfile.did
                         insertEfileByAi(ai ,  dfileList.get(0));
                     }else{//不存在文件 需要穿件文件
@@ -167,6 +165,8 @@ public class SyncServcieImpl extends BaseService implements SyncService {
                             insertEfileByAi(ai , dFileDid);
                         }
                     }
+                }else{
+                    log.error("custid or dirid is null");
                 }
                 System.out.println(ai.getITEM().getEFILENAME());
                 //queue.deleteMessage(popMsg.getReceiptHandle());
@@ -254,6 +254,11 @@ public class SyncServcieImpl extends BaseService implements SyncService {
     private Integer insertDvolByAi(AddItem ai){
         String tbname = "D_VOL" + ai.getITEM().getLIBCODE();
         Integer voldid = getMaxDid(tbname);
+        String sql = "INSERT INTO "+tbname +"(DID,PID,STATUS,ATTR,ATTREX,QZH,BMID,KEYWORD,DIRID) VALUES("
+                + voldid +", -1, 0 , "+ai.getITEM().getATTR()+","+attrex+",'"+qzh+"','"+qzh+"','"
+                + ai.getITEM().getCUSTID() + "','" + ai.getITEM().getDIRID()+"'";
+        System.out.println(sql);
+        execSql(sql);
         return voldid;
     }
 
@@ -266,6 +271,11 @@ public class SyncServcieImpl extends BaseService implements SyncService {
     private Integer insertDfileByAi(AddItem ai , Integer volDid){
         String tbname = "D_FILE" + ai.getITEM().getLIBCODE();
         Integer fileDid = getMaxDid(tbname);
+        String sql = "INSERT INTO "+tbname +"(DID,PID,ATTACHED,STATUS,ATTR,ATTREX,QZH,BMID,KEYWORD,DIRID,FILETYPE) VALUES("
+                + fileDid +", "+volDid+",1, 0 , "+ai.getITEM().getATTR()+","+attrex+",'"+qzh+"','"+qzh+"','"
+                + ai.getITEM().getCUSTID() + "','" + ai.getITEM().getDIRID()+"','" + ai.getITEM().getFILETYPE()+"'";
+        System.out.println(sql);
+        execSql(sql);
         return  fileDid;
     }
 
@@ -278,6 +288,18 @@ public class SyncServcieImpl extends BaseService implements SyncService {
     private Integer insertEfileByAi(AddItem ai , Integer fileDid){
         String tbname = "E_FILE" + ai.getITEM().getLIBCODE();
         Integer eFileDid = getMaxDid(tbname);
+        EFile efile = new EFile();
+        efile.setDid(eFileDid);
+        efile.setPid(fileDid);
+        efile.setTitle(ai.getITEM().getTITLE());
+        efile.setEfilename(FilenameUtils.getBaseName(ai.getITEM().getEFILENAME()));
+        efile.setPathname(ai.getITEM().getEFILENAME().replace(efile.getEfilename(),""));
+        efile.setPzm(ai.getITEM().getPZM());
+        efile.setExt(ai.getITEM().getEXT());
+        efile.setBbh("ADD");
+        efile.setMd5(ai.getITEM().getMD5());
+        efile.setCreator(ai.getITEM().getCREATOR());
+        super.insertEfile(tbname , efile);
         return  eFileDid;
     }
 
@@ -321,6 +343,15 @@ public class SyncServcieImpl extends BaseService implements SyncService {
     @Autowired
     @Value("${lams.sync2queue.libcodes}")
     protected String syncLibcodes;
+
+
+    @Autowired
+    @Value("${lams.default.qzh}")
+    protected String qzh;
+
+    @Autowired
+    @Value("${lams.dfile.attrex}")
+    protected Integer attrex;
 
     private Logger log = (Logger) LoggerFactory.getLogger(this.getClass());
 }
