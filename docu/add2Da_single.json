@@ -1,0 +1,19 @@
+{
+  ITEM: {
+    "LIBCODE": 2,
+    "DIRID": 12,
+    "CUSTID": "用户编号",
+    "CUSTCARD": "身份证号码",
+    "CUSTNAME": "刘某某",
+    "FILETYPE": "身份证/户口本/个人简历/最好有一个和中文对应的编号",
+    "EFILENAME": "/system1/2018/03/06/a3d0cc5d-c797-4aa6-9db2-589431b718f6.jpg也就是OSSkey",
+    "TITLE": "身份证A面",
+    "EXT": "jpg",
+    "PZM": "一个固定字符串,         开发的时候确认",
+    "ATTR": "0/1一个固定值,         方便扩展",
+    "MD5": "d0eb922766f4a7e28a17f49ae0fad6d5",
+    "CREATOR": "文档上传人,建议 usercode/username",
+    "OPERTIME": "2017-05-07 22:48:05",
+    "FILESIZE": 12423482
+  }
+}
