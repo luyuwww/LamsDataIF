@@ -2,7 +2,7 @@ package com.bwzk.action;
 
 import ch.qos.logback.classic.Logger;
 import com.bwzk.service.i.ArcService;
-import com.bwzk.service.i.NoticeService;
+import com.bwzk.service.i.SyncService;
 import com.bwzk.util.GlobalFinalAttr;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -133,20 +133,10 @@ public class CommonCtler {
 
 
     /**
-     * 流程过来的消息 需要发送到 邮件和待办
-     */
-    @RequestMapping(value = "/sendMsg", method = RequestMethod.POST)
-    public void sendMsg(@RequestParam String userCodes, @RequestParam String varsJson, @RequestParam String actTaskID) {
-        if (StringUtils.isNotEmpty(varsJson) && StringUtils.isNotEmpty(actTaskID)) {
-            noticeServiceImpl.sendActivitiMsg(userCodes, varsJson, actTaskID);
-        }
-    }
-
-    /**
      * 查看日志
      */
     @RequestMapping("/syncDclassfy")
-    public void syncDclassfy(@RequestParam Integer libcode ,  HttpServletResponse response) {
+    public void syncDclassfy(@RequestParam Integer libcode, HttpServletResponse response) {
         PrintWriter out = null;
         try {
             response.setContentType("text/html;charset=GBK ");
@@ -169,6 +159,109 @@ public class CommonCtler {
     }
 
     /**
+     * 档案写信贷系统 add
+     */
+    @RequestMapping(value = "/archive2lambdaADD", method = RequestMethod.GET)
+    public void archive2lambdaADD(HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            response.setContentType("text/html;charset=GBK ");
+            out = response.getWriter();
+            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+            out.println("<HTML>");
+            out.println("<BODY>");
+            out.println("<XMP>");
+            out.println(syncService.archive2lambdaADD());
+            out.println("</XMP>");
+            out.println("</BODY>");
+            out.println("</HTML>");
+        } catch (Exception e) {
+            out.println("读取日志错误" + e.getMessage());
+            log.error("读取日志错误" + e.getMessage());
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
+
+    /**
+     * 档案写信贷系统 del
+     */
+    @RequestMapping(value = "/archive2lambdaDEL", method = RequestMethod.GET)
+    public void archive2lambdaDEL(HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            response.setContentType("text/html;charset=GBK ");
+            out = response.getWriter();
+            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+            out.println("<HTML>");
+            out.println("<BODY>");
+            out.println("<XMP>");
+            out.println(syncService.archive2lambdaDEL());
+            out.println("</XMP>");
+            out.println("</BODY>");
+            out.println("</HTML>");
+        } catch (Exception e) {
+            out.println("读取日志错误" + e.getMessage());
+            log.error("读取日志错误" + e.getMessage());
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
+
+    /**
+     * 信贷系统写档案 add
+     */
+    @RequestMapping(value = "/lambda2ArchiveADD", method = RequestMethod.GET)
+    public void lambda2ArchiveADD(HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            response.setContentType("text/html;charset=GBK ");
+            out = response.getWriter();
+            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+            out.println("<HTML>");
+            out.println("<BODY>");
+            out.println("<XMP>");
+            out.println(syncService.lambda2ArchiveADD());
+            out.println("</XMP>");
+            out.println("</BODY>");
+            out.println("</HTML>");
+        } catch (Exception e) {
+            out.println("读取日志错误" + e.getMessage());
+            log.error("读取日志错误" + e.getMessage());
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
+    /**
+     * 信贷系统写档案 del
+     */
+    @RequestMapping(value = "/lambda2ArchiveDEL", method = RequestMethod.GET)
+    public void lambda2ArchiveDEL(HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            response.setContentType("text/html;charset=GBK ");
+            out = response.getWriter();
+            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+            out.println("<HTML>");
+            out.println("<BODY>");
+            out.println("<XMP>");
+            out.println(syncService.lambda2ArchiveDEL());
+            out.println("</XMP>");
+            out.println("</BODY>");
+            out.println("</HTML>");
+        } catch (Exception e) {
+            out.println("读取日志错误" + e.getMessage());
+            log.error("读取日志错误" + e.getMessage());
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
+
+    /**
      * 内部调用 判断是否是允许用户 ture是的
      */
     private Boolean judgeSSO(String usercode, String token) {
@@ -178,8 +271,9 @@ public class CommonCtler {
 
     @Autowired
     private ArcService arcServcieImpl;
+
     @Autowired
-    private NoticeService noticeServiceImpl;
+    private SyncService syncService;
     @Autowired
     @Value("${interface.log.home.address}")
     private String logHomeAdd;

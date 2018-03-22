@@ -1,38 +1,26 @@
 package com.bwzk.service.impl;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebService;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import ch.qos.logback.classic.Logger;
-
-import com.bwzk.pojo.FDTable;
-import com.bwzk.pojo.SGroup;
-import com.bwzk.pojo.SQzh;
-import com.bwzk.pojo.SUser;
-import com.bwzk.pojo.SUserrole;
+import com.alibaba.fastjson.JSON;
+import com.bwzk.pojo.*;
 import com.bwzk.pojo.jaxb.Field;
 import com.bwzk.pojo.jaxb.Table;
 import com.bwzk.service.BaseService;
 import com.bwzk.service.i.BaseDataService;
-import com.bwzk.util.CommonUtil;
-import com.bwzk.util.ExceptionThrows;
-import com.bwzk.util.GlobalFinalAttr;
-import com.bwzk.util.IsExistDepOrUser;
-import com.bwzk.util.XmlObjUtil;
+import com.bwzk.util.*;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebService;
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service("baseDataServiceImpl")
 @WebService(name = "BaseDataWS", targetNamespace = "http://service.lams.cn/")
@@ -540,9 +528,7 @@ public class BaseDataServiceImpl extends BaseService implements BaseDataService 
 			@WebParam(name = "primaryKey") String primaryKey) {
 		String result = "0";
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			Map<String, String> vars = null;
-			vars = mapper.readValue(dataJson, Map.class);
+			Map<String, String> vars = JSON.parseObject(dataJson, Map.class);
 			result = insertUser4Map(vars, deptPk, primaryKey);
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -574,9 +560,7 @@ public class BaseDataServiceImpl extends BaseService implements BaseDataService 
 			} else {
 				pid = group.getDid();
 			}
-			ObjectMapper mapper = new ObjectMapper();
-			Map<String, String> vars = null;
-			vars = mapper.readValue(dataJson, Map.class);
+			Map<String, String> vars = JSON.parseObject(dataJson, Map.class);
 			vars.put("PID" , pid.toString());
 			vars.remove("PASSWD");
 			result = updateUser4Map(vars, primaryKey);
@@ -604,10 +588,9 @@ public class BaseDataServiceImpl extends BaseService implements BaseDataService 
 			@WebParam(name = "orgPk") String orgPk,
 			@WebParam(name = "parentPk") String parentPk) {
 		String result = null;
-		ObjectMapper mapper = new ObjectMapper();
 		Map<String, String> vars = null;
 		try {
-			vars = mapper.readValue(dataJson, Map.class);
+			vars = JSON.parseObject(dataJson, Map.class);
 			result = insertDept4Map(vars, primaryKey, parentPk, orgPk);
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -631,9 +614,7 @@ public class BaseDataServiceImpl extends BaseService implements BaseDataService 
 			@WebParam(name = "primaryKey") String primaryKey) {
 		String result = "0";
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			Map<String, String> vars = null;
-			vars = mapper.readValue(dataJson, Map.class);
+			Map<String, String> vars = JSON.parseObject(dataJson, Map.class);
 			result = updateDept4Map(vars, primaryKey);
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -1060,11 +1041,10 @@ public class BaseDataServiceImpl extends BaseService implements BaseDataService 
 			@WebParam(name = "deptPk") String deptPk,
 			@WebParam(name = "primaryKey") String primaryKey) {
 		String result = "0";
-		ObjectMapper mapper = new ObjectMapper();
 		Map<String, String> map = null;
 		try {
-			map = mapper.readValue(dataJson, Map.class);
-		} catch (IOException e1) {
+			map = JSON.parseObject(dataJson, Map.class);
+		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 		String archKey = "";
@@ -1168,11 +1148,10 @@ public class BaseDataServiceImpl extends BaseService implements BaseDataService 
 			@WebParam(name = "orgPk") String orgPk,
 			@WebParam(name = "parentPk") String parentPk) {
 		String result = "1";
-		ObjectMapper mapper = new ObjectMapper();
 		Map<String, String> map = null;
 		try {
-			map = mapper.readValue(dataJson, Map.class);
-		} catch (IOException e1) {
+			map = JSON.parseObject(dataJson, Map.class);
+		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 		String archKey = "";
@@ -1466,8 +1445,7 @@ public class BaseDataServiceImpl extends BaseService implements BaseDataService 
 		StringBuffer fields = new StringBuffer();
 		StringBuffer values = new StringBuffer();
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			map = mapper.readValue(dataJson, Map.class);
+			map = JSON.parseObject(dataJson, Map.class);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			result = "1[" + e.getMessage() + "]";
@@ -1940,8 +1918,7 @@ public class BaseDataServiceImpl extends BaseService implements BaseDataService 
 		StringBuffer fields = new StringBuffer();
 		StringBuffer values = new StringBuffer();
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			map = mapper.readValue(dataJson, Map.class);
+			map= JSON.parseObject(dataJson, Map.class);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			result = "1[" + e.getMessage() + "]";
@@ -2036,8 +2013,7 @@ public class BaseDataServiceImpl extends BaseService implements BaseDataService 
 		StringBuffer fields = new StringBuffer();
 		StringBuffer values = new StringBuffer();
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			map = mapper.readValue(dataJson, Map.class);
+			map = JSON.parseObject(dataJson, Map.class);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			result = "1[" + e.getMessage() + "]";

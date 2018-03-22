@@ -24,7 +24,6 @@
 </script>
 <body>
 <div class="container theme-showcase">
-    <p>
         <!--
 			<button class="btn btn-lg btn-warning" onclick="submitSyncUserGroup()">同步用户和部门</button>
 			<br>
@@ -40,12 +39,29 @@
            href="${pageContext.request.contextPath}/viewLogList">查看日志</a>
         <a class="btn btn-lg btn-danger"
            href="${pageContext.request.contextPath}/viewXMLList">查看XML</a>
-        <a class="btn btn-lg btn-success"
-           href="${pageContext.request.contextPath}/getUsers">列出所有用户</a>
+
+    <br>
+    <br>
+    <br>
         <a class="btn btn-lg btn-warning"
-           href="${pageContext.request.contextPath}/cxf">查看服务</a>
-        <a class="btn btn-lg btn-info"
-           href="${pageContext.request.contextPath}/syncDclassfy?libcode=32">同步分类表</a>
+           href="${pageContext.request.contextPath}/archive2lambdaADD">
+            archive2lambda-ADD</a>
+        <a class="btn btn-lg btn-danger"
+           href="${pageContext.request.contextPath}/archive2lambdaDEL">
+            archive2lambda-DEL</a>
+    <br>
+    <br>
+    <br>
+        <a class="btn btn-lg btn-primary"
+           href="${pageContext.request.contextPath}/lambda2ArchiveADD">
+            lambda2Archive-ADD</a>
+
+        <a class="btn btn-lg btn-danger"
+           href="${pageContext.request.contextPath}/lambda2ArchiveDEL">
+            lambda2Archive-DEL</a>
+
+
+
     </p>
 </div>
 </body>

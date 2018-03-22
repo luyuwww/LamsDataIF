@@ -100,6 +100,15 @@ public class JdbcDaoImpl implements JdbcDao {
         }
     }
 
+    public <T> T query4Object(String executeQuerySQL , Class clazz){
+        return (T) jdbcTemplate.queryForObject(executeQuerySQL , clazz);
+    }
+
+    public <T> List<T> query4List(String executeQuerySQL , Class clazz){
+        return  jdbcTemplate.queryForList(executeQuerySQL , clazz);
+    }
+
+
     public Connection getConn() {
         try {
             return jdbcTemplate.getDataSource().getConnection();
@@ -111,8 +120,8 @@ public class JdbcDaoImpl implements JdbcDao {
 
     public Integer insertEfile(String tableName, final EFile eFile) {
         return jdbcTemplate.update("insert into " + tableName +
-                "(DID,PID,EFILENAME,TITLE,EXT,PZM,PATHNAME,STATUS,ATTR,ATTREX,CREATOR,CREATETIME,FILESIZE,MD5,CONVERTSTATUS) "
-                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", new PreparedStatementSetter() {
+                "(DID,PID,EFILENAME,TITLE,EXT,PZM,PATHNAME,STATUS,ATTR,ATTREX,CREATOR,CREATETIME,FILESIZE,MD5,CONVERTSTATUS , BBH) "
+                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", new PreparedStatementSetter() {
             public void setValues(PreparedStatement ps) throws SQLException {
                 Integer i = 1;
                 ps.setInt(i++, eFile.getDid());
@@ -130,6 +139,7 @@ public class JdbcDaoImpl implements JdbcDao {
                 ps.setInt(i++, eFile.getFilesize());
                 ps.setString(i++, eFile.getMd5());
                 ps.setInt(i++, 0);//电子文件转换的一个标识  0 是未转换
+                ps.setString(i++, eFile.getBbh());
             }
         });
     }

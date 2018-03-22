@@ -678,4 +678,8 @@
         ${sql}
     </select>
 
+    <select id="efilelistPage" parameterType="map" resultType="com.bwzk.pojo.EFile">
+        ${sql}
+    </select>
+
 </mapper>

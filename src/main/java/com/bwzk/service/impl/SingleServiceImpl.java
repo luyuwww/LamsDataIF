@@ -1,6 +1,7 @@
 package com.bwzk.service.impl;
 
 import ch.qos.logback.classic.Logger;
+import com.alibaba.fastjson.JSON;
 import com.bwzk.dao.i.SUserMapper;
 import com.bwzk.pojo.jaxb.Field;
 import com.bwzk.pojo.jaxb.Table;
@@ -10,7 +11,6 @@ import com.bwzk.util.GlobalFinalAttr;
 import com.bwzk.util.XmlObjUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -222,9 +222,7 @@ public class SingleServiceImpl extends BaseService implements SingleService {
         }
         try {
             maxdid = getMaxDid(xmlName.toUpperCase().replace(".XML", ""));
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> vars = null;
-            vars = mapper.readValue(dataJson, Map.class);
+            Map<String, Object> vars  = JSON.parseObject(dataJson, Map.class);
             StringBuffer fields = new StringBuffer();
             StringBuffer values = new StringBuffer();
             String xmlString = FileUtils.readFileToString(xmlFile, GlobalFinalAttr.PRJ_CHAR_CODE);

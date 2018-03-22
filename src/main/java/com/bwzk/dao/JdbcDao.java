@@ -40,6 +40,11 @@ public interface JdbcDao {
 
     public List<String> quert4List(String sql);
 
+    public <T> T query4Object(String executeQuerySQL , Class clazz);
+
+    public <T> List<T> query4List(String executeQuerySQL , Class clazz);
+
+
     /**
      * 查新表2列 第一列是key第二列是value的一个map
      */

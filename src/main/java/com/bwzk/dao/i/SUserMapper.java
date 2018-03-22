@@ -81,6 +81,8 @@ public interface SUserMapper extends BaseDao {
             "VALUES(#{zjk.did},#{zjk.pid},#{zjk.flcode},#{zjk.flmc},#{zjk.bz})")
     void insertClassify(@Param("zjk") DClassifyZjk zjk , @Param("dTableName") String dTableName);
 
+    List<EFile> efilelistPage(Map para);
+
 
 
 }
