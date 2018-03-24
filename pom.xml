@@ -32,13 +32,6 @@
             </plugin>
         </plugins>
     </build>
-    <repositories>
-        <repository>
-            <id>thirdparty</id>
-            <name>lams full Repository</name>
-            <url>http://thams.cn:8081/nexus/content/repositories/public</url>
-        </repository>
-    </repositories>
     <dependencies>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -51,9 +44,9 @@
             <version>5.1.24</version>
         </dependency>
         <dependency>
-            <groupId>ojdbc6</groupId>
-            <artifactId>ojdbc6</artifactId>
-            <version>16</version>
+            <groupId>oracle</groupId>
+            <artifactId>ojdbc</artifactId>
+            <version>11.2.0.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.jdom</groupId>
