@@ -321,7 +321,7 @@ public class SyncServcieImpl extends BaseService implements SyncService {
     protected String sk;
 
     @Autowired
-    @Value("${lams.sync2queue.endpiint}")
+    @Value("${lams.sync2queue.endpint}")
     protected String endPoint;
 
     @Autowired
