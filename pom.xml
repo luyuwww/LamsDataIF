@@ -225,11 +225,11 @@
             <version>${org.lazyluke.version}</version>
         </dependency>
         <!-- zip -->
-        <dependency>
-            <groupId>antZip</groupId>
-            <artifactId>antZip</artifactId>
-            <version>1.0</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>antZip</groupId>-->
+            <!--<artifactId>antZip</artifactId>-->
+            <!--<version>1.0</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.caucho</groupId>
             <artifactId>hessian</artifactId>
