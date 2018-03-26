@@ -139,30 +139,47 @@ public class SyncServcieImpl extends BaseService implements SyncService {
                 AddItem ai = JSON.parseObject(popMsg.getMessageBody() , AddItem.class);
                 if(StringUtils.isNotBlank(ai.getITEM().getDIRID()) &&
                         StringUtils.isNotBlank(ai.getITEM().getCUSTID())){
-                    String judgeDfileSql = "SELECT DID FROM D_FILE" + ai.getITEM().getLIBCODE()
-                            + " WHERE CUSTID='"+ai.getITEM().getCUSTID()+ "' AND DIRID='"
-                            + ai.getITEM().getDIRID()+"' AND STATUS=0 AND FILETYPE='"
-                            + ai.getITEM().getFILETYPE() + "'";
-                    List<Integer> dfileList = jdbcDao.query4List(judgeDfileSql , Integer.class);
-                    if(dfileList.size() > 0){//文件存在 好办了 直接插入EFILE关联
-                        //插入Efile  dfile.did
-                        insertEfileByAi(ai ,  dfileList.get(0));
-                    }else{//不存在文件 需要穿件文件
-                        String judgeDVolSql = "SELECT DID FROM D_VOL" + ai.getITEM().getLIBCODE()
-                                + " WHERE CUSTID='"+ai.getITEM().getCUSTID()+"' AND STATUS=0";
-                        List<Integer> volList = jdbcDao.query4List(judgeDVolSql , Integer.class);
-                        if(volList.size() > 0) {//案卷存在 文件不存在
-                            //插入Dfile  dVOL.did
-                            Integer dFileDid = insertDfileByAi(ai , volList.get(0));
+                    //父级存在并且电子文件存在 修改父级的名字
+                    String judgeEfileSql = "SELECT PID FROM E_FILE" + ai.getITEM().getLIBCODE()
+                            + " WHERE  CONCAT(PATHNAME,EFILENAME) ='"+ai.getITEM().getEFILENAME()+ "'STATUS=0 ";
+                    List<Integer> efileList = jdbcDao.query4List(judgeEfileSql , Integer.class);
+                    //电子文件已经存在.需要修改DFILE的FILETYPE
+                    if(efileList.size() > 0 && StringUtils.isNotBlank(ai.getITEM().getFILETYPE())){
+                        try {
+                            execSql("UPDATE D_FILE" + ai.getITEM().getLIBCODE()+" SET FILETYPE='"
+                                    + ai.getITEM().getFILETYPE() + "' WHERE DID=" + efileList.get(0));
+                            log.error("update D_FILE" + ai.getITEM().getLIBCODE()+"'filetype="+ai.getITEM().getFILETYPE() );
+                            continue;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }else{
+                        // 电子文件不存在 判断DFILE是否存在
+                        String judgeDfileSql = "SELECT DID FROM D_FILE" + ai.getITEM().getLIBCODE()
+                                + " WHERE CUSTID='"+ai.getITEM().getCUSTID()+ "' AND DIRID='"
+                                + ai.getITEM().getDIRID()+"' AND STATUS=0 AND FILETYPE='"
+                                + ai.getITEM().getFILETYPE() + "'";
+                        List<Integer> dfileList = jdbcDao.query4List(judgeDfileSql , Integer.class);
+                        if(dfileList.size() > 0){//文件存在 好办了 直接插入EFILE关联
                             //插入Efile  dfile.did
-                            insertEfileByAi(ai , dFileDid);
-                        }else{//案卷文件都不存在
-                            //插入DVOL
-                            Integer dVolDid = insertDvolByAi(ai);
-                            //插入Dfile  dVOL.did
-                            Integer dFileDid = insertDfileByAi(ai , dVolDid);
-                            //插入Efile  dfile.did
-                            insertEfileByAi(ai , dFileDid);
+                            insertEfileByAi(ai ,  dfileList.get(0));
+                        }else{//不存在文件 需要穿件文件
+                            String judgeDVolSql = "SELECT DID FROM D_VOL" + ai.getITEM().getLIBCODE()
+                                    + " WHERE CUSTID='"+ai.getITEM().getCUSTID()+"' AND STATUS=0";
+                            List<Integer> volList = jdbcDao.query4List(judgeDVolSql , Integer.class);
+                            if(volList.size() > 0) {//案卷存在 文件不存在
+                                //插入Dfile  dVOL.did
+                                Integer dFileDid = insertDfileByAi(ai , volList.get(0));
+                                //插入Efile  dfile.did
+                                insertEfileByAi(ai , dFileDid);
+                            }else{//案卷文件都不存在
+                                //插入DVOL
+                                Integer dVolDid = insertDvolByAi(ai);
+                                //插入Dfile  dVOL.did
+                                Integer dFileDid = insertDfileByAi(ai , dVolDid);
+                                //插入Efile  dfile.did
+                                insertEfileByAi(ai , dFileDid);
+                            }
                         }
                     }
                 }else{
