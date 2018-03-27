@@ -137,6 +137,7 @@ public class SyncServcieImpl extends BaseService implements SyncService {
             while (null != popMsg){
                 System.out.println(popMsg.getMessageBody());
                 AddItem ai = JSON.parseObject(popMsg.getMessageBody() , AddItem.class);
+                System.out.println( ai.getITEM().toString());
                 if(StringUtils.isNotBlank(ai.getITEM().getDIRID()) &&
                         StringUtils.isNotBlank(ai.getITEM().getCUSTID())){
                     //父级存在并且电子文件存在 修改父级的名字
