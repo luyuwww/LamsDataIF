@@ -4,26 +4,26 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 public class AddItem {
 
-    public AddItem(String LIBCODE, String DIRID,    String CUSTID,    String CUSTCARD,    String CUSTNAME,
-                   String FILETYPE,    String EFILENAME,    String TITLE,    String EXT,   String PZM ,
-                   Integer ATTR , String MD5 , String CREATOR , String OPERTIME , Integer FILESIZE){
+    public AddItem(String libcode, String dirid,    String custid,    String custcard,    String custname,
+                   String filetype,    String efilename,    String title,    String ext,   String pzm ,
+                   Integer attr , String md5 , String creator , String opertime , Integer filesize){
         ITEMBean item = new ITEMBean();
-        item.setLIBCODE(LIBCODE);
-        item.setDIRID(DIRID);
-        item.setCUSTID(CUSTID);
-        item.setCUSTCARD(CUSTCARD);
-        item.setCUSTNAME(CUSTNAME);
-        item.setFILETYPE(FILETYPE);
-        item.setEFILENAME(EFILENAME);
-        item.setTITLE(TITLE);
-        item.setEXT(EXT);
+        item.setLibcode(libcode);
+        item.setDirid(dirid);
+        item.setCustid(custid);
+        item.setCustcard(custcard);
+        item.setCustname(custname);
+        item.setFiletype(filetype);
+        item.setEfilename(efilename);
+        item.setTitle(title);
+        item.setExt(ext);
 
-        item.setPZM(PZM);
-        item.setATTR(ATTR);
-        item.setMD5(MD5);
-        item.setCREATOR(CREATOR);
-        item.setOPERTIME(OPERTIME);
-        item.setFILESIZE(FILESIZE);
+        item.setPzm(pzm);
+        item.setAttr(attr);
+        item.setMd5(md5);
+        item.setCreator(creator);
+        item.setOpertime(opertime);
+        item.setFilesize(filesize);
         this.ITEM = item;
     }
 
@@ -35,7 +35,7 @@ public class AddItem {
     }
 
     /**
-     * ITEM : {"LIBCODE":2,"DIRID":12,"CUSTID":"用户编号","CUSTCARD":"身份证号码","CUSTNAME":"刘某某","FILETYPE":"身份证/户口本/个人简历/最好有一个和中文对应的编号","EFILENAME":"/system1/2018/03/06/a3d0cc5d-c797-4aa6-9db2-589431b718f6.jpg也就是OSSkey","TITLE":"身份证A面","EXT":"jpg","PZM":"一个固定字符串,         开发的时候确认","ATTR":"0/1一个固定值,         方便扩展","MD5":"d0eb922766f4a7e28a17f49ae0fad6d5","CREATOR":"文档上传人,建议 usercode/username","OPERTIME":"2017-05-07 22:48:05","FILESIZE":12423482}
+     * ITEM : {"libcode":2,"dirid":12,"custid":"用户编号","custcard":"身份证号码","custname":"刘某某","filetype":"身份证/户口本/个人简历/最好有一个和中文对应的编号","efilename":"/system1/2018/03/06/a3d0cc5d-c797-4aa6-9db2-589431b718f6.jpg也就是OSSkey","title":"身份证A面","ext":"jpg","pzm":"一个固定字符串,         开发的时候确认","attr":"0/1一个固定值,         方便扩展","md5":"d0eb922766f4a7e28a17f49ae0fad6d5","creator":"文档上传人,建议 usercode/username","opertime":"2017-05-07 22:48:05","filesize":12423482}
      */
 
     @JSONField(name = "ITEM")
@@ -51,173 +51,148 @@ public class AddItem {
 
     public static class ITEMBean {
         /**
-         * LIBCODE : 2
-         * DIRID : 12
-         * CUSTID : 用户编号
-         * CUSTCARD : 身份证号码
-         * CUSTNAME : 刘某某
-         * FILETYPE : 身份证/户口本/个人简历/最好有一个和中文对应的编号
-         * EFILENAME : /system1/2018/03/06/a3d0cc5d-c797-4aa6-9db2-589431b718f6.jpg也就是OSSkey
-         * TITLE : 身份证A面
-         * EXT : jpg
-         * PZM : 一个固定字符串,         开发的时候确认
-         * ATTR : 0/1一个固定值,         方便扩展
-         * MD5 : d0eb922766f4a7e28a17f49ae0fad6d5
-         * CREATOR : 文档上传人,建议 usercode/username
-         * OPERTIME : 2017-05-07 22:48:05
-         * FILESIZE : 12423482
+         * libcode : 2
+         * dirid : 12
+         * custid : 用户编号
+         * custcard : 身份证号码
+         * custname : 刘某某
+         * filetype : 身份证/户口本/个人简历/最好有一个和中文对应的编号
+         * efilename : /system1/2018/03/06/a3d0cc5d-c797-4aa6-9db2-589431b718f6.jpg也就是OSSkey
+         * title : 身份证A面
+         * ext : jpg
+         * pzm : 一个固定字符串,         开发的时候确认
+         * attr : 0/1一个固定值,         方便扩展
+         * md5 : d0eb922766f4a7e28a17f49ae0fad6d5
+         * creator : 文档上传人,建议 usercode/username
+         * opertime : 2017-05-07 22:48:05
+         * filesize : 12423482
          */
 
-        @JSONField(name = "LIBCODE")
-        private String LIBCODE;
-        @JSONField(name = "DIRID")
-        private String DIRID;
-        @JSONField(name = "CUSTID")
-        private String CUSTID;
-        @JSONField(name = "CUSTCARD")
-        private String CUSTCARD;
-        @JSONField(name = "CUSTNAME")
-        private String CUSTNAME;
-        @JSONField(name = "FILETYPE")
-        private String FILETYPE;
-        @JSONField(name = "EFILENAME")
-        private String EFILENAME;
-        @JSONField(name = "TITLE")
-        private String TITLE;
-        @JSONField(name = "EXT")
-        private String EXT;
-        @JSONField(name = "PZM")
-        private String PZM;
-        @JSONField(name = "ATTR")
-        private Integer ATTR;
-        @JSONField(name = "MD5")
-        private String MD5;
-        @JSONField(name = "CREATOR")
-        private String CREATOR;
-        @JSONField(name = "OPERTIME")
-        private String OPERTIME;
-        @JSONField(name = "FILESIZE")
-        private Integer FILESIZE;
+        @JSONField(name = "libcode")
+        private String libcode;
+        @JSONField(name = "dirid")
+        private String dirid;
+        @JSONField(name = "custid")
+        private String custid;
+        @JSONField(name = "custcard")
+        private String custcard;
+        @JSONField(name = "custname")
+        private String custname;
+        @JSONField(name = "filetype")
+        private String filetype;
+        @JSONField(name = "efilename")
+        private String efilename;
+        @JSONField(name = "title")
+        private String title;
+        @JSONField(name = "ext")
+        private String ext;
+        @JSONField(name = "pzm")
+        private String pzm;
+        @JSONField(name = "attr")
+        private Integer attr;
+        @JSONField(name = "md5")
+        private String md5;
+        @JSONField(name = "creator")
+        private String creator;
+        @JSONField(name = "opertime")
+        private String opertime;
+        @JSONField(name = "filesize")
+        private Integer filesize;
+        
+        
+        
+		public String getLibcode() {
+			return libcode;
+		}
+		public void setLibcode(String libcode) {
+			this.libcode = libcode;
+		}
+		public String getDirid() {
+			return dirid;
+		}
+		public void setDirid(String dirid) {
+			this.dirid = dirid;
+		}
+		public String getCustid() {
+			return custid;
+		}
+		public void setCustid(String custid) {
+			this.custid = custid;
+		}
+		public String getCustcard() {
+			return custcard;
+		}
+		public void setCustcard(String custcard) {
+			this.custcard = custcard;
+		}
+		public String getCustname() {
+			return custname;
+		}
+		public void setCustname(String custname) {
+			this.custname = custname;
+		}
+		public String getFiletype() {
+			return filetype;
+		}
+		public void setFiletype(String filetype) {
+			this.filetype = filetype;
+		}
+		public String getEfilename() {
+			return efilename;
+		}
+		public void setEfilename(String efilename) {
+			this.efilename = efilename;
+		}
+		public String getTitle() {
+			return title;
+		}
+		public void setTitle(String title) {
+			this.title = title;
+		}
+		public String getExt() {
+			return ext;
+		}
+		public void setExt(String ext) {
+			this.ext = ext;
+		}
+		public String getPzm() {
+			return pzm;
+		}
+		public void setPzm(String pzm) {
+			this.pzm = pzm;
+		}
+		public Integer getAttr() {
+			return attr;
+		}
+		public void setAttr(Integer attr) {
+			this.attr = attr;
+		}
+		public String getMd5() {
+			return md5;
+		}
+		public void setMd5(String md5) {
+			this.md5 = md5;
+		}
+		public String getCreator() {
+			return creator;
+		}
+		public void setCreator(String creator) {
+			this.creator = creator;
+		}
+		public String getOpertime() {
+			return opertime;
+		}
+		public void setOpertime(String opertime) {
+			this.opertime = opertime;
+		}
+		public Integer getFilesize() {
+			return filesize;
+		}
+		public void setFilesize(Integer filesize) {
+			this.filesize = filesize;
+		}
 
 
-        public String getLIBCODE() {
-            return LIBCODE;
-        }
-
-        public void setLIBCODE(String LIBCODE) {
-            this.LIBCODE = LIBCODE;
-        }
-
-        public String getDIRID() {
-            return DIRID;
-        }
-
-        public void setDIRID(String DIRID) {
-            this.DIRID = DIRID;
-        }
-
-        public String getCUSTID() {
-            return CUSTID;
-        }
-
-        public void setCUSTID(String CUSTID) {
-            this.CUSTID = CUSTID;
-        }
-
-        public String getCUSTCARD() {
-            return CUSTCARD;
-        }
-
-        public void setCUSTCARD(String CUSTCARD) {
-            this.CUSTCARD = CUSTCARD;
-        }
-
-        public String getCUSTNAME() {
-            return CUSTNAME;
-        }
-
-        public void setCUSTNAME(String CUSTNAME) {
-            this.CUSTNAME = CUSTNAME;
-        }
-
-        public String getFILETYPE() {
-            return FILETYPE;
-        }
-
-        public void setFILETYPE(String FILETYPE) {
-            this.FILETYPE = FILETYPE;
-        }
-
-        public String getEFILENAME() {
-            return EFILENAME;
-        }
-
-        public void setEFILENAME(String EFILENAME) {
-            this.EFILENAME = EFILENAME;
-        }
-
-        public String getTITLE() {
-            return TITLE;
-        }
-
-        public void setTITLE(String TITLE) {
-            this.TITLE = TITLE;
-        }
-
-        public String getEXT() {
-            return EXT;
-        }
-
-        public void setEXT(String EXT) {
-            this.EXT = EXT;
-        }
-
-        public String getPZM() {
-            return PZM;
-        }
-
-        public void setPZM(String PZM) {
-            this.PZM = PZM;
-        }
-
-        public Integer getATTR() {
-            return ATTR;
-        }
-
-        public void setATTR(Integer ATTR) {
-            this.ATTR = ATTR;
-        }
-
-        public String getMD5() {
-            return MD5;
-        }
-
-        public void setMD5(String MD5) {
-            this.MD5 = MD5;
-        }
-
-        public String getCREATOR() {
-            return CREATOR;
-        }
-
-        public void setCREATOR(String CREATOR) {
-            this.CREATOR = CREATOR;
-        }
-
-        public String getOPERTIME() {
-            return OPERTIME;
-        }
-
-        public void setOPERTIME(String OPERTIME) {
-            this.OPERTIME = OPERTIME;
-        }
-
-        public Integer getFILESIZE() {
-            return FILESIZE;
-        }
-
-        public void setFILESIZE(Integer FILESIZE) {
-            this.FILESIZE = FILESIZE;
-        }
+       
     }
 }

@@ -25,10 +25,10 @@ public class TestJsonBean {
         String addStr = FileUtils.readFileToString(add);
         String delStr = FileUtils.readFileToString(del);
         AddItem addItem =JSON.parseObject(addStr, AddItem.class);
-        System.out.println(addItem.getITEM().getEFILENAME());
+        //System.out.println(addItem.getITEM().getEFILENAME());
 
         DelItem di = JSON.parseObject(delStr , DelItem.class);
-        System.out.println(di.getDELITEM().getEFILENAME());
+        //System.out.println(di.getDELITEM().getEFILENAME());
 
 
     }
