@@ -135,8 +135,8 @@ public class SyncServcieImpl extends BaseService implements SyncService {
             queue = client.getQueueRef(lambdaWriteAddQ);
             Message popMsg = queue.popMessage();
             while (null != popMsg){
-                System.out.println(popMsg.getMessageBody());
-                AddItem ai = JSON.parseObject(popMsg.getMessageBody() , AddItem.class);
+                System.out.println(popMsg.getMessageBodyAsString());
+                AddItem ai = JSON.parseObject(popMsg.getMessageBodyAsString() , AddItem.class);
                 System.out.println( ai.getITEM().toString());
                 if(StringUtils.isNotBlank(ai.getITEM().getDirid()) &&
                         StringUtils.isNotBlank(ai.getITEM().getCustid())){
