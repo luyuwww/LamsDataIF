@@ -4,14 +4,15 @@ package com.bwzk.junit;/**
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.bwzk.pojo.jsonbean.AddItem;
-import com.bwzk.pojo.jsonbean.DelItem;
-
+import com.bwzk.pojo.jsonbean.ArchivesAddBean;
+import com.bwzk.pojo.jsonbean.ITEM;
+import com.bwzk.pojo.jsonbean.MnsMessageDto;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author DaMo
@@ -22,18 +23,29 @@ public class TestJsonBean {
 
     @Test
     public void json2Bean() throws IOException {
-      //  File del = new File("D:\\workspace\\idea\\LamsDataIF\\docu\\del2Da_single.json");
-         File add = new File("D:\\data\\add2Da_single.json");
+        //  File del = new File("D:\\workspace\\idea\\LamsDataIF\\docu\\del2Da_single.json");
+        File add = new File("D:\\data\\add2Da_single.json");
         String addStr = FileUtils.readFileToString(add);
-        //String delStr = FileUtils.readFileToString(del);
-        JSONObject jsStr = JSONObject.parseObject(addStr);
-        JSONObject jsStr1=jsStr.getJSONObject("messageBody");
-        JSONObject jsStr2=jsStr1.getJSONObject("data");
-        JSONObject jsStr3=jsStr2.getJSONObject("item");
-        System.out.println(jsStr3.toJSONString());
-        
-        AddItem addItem =JSON.parseObject(jsStr3.toJSONString(), AddItem.class);
-        System.out.println(addItem.getITEM().toString());
+        System.out.println(addStr);
+        Map<String , String> mapObj = JSON.parseObject(addStr, Map.class);
+        MnsMessageDto<JSONObject> itemBean = JSON.parseObject(mapObj.get("messageBody"), MnsMessageDto.class);
+        System.out.println(itemBean.getData().toString());
+        ITEM item = JSON.parseObject(itemBean.getData().toString() , ITEM.class);
+        System.out.println(item.getItem().getAttr());
+
+//        ITEM tuItem = JSON.parseObject(itemBean.getData().toString() , ITEM.class);
+
+
+//        //String delStr = FileUtils.readFileToString(del);
+//        JSONObject jsStr = JSONObject.parseObject(addStr);
+//        JSONObject jsStr1=jsStr.getJSONObject("messageBody");
+//        JSONObject jsStr2=jsStr1.getJSONObject("data");
+//        JSONObject jsStr3=jsStr2.getJSONObject("item");
+//        String jsStr4=jsStr3.getString("title");
+//        System.out.println(jsStr4.toString());
+//
+//        AddItem addItem =JSON.parseObject(jsStr3.toJSONString(), AddItem.class);
+//        System.out.println(addItem.getITEM().toString());
 
         //DelItem di = JSON.parseObject(delStr , DelItem.class);
         //System.out.println(di.getDELITEM().getEFILENAME());

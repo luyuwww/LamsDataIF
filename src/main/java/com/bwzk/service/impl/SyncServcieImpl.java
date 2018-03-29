@@ -2,6 +2,7 @@ package com.bwzk.service.impl;
 
 import ch.qos.logback.classic.Logger;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.aliyun.mns.client.CloudAccount;
 import com.aliyun.mns.client.CloudQueue;
 import com.aliyun.mns.client.MNSClient;
@@ -12,11 +13,12 @@ import com.bwzk.dao.i.SUserMapper;
 import com.bwzk.dao.i.SUserroleMapper;
 import com.bwzk.page.PageContext;
 import com.bwzk.pojo.EFile;
-import com.bwzk.pojo.jsonbean.AddItem;
-import com.bwzk.pojo.jsonbean.DelItem;
+import com.bwzk.pojo.jsonbean.ITEM;
+import com.bwzk.pojo.jsonbean.MnsMessageDto;
 import com.bwzk.service.BaseService;
 import com.bwzk.service.i.SyncService;
 import com.bwzk.util.DateUtil;
+import com.bwzk.util.GlobalFinalAttr;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -43,7 +45,7 @@ public class SyncServcieImpl extends BaseService implements SyncService {
             MNSClient client = account.getMNSClient();
             for (EFile eFile : efieList) {
                 Map<String, Object> dFile = queryForMap("SELECT DID,PID,TITLE,DIRID,KEYWORD,FILETYPE,CUSTCARD" +
-                        " ,F1,F2,F3,F4,F5,F6  FROM D_FILE" + libcode + " WHERE STATUS=0 AND DID=" + eFile.getPid());
+                        " FROM D_FILE" + libcode + " WHERE STATUS=0 AND DID=" + eFile.getPid());
 
                 if (null != dFile && StringUtils.isNotBlank(MapUtils.getString(dFile, "PID"))) {
                     String DIRID = MapUtils.getString(dFile, "DIRID");
@@ -51,23 +53,31 @@ public class SyncServcieImpl extends BaseService implements SyncService {
                     String KEYWORD = MapUtils.getString(dFile, "KEYWORD");
                     String FILETYPE = MapUtils.getString(dFile, "FILETYPE");
                     String CUSTCARD = MapUtils.getString(dFile, "CUSTCARD");
-                    String f1 = MapUtils.getString(dFile, "F1");
-                    String f2 = MapUtils.getString(dFile, "F2");
-                    String f3 = MapUtils.getString(dFile, "F3");
-                    String f4 = MapUtils.getString(dFile, "F4");
-                    String f5 = MapUtils.getString(dFile, "F5");
-                    String f6 = MapUtils.getString(dFile, "F6");
 
-                    AddItem addItem = new AddItem(libcode, DIRID, KEYWORD, CUSTCARD, TITLE,
-                            FILETYPE, FilenameUtils.normalize(eFile.getPathname() + eFile.getEfilename())
-                            , eFile.getTitle(), eFile.getExt(),
-                            eFile.getPzm(), eFile.getAttr(), eFile.getMd5(), eFile.getCreator()
+                    ITEM.ItemBean addItem = new ITEM.ItemBean(libcode, DIRID, KEYWORD, CUSTCARD, TITLE
+                            , FILETYPE, FilenameUtils.normalize(eFile.getPathname() + eFile.getEfilename())
+                            , eFile.getExt(),  eFile.getPzm(), eFile.getAttr(), eFile.getMd5(), eFile.getCreator()
                             , DateUtil.dateToStr(eFile.getCreatetime()), eFile.getFilesize());
+                    ITEM item = new ITEM();
+                    item.setItem(addItem);
                     try {
-                        String json = JSON.toJSONString(addItem);
+                        String json = JSON.toJSONString(item);
+                        MnsMessageDto mnsDto = new MnsMessageDto();
+                        mnsDto.setType("hams");
+                        mnsDto.setUuid(GlobalFinalAttr.getGuid());
+                        mnsDto.setData(json);
+                        String messageBody = JSON.toJSONString(mnsDto);
+                        Map<String , Object> mapObj = new HashMap<>();
+                        mapObj.put("messageBody" , messageBody);
+                        mapObj.put("properties" , getProperteis());
+
+                        String finalMsg = JSON.toJSONString(mapObj);
+
+                        System.out.println(finalMsg);
+
                         CloudQueue queue = client.getQueueRef(arcWriteAddQ);
                         Message message = new Message();
-                        message.setMessageBody(json);
+                        message.setMessageBody(finalMsg);
                         Message putMsg = queue.putMessage(message);
                         execSql("UPDATE E_FILE" + libcode + " SET BBH='ADD' WHERE DID=" + eFile.getDid());
                         eNum++;
@@ -99,23 +109,23 @@ public class SyncServcieImpl extends BaseService implements SyncService {
                         + " WHERE STATUS=0 AND DID=" + eFile.getPid());
 
                 if (null != dFile && StringUtils.isNotBlank(MapUtils.getString(dFile, "PID"))) {
-                    String DIRID = MapUtils.getString(dFile, "DIRID");
-                    DelItem delItem = new DelItem(libcode, DIRID,
-                            FilenameUtils.normalize(eFile.getPathname() + eFile.getEfilename()), eFile.getDeltor(),
-                            DateUtil.dateToStr(eFile.getDeltime()));
-                    try {
-                        String json = JSON.toJSONString(delItem);
-                        CloudQueue queue = client.getQueueRef(arcWriteDelQ);
-                        Message message = new Message();
-                        message.setMessageBody(json);
-                        Message putMsg = queue.putMessage(message);
-                        execSql("UPDATE E_FILE" + libcode + " SET BBH='DEL' WHERE DID=" + eFile.getDid());
-                        eNum++;
-                        log.error("sync del " + eNum + " itme2 queue:" + putMsg.getMessageId());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        log.error(e.getMessage(), e);
-                    }
+//                    String DIRID = MapUtils.getString(dFile, "DIRID");
+//                    DelItem delItem = new DelItem(libcode, DIRID,
+//                            FilenameUtils.normalize(eFile.getPathname() + eFile.getEfilename()), eFile.getDeltor(),
+//                            DateUtil.dateToStr(eFile.getDeltime()));
+//                    try {
+//                        String json = JSON.toJSONString(delItem);
+//                        CloudQueue queue = client.getQueueRef(arcWriteDelQ);
+//                        Message message = new Message();
+//                        message.setMessageBody(json);
+//                        Message putMsg = queue.putMessage(message);
+//                        execSql("UPDATE E_FILE" + libcode + " SET BBH='DEL' WHERE DID=" + eFile.getDid());
+//                        eNum++;
+//                        log.error("sync del " + eNum + " itme2 queue:" + putMsg.getMessageId());
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                        log.error(e.getMessage(), e);
+//                    }
                 }
             }
             if (client != null) {
@@ -134,59 +144,65 @@ public class SyncServcieImpl extends BaseService implements SyncService {
         try {
             queue = client.getQueueRef(lambdaWriteAddQ);
             Message popMsg = queue.popMessage();
-            while (null != popMsg){
-                System.out.println(popMsg.getMessageBodyAsString());
-                AddItem ai = JSON.parseObject(popMsg.getMessageBodyAsString() , AddItem.class);
-                System.out.println( ai.getITEM().toString());
-                if(StringUtils.isNotBlank(ai.getITEM().getDirid()) &&
-                        StringUtils.isNotBlank(ai.getITEM().getCustid())){
+            while (null != popMsg) {
+                String json = popMsg.getMessageBodyAsString();
+                System.out.println(json);
+
+                Map<String , String> mapObj = JSON.parseObject(json, Map.class);
+                MnsMessageDto<JSONObject> itemBean = JSON.parseObject(mapObj.get("messageBody"), MnsMessageDto.class);
+                System.out.println(itemBean.getData().toString());
+                ITEM ai = JSON.parseObject(itemBean.getData().toString() , ITEM.class);
+
+                System.out.println(ai.getItem().toString());
+                if (StringUtils.isNotBlank(ai.getItem().getDirid()) &&
+                        StringUtils.isNotBlank(ai.getItem().getCustid())) {
                     //父级存在并且电子文件存在 修改父级的名字
-                    String judgeEfileSql = "SELECT PID FROM E_FILE" + ai.getITEM().getLibcode()
-                            + " WHERE  CONCAT(PATHNAME,EFILENAME) ='"+ai.getITEM().getEfilename()+ "'STATUS=0 ";
-                    List<Integer> efileList = jdbcDao.query4List(judgeEfileSql , Integer.class);
+                    String judgeEfileSql = "SELECT PID FROM E_FILE" + ai.getItem().getLibcode()
+                            + " WHERE  CONCAT(PATHNAME,EFILENAME) ='" + ai.getItem().getEfilename() + "'STATUS=0 ";
+                    List<Integer> efileList = jdbcDao.query4List(judgeEfileSql, Integer.class);
                     //电子文件已经存在.需要修改DFILE的FILETYPE
-                    if(efileList.size() > 0 && StringUtils.isNotBlank(ai.getITEM().getFiletype())){
+                    if (efileList.size() > 0 && StringUtils.isNotBlank(ai.getItem().getFiletype())) {
                         try {
-                            execSql("UPDATE D_FILE" + ai.getITEM().getLibcode()+" SET FILETYPE='"
-                                    + ai.getITEM().getFiletype() + "' WHERE DID=" + efileList.get(0));
-                            log.error("update D_FILE" + ai.getITEM().getLibcode()+"'filetype="+ai.getITEM().getFiletype() );
+                            execSql("UPDATE D_FILE" + ai.getItem().getLibcode() + " SET FILETYPE='"
+                                    + ai.getItem().getFiletype() + "' WHERE DID=" + efileList.get(0));
+                            log.error("update D_FILE" + ai.getItem().getLibcode() + "'filetype=" + ai.getItem().getFiletype());
                             continue;
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    }else{
+                    } else {
                         // 电子文件不存在 判断DFILE是否存在
-                        String judgeDfileSql = "SELECT DID FROM D_FILE" + ai.getITEM().getLibcode()
-                                + " WHERE CUSTID='"+ai.getITEM().getCustid()+ "' AND DIRID='"
-                                + ai.getITEM().getDirid()+"' AND STATUS=0 AND FILETYPE='"
-                                + ai.getITEM().getFiletype() + "'";
-                        List<Integer> dfileList = jdbcDao.query4List(judgeDfileSql , Integer.class);
-                        if(dfileList.size() > 0){//文件存在 好办了 直接插入EFILE关联
+                        String judgeDfileSql = "SELECT DID FROM D_FILE" + ai.getItem().getLibcode()
+                                + " WHERE CUSTID='" + ai.getItem().getCustid() + "' AND DIRID='"
+                                + ai.getItem().getDirid() + "' AND STATUS=0 AND FILETYPE='"
+                                + ai.getItem().getFiletype() + "'";
+                        List<Integer> dfileList = jdbcDao.query4List(judgeDfileSql, Integer.class);
+                        if (dfileList.size() > 0) {//文件存在 好办了 直接插入EFILE关联
                             //插入Efile  dfile.did
-                            insertEfileByAi(ai ,  dfileList.get(0));
-                        }else{//不存在文件 需要穿件文件
-                            String judgeDVolSql = "SELECT DID FROM D_VOL" + ai.getITEM().getLibcode()
-                                    + " WHERE CUSTID='"+ai.getITEM().getCustid()+"' AND STATUS=0";
-                            List<Integer> volList = jdbcDao.query4List(judgeDVolSql , Integer.class);
-                            if(volList.size() > 0) {//案卷存在 文件不存在
+                            insertEfileByAi(ai, dfileList.get(0));
+                        } else {//不存在文件 需要穿件文件
+                            String judgeDVolSql = "SELECT DID FROM D_VOL" + ai.getItem().getLibcode()
+                                    + " WHERE CUSTID='" + ai.getItem().getCustid() + "' AND STATUS=0";
+                            List<Integer> volList = jdbcDao.query4List(judgeDVolSql, Integer.class);
+                            if (volList.size() > 0) {//案卷存在 文件不存在
                                 //插入Dfile  dVOL.did
-                                Integer dFileDid = insertDfileByAi(ai , volList.get(0));
+                                Integer dFileDid = insertDfileByAi(ai, volList.get(0));
                                 //插入Efile  dfile.did
-                                insertEfileByAi(ai , dFileDid);
-                            }else{//案卷文件都不存在
+                                insertEfileByAi(ai, dFileDid);
+                            } else {//案卷文件都不存在
                                 //插入DVOL
                                 Integer dVolDid = insertDvolByAi(ai);
                                 //插入Dfile  dVOL.did
-                                Integer dFileDid = insertDfileByAi(ai , dVolDid);
+                                Integer dFileDid = insertDfileByAi(ai, dVolDid);
                                 //插入Efile  dfile.did
-                                insertEfileByAi(ai , dFileDid);
+                                insertEfileByAi(ai, dFileDid);
                             }
                         }
                     }
-                }else{
+                } else {
                     log.error("custid or dirid is null");
                 }
-                System.out.println(ai.getITEM().getEfilename());
+                System.out.println(ai.getItem().getEfilename());
                 //queue.deleteMessage(popMsg.getReceiptHandle());
                 popMsg = queue.popMessage();
             }
@@ -208,14 +224,15 @@ public class SyncServcieImpl extends BaseService implements SyncService {
         try {
             queue = client.getQueueRef(lambdaWriteDelQ);
             Message popMsg = queue.popMessage();
-            while (null != popMsg){
-                DelItem di = JSON.parseObject(popMsg.getMessageBody() , DelItem.class);
-                String baseFileName = FilenameUtils.getName(di.getDELITEM().getEfilename());
-                String sql = "UPDATE E_FILE" + di.getDELITEM().getLibcode() + " SET BBH='DEL' , STATUS=1" +
-                        " WHERE EFILENAME='" + baseFileName +"'";
-                System.out.println(sql);
-                execSql(sql);
-                log.error("同步删除了电子文件:" + di.getDELITEM().getEfilename());
+            while (null != popMsg) {
+                System.out.println(popMsg.getMessageBodyAsString());
+                ITEM di = JSON.parseObject(popMsg.getMessageBody(), ITEM.class);
+//                String baseFileName = FilenameUtils.getName(di.getDELITEM().getEfilename());
+//                String sql = "UPDATE E_FILE" + di.getDELITEM().getLibcode() + " SET BBH='DEL' , STATUS=1" +
+//                        " WHERE EFILENAME='" + baseFileName + "'";
+//                System.out.println(sql);
+//                execSql(sql);
+//                log.error("同步删除了电子文件:" + di.getDELITEM().getEfilename());
                 eNum++;
 
 //                queue.deleteMessage(popMsg.getReceiptHandle());
@@ -266,15 +283,16 @@ public class SyncServcieImpl extends BaseService implements SyncService {
 
     /**
      * 插入案卷
+     *
      * @param ai
      * @return
      */
-    private Integer insertDvolByAi(AddItem ai){
-        String tbname = "D_VOL" + ai.getITEM().getLibcode();
+    private Integer insertDvolByAi(ITEM ai) {
+        String tbname = "D_VOL" + ai.getItem().getLibcode();
         Integer voldid = getMaxDid(tbname);
-        String sql = "INSERT INTO "+tbname +"(DID,PID,STATUS,ATTR,ATTREX,QZH,BMID,KEYWORD,DIRID) VALUES("
-                + voldid +", -1, 0 , "+ai.getITEM().getAttr()+","+attrex+",'"+qzh+"','"+qzh+"','"
-                + ai.getITEM().getCustid() + "','" + ai.getITEM().getDirid()+"'";
+        String sql = "INSERT INTO " + tbname + "(DID,PID,STATUS,ATTR,ATTREX,QZH,BMID,KEYWORD,DIRID) VALUES("
+                + voldid + ", -1, 0 , " + ai.getItem().getAttr() + "," + attrex + ",'" + qzh + "','" + qzh + "','"
+                + ai.getItem().getCustid() + "','" + ai.getItem().getDirid() + "'";
         System.out.println(sql);
         execSql(sql);
         return voldid;
@@ -282,45 +300,54 @@ public class SyncServcieImpl extends BaseService implements SyncService {
 
     /**
      * 插入文件
+     *
      * @param ai
      * @param volDid
      * @return
      */
-    private Integer insertDfileByAi(AddItem ai , Integer volDid){
-        String tbname = "D_FILE" + ai.getITEM().getLibcode();
+    private Integer insertDfileByAi(ITEM ai, Integer volDid) {
+        String tbname = "D_FILE" + ai.getItem().getLibcode();
         Integer fileDid = getMaxDid(tbname);
-        String sql = "INSERT INTO "+tbname +"(DID,PID,ATTACHED,STATUS,ATTR,ATTREX,QZH,BMID,KEYWORD,DIRID,FILETYPE) VALUES("
-                + fileDid +", "+volDid+",1, 0 , "+ai.getITEM().getAttr()+","+attrex+",'"+qzh+"','"+qzh+"','"
-                + ai.getITEM().getCustid() + "','" + ai.getITEM().getDirid()+"','" + ai.getITEM().getFiletype()+"'";
+        String sql = "INSERT INTO " + tbname + "(DID,PID,ATTACHED,STATUS,ATTR,ATTREX,QZH,BMID,KEYWORD,DIRID,FILETYPE) VALUES("
+                + fileDid + ", " + volDid + ",1, 0 , " + ai.getItem().getAttr() + "," + attrex + ",'" + qzh + "','" + qzh + "','"
+                + ai.getItem().getCustid() + "','" + ai.getItem().getDirid() + "','" + ai.getItem().getFiletype() + "'";
         System.out.println(sql);
         execSql(sql);
-        return  fileDid;
+        return fileDid;
     }
 
     /**
      * 插入电子文件
+     *
      * @param ai
      * @param fileDid
      * @return
      */
-    private Integer insertEfileByAi(AddItem ai , Integer fileDid){
-        String tbname = "E_FILE" + ai.getITEM().getLibcode();
+    private Integer insertEfileByAi(ITEM ai, Integer fileDid) {
+        String tbname = "E_FILE" + ai.getItem().getLibcode();
         Integer eFileDid = getMaxDid(tbname);
         EFile efile = new EFile();
         efile.setDid(eFileDid);
         efile.setPid(fileDid);
-        efile.setTitle(ai.getITEM().getTitle());
-        efile.setEfilename(FilenameUtils.getBaseName(ai.getITEM().getEfilename()));
-        efile.setPathname(ai.getITEM().getEfilename().replace(efile.getEfilename(),""));
-        efile.setPzm(ai.getITEM().getPzm());
-        efile.setExt(ai.getITEM().getExt());
+        efile.setTitle(ai.getItem().getTitle());
+        efile.setEfilename(FilenameUtils.getBaseName(ai.getItem().getEfilename()));
+        efile.setPathname(ai.getItem().getEfilename().replace(efile.getEfilename(), ""));
+        efile.setPzm(ai.getItem().getPzm());
+        efile.setExt(ai.getItem().getExt());
         efile.setBbh("ADD");
-        efile.setMd5(ai.getITEM().getMd5());
-        efile.setCreator(ai.getITEM().getCreator());
-        super.insertEfile(tbname , efile);
-        return  eFileDid;
+        efile.setMd5(ai.getItem().getMd5());
+        efile.setCreator(ai.getItem().getCreator());
+        super.insertEfile(tbname, efile);
+        return eFileDid;
     }
 
+    private Map<String  ,String > getProperteis(){
+        Map<String , String> properties = new HashMap<>();
+        properties.put("propertyName", "JMS_MNSMessageType");
+        properties.put("propertyType", "String");
+        properties.put("propertyValue", "text");
+        return properties;
+    }
     @Autowired
     private SGroupMapper sGroupMapper;
     @Autowired
