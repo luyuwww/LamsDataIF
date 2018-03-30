@@ -67,7 +67,7 @@ public class SyncServcieImpl extends BaseService implements SyncService {
                     try {
                         String json = JSON.toJSONString(item);
                         MnsMessageDto mnsDto = new MnsMessageDto();
-                        mnsDto.setType("hamsadd");
+                        mnsDto.setType("hams");
                         mnsDto.setUuid(GlobalFinalAttr.getGuid());
                         mnsDto.setData(json);
                         String messageBody = JSON.toJSONString(mnsDto);
@@ -118,16 +118,16 @@ public class SyncServcieImpl extends BaseService implements SyncService {
                     String efilename= eFile.getPathname() + eFile.getEfilename() ;
                     efilename=efilename.replaceAll("\\\\", "");
                     DelItem delItem = new DelItem();
-                    delItem.setLIBCODE(Integer.valueOf(libcode));
-                    delItem.setEFILENAME(efilename);
-                    delItem.setDELETOR(eFile.getDeltor());
-                    delItem.setDIRID(Integer.valueOf(DIRID));
-                    delItem.setOPERTIME( eFile.getDeltime() );
+                    delItem.setLibcode(Integer.valueOf(libcode));
+                    delItem.setEfilename(efilename);
+                    delItem.setDeletor(eFile.getDeltor());
+                    delItem.setDirid(Integer.valueOf(DIRID));
+                    delItem.setOpertime( eFile.getDeltime() );
                       try {
                         String json = JSON.toJSONString(delItem);
                         CloudQueue queue = client.getQueueRef(arcWriteDelQ);
                         MnsMessageDto mnsDto = new MnsMessageDto();
-                        mnsDto.setType("hamsdel");
+                        mnsDto.setType("hams");
                         mnsDto.setUuid(GlobalFinalAttr.getGuid());
                         mnsDto.setData(json);
                         String messageBody = JSON.toJSONString(mnsDto);
@@ -233,7 +233,7 @@ public class SyncServcieImpl extends BaseService implements SyncService {
                     log.error("custid or dirid is null");
                 }
                 System.out.println(ai.getItem().getEfilename());
-                //queue.deleteMessage(popMsg.getReceiptHandle());
+                 queue.deleteMessage(popMsg.getReceiptHandle());
                 popMsg = queue.popMessage();
             }
 
@@ -278,7 +278,7 @@ public class SyncServcieImpl extends BaseService implements SyncService {
                  log.error("同步删除了电子文件:" + edelfile);
                 eNum++;
 
-//                queue.deleteMessage(popMsg.getReceiptHandle());
+                 queue.deleteMessage(popMsg.getReceiptHandle());
                 popMsg = queue.popMessage();
             }
 

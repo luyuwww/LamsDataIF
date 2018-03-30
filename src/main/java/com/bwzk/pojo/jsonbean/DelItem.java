@@ -2,44 +2,41 @@ package com.bwzk.pojo.jsonbean;
 import java.util.Date;
 public class DelItem {
 
-    private int LIBCODE;
-    private int DIRID;
-    private String EFILENAME;
-    private String DELETOR;
-    private Date OPERTIME;
-    public void setLIBCODE(int LIBCODE) {
-         this.LIBCODE = LIBCODE;
-     }
-     public int getLIBCODE() {
-         return LIBCODE;
-     }
-
-    public void setDIRID(int DIRID) {
-         this.DIRID = DIRID;
-     }
-     public int getDIRID() {
-         return DIRID;
-     }
-
-    public void setEFILENAME(String EFILENAME) {
-         this.EFILENAME = EFILENAME;
-     }
-     public String getEFILENAME() {
-         return EFILENAME;
-     }
-
-    public void setDELETOR(String DELETOR) {
-         this.DELETOR = DELETOR;
-     }
-     public String getDELETOR() {
-         return DELETOR;
-     }
-
-    public void setOPERTIME(Date OPERTIME) {
-         this.OPERTIME = OPERTIME;
-     }
-     public Date getOPERTIME() {
-         return OPERTIME;
-     }
+    private int libcode;
+    private int dirid;
+    private String efilename;
+    private String deletor;
+    private Date opertime;
+	public int getLibcode() {
+		return libcode;
+	}
+	public void setLibcode(int libcode) {
+		this.libcode = libcode;
+	}
+	public int getDirid() {
+		return dirid;
+	}
+	public void setDirid(int dirid) {
+		this.dirid = dirid;
+	}
+	public String getEfilename() {
+		return efilename;
+	}
+	public void setEfilename(String efilename) {
+		this.efilename = efilename;
+	}
+	public String getDeletor() {
+		return deletor;
+	}
+	public void setDeletor(String deletor) {
+		this.deletor = deletor;
+	}
+	public Date getOpertime() {
+		return opertime;
+	}
+	public void setOpertime(Date opertime) {
+		this.opertime = opertime;
+	}
+     
 
 }
