@@ -385,6 +385,9 @@ public class SyncServcieImpl extends BaseService implements SyncService {
         efile.setPathname(pathname);
        
         efile.setPzm(ai.getItem().getPzm());
+        if (efile.getPzm()==null){
+        	efile.setPzm("data");
+        }
         efile.setExt(ai.getItem().getExt());
         efile.setBbh("ADD");
         efile.setMd5(ai.getItem().getMd5());
