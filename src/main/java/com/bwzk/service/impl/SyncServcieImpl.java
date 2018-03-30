@@ -1,6 +1,7 @@
 package com.bwzk.service.impl;
 
 import ch.qos.logback.classic.Logger;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.mns.client.CloudAccount;
@@ -13,12 +14,14 @@ import com.bwzk.dao.i.SUserMapper;
 import com.bwzk.dao.i.SUserroleMapper;
 import com.bwzk.page.PageContext;
 import com.bwzk.pojo.EFile;
+import com.bwzk.pojo.jsonbean.DelItem;
 import com.bwzk.pojo.jsonbean.ITEM;
 import com.bwzk.pojo.jsonbean.MnsMessageDto;
 import com.bwzk.service.BaseService;
 import com.bwzk.service.i.SyncService;
 import com.bwzk.util.DateUtil;
 import com.bwzk.util.GlobalFinalAttr;
+
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -44,18 +47,19 @@ public class SyncServcieImpl extends BaseService implements SyncService {
             CloudAccount account = new CloudAccount(this.ak, this.sk, this.endPoint);
             MNSClient client = account.getMNSClient();
             for (EFile eFile : efieList) {
-                Map<String, Object> dFile = queryForMap("SELECT DID,PID,TITLE,DIRID,KEYWORD,FILETYPE,CUSTCARD" +
+                Map<String, Object> dFile = queryForMap("SELECT DID,PID,TITLE,DIRID,CUSTID,FILETYPE,CUSTCARD" +
                         " FROM D_FILE" + libcode + " WHERE STATUS=0 AND DID=" + eFile.getPid());
 
                 if (null != dFile && StringUtils.isNotBlank(MapUtils.getString(dFile, "PID"))) {
                     String DIRID = MapUtils.getString(dFile, "DIRID");
                     String TITLE = MapUtils.getString(dFile, "TITLE");
-                    String KEYWORD = MapUtils.getString(dFile, "KEYWORD");
+                    String CUSTID = MapUtils.getString(dFile, "CUSTID");
                     String FILETYPE = MapUtils.getString(dFile, "FILETYPE");
                     String CUSTCARD = MapUtils.getString(dFile, "CUSTCARD");
-
-                    ITEM.ItemBean addItem = new ITEM.ItemBean(libcode, DIRID, KEYWORD, CUSTCARD, TITLE
-                            , FILETYPE, FilenameUtils.normalize(eFile.getPathname() + eFile.getEfilename())
+                   String efilename= eFile.getPathname() + eFile.getEfilename() ;
+                    efilename=efilename.replaceAll("\\\\", "");
+                    ITEM.ItemBean addItem = new ITEM.ItemBean(libcode, DIRID, CUSTID, CUSTCARD, TITLE
+                            , FILETYPE, efilename
                             , eFile.getExt(),  eFile.getPzm(), eFile.getAttr(), eFile.getMd5(), eFile.getCreator()
                             , DateUtil.dateToStr(eFile.getCreatetime()), eFile.getFilesize());
                     ITEM item = new ITEM();
@@ -63,7 +67,7 @@ public class SyncServcieImpl extends BaseService implements SyncService {
                     try {
                         String json = JSON.toJSONString(item);
                         MnsMessageDto mnsDto = new MnsMessageDto();
-                        mnsDto.setType("hams");
+                        mnsDto.setType("hamsadd");
                         mnsDto.setUuid(GlobalFinalAttr.getGuid());
                         mnsDto.setData(json);
                         String messageBody = JSON.toJSONString(mnsDto);
@@ -105,27 +109,53 @@ public class SyncServcieImpl extends BaseService implements SyncService {
             CloudAccount account = new CloudAccount(this.ak, this.sk, this.endPoint);
             MNSClient client = account.getMNSClient();
             for (EFile eFile : efieList) {
-                Map<String, Object> dFile = queryForMap("SELECT DID,PID,DIRID,KEYWORD FROM D_FILE" + libcode
+                Map<String, Object> dFile = queryForMap("SELECT DID,PID,DIRID,CUSTID FROM D_FILE" + libcode
                         + " WHERE STATUS=0 AND DID=" + eFile.getPid());
 
                 if (null != dFile && StringUtils.isNotBlank(MapUtils.getString(dFile, "PID"))) {
-//                    String DIRID = MapUtils.getString(dFile, "DIRID");
-//                    DelItem delItem = new DelItem(libcode, DIRID,
-//                            FilenameUtils.normalize(eFile.getPathname() + eFile.getEfilename()), eFile.getDeltor(),
-//                            DateUtil.dateToStr(eFile.getDeltime()));
-//                    try {
-//                        String json = JSON.toJSONString(delItem);
-//                        CloudQueue queue = client.getQueueRef(arcWriteDelQ);
-//                        Message message = new Message();
-//                        message.setMessageBody(json);
-//                        Message putMsg = queue.putMessage(message);
-//                        execSql("UPDATE E_FILE" + libcode + " SET BBH='DEL' WHERE DID=" + eFile.getDid());
-//                        eNum++;
-//                        log.error("sync del " + eNum + " itme2 queue:" + putMsg.getMessageId());
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        log.error(e.getMessage(), e);
-//                    }
+ 
+                    String DIRID = MapUtils.getString(dFile, "DIRID");
+                    String efilename= eFile.getPathname() + eFile.getEfilename() ;
+                    efilename=efilename.replaceAll("\\\\", "");
+                    DelItem delItem = new DelItem();
+                    delItem.setLIBCODE(Integer.valueOf(libcode));
+                    delItem.setEFILENAME(efilename);
+                    delItem.setDELETOR(eFile.getDeltor());
+                    delItem.setDIRID(Integer.valueOf(DIRID));
+                    delItem.setOPERTIME( eFile.getDeltime() );
+                      try {
+                        String json = JSON.toJSONString(delItem);
+                        CloudQueue queue = client.getQueueRef(arcWriteDelQ);
+                        MnsMessageDto mnsDto = new MnsMessageDto();
+                        mnsDto.setType("hamsdel");
+                        mnsDto.setUuid(GlobalFinalAttr.getGuid());
+                        mnsDto.setData(json);
+                        String messageBody = JSON.toJSONString(mnsDto);
+                        
+                        
+                        Map<String , Object> mapObj = new HashMap<>();
+                      
+                        
+                        mapObj.put("messageBody" , messageBody);
+                        mapObj.put("properties" , getProperteis());
+
+                        String finalMsg = JSON.toJSONString(mapObj);
+
+                        System.out.println(finalMsg);
+
+                        
+                        Message message = new Message();
+                        message.setMessageBody(finalMsg);
+                         Message putMsg = queue.putMessage(message);
+                        execSql("UPDATE E_FILE" + libcode + " SET BBH='DEL' WHERE DID=" + eFile.getDid());
+                        eNum++;
+                    
+                    
+                  log.error("sync del " + eNum + " itme2 queue:" + putMsg.getMessageId());
+                     } catch (Exception e) {
+                         e.printStackTrace();
+                         log.error(e.getMessage(), e);
+                    }
                 }
             }
             if (client != null) {
@@ -147,7 +177,7 @@ public class SyncServcieImpl extends BaseService implements SyncService {
             while (null != popMsg) {
                 String json = popMsg.getMessageBodyAsString();
                 System.out.println(json);
-
+                 json = new String(json.getBytes("gbk"),"utf-8");
                 Map<String , String> mapObj = JSON.parseObject(json, Map.class);
                 MnsMessageDto<JSONObject> itemBean = JSON.parseObject(mapObj.get("messageBody"), MnsMessageDto.class);
                 System.out.println(itemBean.getData().toString());
@@ -158,7 +188,7 @@ public class SyncServcieImpl extends BaseService implements SyncService {
                         StringUtils.isNotBlank(ai.getItem().getCustid())) {
                     //父级存在并且电子文件存在 修改父级的名字
                     String judgeEfileSql = "SELECT PID FROM E_FILE" + ai.getItem().getLibcode()
-                            + " WHERE  CONCAT(PATHNAME,EFILENAME) ='" + ai.getItem().getEfilename() + "'STATUS=0 ";
+                            + " WHERE  CONCAT(PATHNAME,EFILENAME) ='" + ai.getItem().getEfilename() + "' AND STATUS=0 ";
                     List<Integer> efileList = jdbcDao.query4List(judgeEfileSql, Integer.class);
                     //电子文件已经存在.需要修改DFILE的FILETYPE
                     if (efileList.size() > 0 && StringUtils.isNotBlank(ai.getItem().getFiletype())) {
@@ -218,6 +248,10 @@ public class SyncServcieImpl extends BaseService implements SyncService {
     @Override
     public String lambda2ArchiveDEL() {
         Integer eNum = 0;
+         String efilename="";
+	        String pathname="";
+		 String edelfile="";
+		 String delStr="";
         CloudAccount account = new CloudAccount(this.ak, this.sk, this.endPoint);
         MNSClient client = account.getMNSClient();
         CloudQueue queue = null;
@@ -226,13 +260,22 @@ public class SyncServcieImpl extends BaseService implements SyncService {
             Message popMsg = queue.popMessage();
             while (null != popMsg) {
                 System.out.println(popMsg.getMessageBodyAsString());
-                ITEM di = JSON.parseObject(popMsg.getMessageBody(), ITEM.class);
-//                String baseFileName = FilenameUtils.getName(di.getDELITEM().getEfilename());
-//                String sql = "UPDATE E_FILE" + di.getDELITEM().getLibcode() + " SET BBH='DEL' , STATUS=1" +
-//                        " WHERE EFILENAME='" + baseFileName + "'";
-//                System.out.println(sql);
-//                execSql(sql);
-//                log.error("同步删除了电子文件:" + di.getDELITEM().getEfilename());
+                delStr=popMsg.getMessageBodyAsString();
+                delStr = new String(delStr.getBytes("gbk"),"utf-8");
+               Map<String , String> mapObj = JSON.parseObject(delStr, Map.class);
+                 MnsMessageDto<JSONObject> itemBean = JSON.parseObject(mapObj.get("messageBody"), MnsMessageDto.class);
+        
+		         
+             edelfile=itemBean.getData().getJSONObject("delitem").getString("efilename");
+                 efilename= FilenameUtils.getName( edelfile);
+                 
+                 pathname= edelfile.replace(efilename, "")  ;
+                 pathname=pathname.replaceAll("\\\\", "");
+              String sql = "UPDATE E_FILE" + itemBean.getData().getJSONObject("delitem").getString("libcode") + " SET BBH='DEL' , STATUS=1" +
+                        " WHERE EFILENAME='" + efilename + "' AND PATHNAME='" +pathname + "'" ;
+                System.out.println(sql);
+                execSql(sql);
+                 log.error("同步删除了电子文件:" + edelfile);
                 eNum++;
 
 //                queue.deleteMessage(popMsg.getReceiptHandle());
@@ -290,9 +333,9 @@ public class SyncServcieImpl extends BaseService implements SyncService {
     private Integer insertDvolByAi(ITEM ai) {
         String tbname = "D_VOL" + ai.getItem().getLibcode();
         Integer voldid = getMaxDid(tbname);
-        String sql = "INSERT INTO " + tbname + "(DID,PID,STATUS,ATTR,ATTREX,QZH,BMID,KEYWORD,DIRID) VALUES("
+        String sql = "INSERT INTO " + tbname + "(DID,PID,STATUS,ATTR,ATTREX,QZH,BMID,CUSTID,DIRID) VALUES("
                 + voldid + ", -1, 0 , " + ai.getItem().getAttr() + "," + attrex + ",'" + qzh + "','" + qzh + "','"
-                + ai.getItem().getCustid() + "','" + ai.getItem().getDirid() + "'";
+                + ai.getItem().getCustid() + "','" + ai.getItem().getDirid() + "')";
         System.out.println(sql);
         execSql(sql);
         return voldid;
@@ -308,9 +351,9 @@ public class SyncServcieImpl extends BaseService implements SyncService {
     private Integer insertDfileByAi(ITEM ai, Integer volDid) {
         String tbname = "D_FILE" + ai.getItem().getLibcode();
         Integer fileDid = getMaxDid(tbname);
-        String sql = "INSERT INTO " + tbname + "(DID,PID,ATTACHED,STATUS,ATTR,ATTREX,QZH,BMID,KEYWORD,DIRID,FILETYPE) VALUES("
+        String sql = "INSERT INTO " + tbname + "(DID,PID,ATTACHED,STATUS,ATTR,ATTREX,QZH,BMID,CUSTID,DIRID,FILETYPE) VALUES("
                 + fileDid + ", " + volDid + ",1, 0 , " + ai.getItem().getAttr() + "," + attrex + ",'" + qzh + "','" + qzh + "','"
-                + ai.getItem().getCustid() + "','" + ai.getItem().getDirid() + "','" + ai.getItem().getFiletype() + "'";
+                + ai.getItem().getCustid() + "','" + ai.getItem().getDirid() + "','" + ai.getItem().getFiletype() + "')";
         System.out.println(sql);
         execSql(sql);
         return fileDid;
@@ -325,21 +368,39 @@ public class SyncServcieImpl extends BaseService implements SyncService {
      */
     private Integer insertEfileByAi(ITEM ai, Integer fileDid) {
         String tbname = "E_FILE" + ai.getItem().getLibcode();
+        String efilename="";
+        String pathname="";
         Integer eFileDid = getMaxDid(tbname);
         EFile efile = new EFile();
         efile.setDid(eFileDid);
         efile.setPid(fileDid);
         efile.setTitle(ai.getItem().getTitle());
-        efile.setEfilename(FilenameUtils.getBaseName(ai.getItem().getEfilename()));
-        efile.setPathname(ai.getItem().getEfilename().replace(efile.getEfilename(), ""));
+        
+         efilename= FilenameUtils.getName(ai.getItem().getEfilename());
+        efile.setEfilename(efilename);
+        efile.setAttr(0);
+        efile.setAttrex(0);
+        efile.setStatus(0);
+        pathname=   ai.getItem().getEfilename().replace(efilename, "")  ;
+        efile.setPathname(pathname);
+       
         efile.setPzm(ai.getItem().getPzm());
         efile.setExt(ai.getItem().getExt());
         efile.setBbh("ADD");
         efile.setMd5(ai.getItem().getMd5());
         efile.setCreator(ai.getItem().getCreator());
-        super.insertEfile(tbname, efile);
+        efile.setTablename(tbname);
+        
+        String sql = "insert into " + tbname +
+                "(DID,PID,EFILENAME,TITLE,EXT,PZM,PATHNAME,STATUS,ATTR,ATTREX,CREATOR,FILESIZE,MD5,CONVERTSTATUS , BBH) "
+                + "values("+efile.getDid().toString()+","+efile.getPid().toString()+",'"+efile.getEfilename()+"','"+ efile.getTitle()+"','"+
+                efile.getExt()+"','"+efile.getPzm()+"','"+efile.getPathname()+"',"+efile.getStatus().toString()+",0,0,'"+efile.getCreator()+"',"+efile.getFilesize().toString()+",'"+efile.getMd5()+"',0,'" + efile.getBbh()+"')"; 
+        sql=sql.replaceAll("\\\\", "");
+        System.out.println(sql);
+        execSql(sql);
         return eFileDid;
     }
+
 
     private Map<String  ,String > getProperteis(){
         Map<String , String> properties = new HashMap<>();
