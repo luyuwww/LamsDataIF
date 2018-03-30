@@ -65,20 +65,20 @@ public class SyncServcieImpl extends BaseService implements SyncService {
                     ITEM item = new ITEM();
                     item.setItem(addItem);
                     try {
-                        String json = JSON.toJSONString(item);
-                        MnsMessageDto mnsDto = new MnsMessageDto();
-                        mnsDto.setType("hams");
-                        mnsDto.setUuid(GlobalFinalAttr.getGuid());
-                        mnsDto.setData(json);
-                        String messageBody = JSON.toJSONString(mnsDto);
-                        Map<String , Object> mapObj = new HashMap<>();
-                        mapObj.put("messageBody" , messageBody);
-                        mapObj.put("properties" , getProperteis());
+                    	 MnsMessageDto mnsDto = new MnsMessageDto();
+                         mnsDto.setType("hams");
+                         mnsDto.setUuid(GlobalFinalAttr.getGuid());
+                         mnsDto.setData(item);
+                     //    String messageBody = JSON.toJSONString(mnsDto);
+                         Map<String , Object> mapObj = new HashMap<>();
+                         mapObj.put("messageBody" , mnsDto);
+                         mapObj.put("properties" , getProperteis());
 
-                        String finalMsg = JSON.toJSONString(mapObj);
+                         String finalMsg = JSON.toJSONString(mapObj);
+                      //   finalMsg=finalMsg.replaceAll("\\\\\\\\\\\\", "\\\\");
+                         System.out.println(finalMsg);
 
-                        System.out.println(finalMsg);
-
+                          
                         CloudQueue queue = client.getQueueRef(arcWriteAddQ);
                         Message message = new Message();
                         message.setMessageBody(finalMsg);
@@ -117,33 +117,33 @@ public class SyncServcieImpl extends BaseService implements SyncService {
                     String DIRID = MapUtils.getString(dFile, "DIRID");
                     String efilename= eFile.getPathname() + eFile.getEfilename() ;
                     efilename=efilename.replaceAll("\\\\", "");
-                    DelItem delItem = new DelItem();
-                    delItem.setLibcode(Integer.valueOf(libcode));
-                    delItem.setEfilename(efilename);
-                    delItem.setDeletor(eFile.getDeltor());
-                    delItem.setDirid(Integer.valueOf(DIRID));
-                    delItem.setOpertime( eFile.getDeltime() );
+                    DelItem delitem = new DelItem();
+                    delitem.setLibcode(Integer.valueOf(libcode));
+                    delitem.setEfilename(efilename);
+                    delitem.setDeletor(eFile.getDeltor());
+                    delitem.setDirid(Integer.valueOf(DIRID));
+                    delitem.setOpertime( eFile.getDeltime() );
                       try {
-                        String json = JSON.toJSONString(delItem);
-                        CloudQueue queue = client.getQueueRef(arcWriteDelQ);
-                        MnsMessageDto mnsDto = new MnsMessageDto();
-                        mnsDto.setType("hams");
-                        mnsDto.setUuid(GlobalFinalAttr.getGuid());
-                        mnsDto.setData(json);
-                        String messageBody = JSON.toJSONString(mnsDto);
-                        
-                        
-                        Map<String , Object> mapObj = new HashMap<>();
-                      
-                        
-                        mapObj.put("messageBody" , messageBody);
-                        mapObj.put("properties" , getProperteis());
+                    	   Map<String , Object> data = new HashMap<>();
+                           data.put("delitem" , delitem);
+                           
+                           MnsMessageDto mnsDto = new MnsMessageDto();
+                           mnsDto.setType("hams");
+                           mnsDto.setUuid(GlobalFinalAttr.getGuid());
+                           mnsDto.setData(data);
+                            
+                           Map<String , Object> mapObj = new HashMap<>();
+                         
+                           
+                           mapObj.put("messageBody" , mnsDto);
+                           mapObj.put("properties" , getProperteis());
 
-                        String finalMsg = JSON.toJSONString(mapObj);
-
+                           String finalMsg = JSON.toJSONString(mapObj);
+                           
+                          
                         System.out.println(finalMsg);
 
-                        
+                        CloudQueue queue = client.getQueueRef(arcWriteDelQ);
                         Message message = new Message();
                         message.setMessageBody(finalMsg);
                          Message putMsg = queue.putMessage(message);
