@@ -1,6 +1,6 @@
 package com.bwzk.pojo.jsonbean;
 import java.util.Date;
-public class DELITEM {
+public class DelItem {
 
     private int LIBCODE;
     private int DIRID;

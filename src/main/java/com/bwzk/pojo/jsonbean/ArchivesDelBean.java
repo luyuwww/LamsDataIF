@@ -2,8 +2,8 @@ package com.bwzk.pojo.jsonbean;
 
 public class ArchivesDelBean {
 
-    private DELITEM DELITEM;
-    public void setDELITEM(DELITEM DELITEM) {
+    private DelItem DELITEM;
+    public void setDELITEM(DelItem DELITEM) {
          this.DELITEM = DELITEM;
      }
 
@@ -15,7 +15,7 @@ public class ArchivesDelBean {
         return null;
     }
 
-    public DELITEM getDELITEM() {
+    public DelItem getDELITEM() {
          return DELITEM;
      }
 
