@@ -27,25 +27,24 @@ public class ITEM {
 
 
 
-        public ItemBean(String libcode , String dirid , String  keyword, String custcard, String title
-                        , String filetype, String efilename, String ext ,  String pzm ,  Integer attr
-                        , String md5, String creator , String opertime , Integer filesize) {
-            this.pzm = pzm;
-            this.custcard = custcard;
-            this.attr = attr;
-            this.ext = ext;
-            this.creator = creator;
-            this.title = title;
-            this.filesize = filesize;
-            this.libcode = libcode;
-            this.md5 = md5;
-            this.efilename = efilename;
-            this.filetype = filetype;
-            this.dirid = dirid;
-            this.opertime = opertime;
-            this.custid = custid;
-            this.custname = title;
-        }
+        public ItemBean(String libcode , String dirid , String  custid, String custcard, String custname
+                , String filetype, String efilename, String ext ,  String pzm ,  Integer attr
+                , String md5, String creator , String opertime , Integer filesize) {
+    this.pzm = pzm;
+    this.custcard = custcard;
+    this.attr = attr;
+    this.ext = ext;
+    this.creator = creator;
+    this.filesize = filesize;
+    this.libcode = libcode;
+    this.md5 = md5;
+    this.efilename = efilename;
+    this.filetype = filetype;
+    this.dirid = dirid;
+    this.opertime = opertime;
+    this.custid = custid;
+    this.custname = custname;
+}
 
         /**
          * pzm : 111

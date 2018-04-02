@@ -123,6 +123,7 @@ public class SyncServcieImpl extends BaseService implements SyncService {
                     delitem.setDeletor(eFile.getDeltor());
                     delitem.setDirid(Integer.valueOf(DIRID));
                     delitem.setOpertime( eFile.getDeltime() );
+                    delitem.setCustid(MapUtils.getString(dFile, "CUSTID"));
                       try {
                     	   Map<String , Object> data = new HashMap<>();
                            data.put("delitem" , delitem);
@@ -332,10 +333,15 @@ public class SyncServcieImpl extends BaseService implements SyncService {
      */
     private Integer insertDvolByAi(ITEM ai) {
         String tbname = "D_VOL" + ai.getItem().getLibcode();
+        String custName="";
+        if (StringUtils.isNotBlank(ai.getItem().getCustname())){
+        	custName=ai.getItem().getCustname();
+        }
+        
         Integer voldid = getMaxDid(tbname);
-        String sql = "INSERT INTO " + tbname + "(DID,PID,STATUS,ATTR,ATTREX,QZH,BMID,CUSTID,DIRID) VALUES("
+        String sql = "INSERT INTO " + tbname + "(DID,PID,STATUS,ATTR,ATTREX,QZH,BMID,CUSTID,DIRID,TITLE) VALUES("
                 + voldid + ", -1, 0 , " + ai.getItem().getAttr() + "," + attrex + ",'" + qzh + "','" + qzh + "','"
-                + ai.getItem().getCustid() + "','" + ai.getItem().getDirid() + "')";
+                + ai.getItem().getCustid() + "','" + ai.getItem().getDirid() +"','" + custName +  "')";
         System.out.println(sql);
         execSql(sql);
         return voldid;
@@ -350,10 +356,14 @@ public class SyncServcieImpl extends BaseService implements SyncService {
      */
     private Integer insertDfileByAi(ITEM ai, Integer volDid) {
         String tbname = "D_FILE" + ai.getItem().getLibcode();
+        String custName="";
+        if (StringUtils.isNotBlank(ai.getItem().getCustname())){
+        	custName=ai.getItem().getCustname();
+        }
         Integer fileDid = getMaxDid(tbname);
-        String sql = "INSERT INTO " + tbname + "(DID,PID,ATTACHED,STATUS,ATTR,ATTREX,QZH,BMID,CUSTID,DIRID,FILETYPE) VALUES("
+        String sql = "INSERT INTO " + tbname + "(DID,PID,ATTACHED,STATUS,ATTR,ATTREX,QZH,BMID,CUSTID,DIRID,FILETYPE,TITLE) VALUES("
                 + fileDid + ", " + volDid + ",1, 0 , " + ai.getItem().getAttr() + "," + attrex + ",'" + qzh + "','" + qzh + "','"
-                + ai.getItem().getCustid() + "','" + ai.getItem().getDirid() + "','" + ai.getItem().getFiletype() + "')";
+                + ai.getItem().getCustid() + "','" + ai.getItem().getDirid() + "','" + ai.getItem().getFiletype()+ "','" + custName + "')";
         System.out.println(sql);
         execSql(sql);
         return fileDid;

@@ -7,6 +7,7 @@ public class DelItem {
     private String efilename;
     private String deletor;
     private Date opertime;
+    private String custid;
 	public int getLibcode() {
 		return libcode;
 	}
@@ -36,6 +37,12 @@ public class DelItem {
 	}
 	public void setOpertime(Date opertime) {
 		this.opertime = opertime;
+	}
+	public String getCustid() {
+		return custid;
+	}
+	public void setCustid(String custid) {
+		this.custid = custid;
 	}
      
 
