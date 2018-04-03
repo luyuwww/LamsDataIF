@@ -57,7 +57,8 @@ public class SyncServcieImpl extends BaseService implements SyncService {
                     String FILETYPE = MapUtils.getString(dFile, "FILETYPE");
                     String CUSTCARD = MapUtils.getString(dFile, "CUSTCARD");
                    String efilename= eFile.getPathname() + eFile.getEfilename() ;
-                    efilename=efilename.replaceAll("\\\\", "");
+                    
+                    efilename= formatSavePath(efilename);
                     ITEM.ItemBean addItem = new ITEM.ItemBean(libcode, DIRID, CUSTID, CUSTCARD, TITLE
                             , FILETYPE, efilename
                             , eFile.getExt(),  eFile.getPzm(), eFile.getAttr(), eFile.getMd5(), eFile.getCreator()
@@ -117,7 +118,7 @@ public class SyncServcieImpl extends BaseService implements SyncService {
                     String DIRID = MapUtils.getString(dFile, "DIRID");
                     String CUSTID = MapUtils.getString(dFile, "CUSTID");
                     String efilename= eFile.getPathname() + eFile.getEfilename() ;
-                    efilename=efilename.replaceAll("\\\\", "");
+                    efilename= formatSavePath(efilename);
                     DelItem.ItemBean delitem = new DelItem.ItemBean(   libcode , DIRID ,CUSTID 
                     		,efilename,eFile.getDeltime()  );
                     
@@ -421,6 +422,24 @@ public class SyncServcieImpl extends BaseService implements SyncService {
         properties.put("propertyValue", "text");
         return properties;
     }
+    
+    /**
+	 * 统一格式云存储路径
+	 * @param sourceStr
+	 * @return
+	 */
+    private   String formatSavePath(String pathname){
+		pathname =  pathname.replaceAll("\\\\" , "/");
+		pathname =  pathname.replaceAll("/////" , "/");
+		pathname =  pathname.replaceAll("////" , "/");
+		pathname =  pathname.replaceAll("///" , "/");
+		pathname =  pathname.replaceAll("//" , "/");
+         if (pathname.startsWith("/")){
+        	 pathname =  pathname.substring(1);
+         }
+         return pathname;
+	}
+    
     @Autowired
     private SGroupMapper sGroupMapper;
     @Autowired
