@@ -108,40 +108,38 @@ public class SyncServcieImpl extends BaseService implements SyncService {
             List<EFile> efieList = listNoSyncDelEfile50("E_FILE" + libcode);
             CloudAccount account = new CloudAccount(this.ak, this.sk, this.endPoint);
             MNSClient client = account.getMNSClient();
+            
             for (EFile eFile : efieList) {
                 Map<String, Object> dFile = queryForMap("SELECT DID,PID,DIRID,CUSTID FROM D_FILE" + libcode
                         + " WHERE STATUS=0 AND DID=" + eFile.getPid());
 
                 if (null != dFile && StringUtils.isNotBlank(MapUtils.getString(dFile, "PID"))) {
- 
                     String DIRID = MapUtils.getString(dFile, "DIRID");
+                    String CUSTID = MapUtils.getString(dFile, "CUSTID");
                     String efilename= eFile.getPathname() + eFile.getEfilename() ;
                     efilename=efilename.replaceAll("\\\\", "");
-                    DelItem delitem = new DelItem();
-                    delitem.setLibcode(Integer.valueOf(libcode));
-                    delitem.setEfilename(efilename);
-                    delitem.setDeletor(eFile.getDeltor());
-                    delitem.setDirid(Integer.valueOf(DIRID));
-                    delitem.setOpertime( eFile.getDeltime() );
-                    delitem.setCustid(MapUtils.getString(dFile, "CUSTID"));
-                      try {
-                    	   Map<String , Object> data = new HashMap<>();
-                           data.put("delitem" , delitem);
-                           
-                           MnsMessageDto mnsDto = new MnsMessageDto();
-                           mnsDto.setType("hams");
-                           mnsDto.setUuid(GlobalFinalAttr.getGuid());
-                           mnsDto.setData(data);
-                            
-                           Map<String , Object> mapObj = new HashMap<>();
+                    DelItem.ItemBean delitem = new DelItem.ItemBean(   libcode , DIRID ,CUSTID 
+                    		,efilename,eFile.getDeltime()  );
+                    
+                    		 
+                    DelItem ditem = new DelItem();
+                    ditem.setDelitem(delitem);
+                    
+                    try {
                          
-                           
-                           mapObj.put("messageBody" , mnsDto);
-                           mapObj.put("properties" , getProperteis());
+                        MnsMessageDto mnsDto = new MnsMessageDto();
+                        mnsDto.setType("hams");
+                        mnsDto.setUuid(GlobalFinalAttr.getGuid());
+                        mnsDto.setData(ditem);
+                         
+                        Map<String , Object> mapObj = new HashMap<>();
+                      
+                        
+                        mapObj.put("messageBody" , mnsDto);
+                        mapObj.put("properties" , getProperteis());
 
-                           String finalMsg = JSON.toJSONString(mapObj);
-                           
-                          
+                        String finalMsg = JSON.toJSONString(mapObj);
+                        
                         System.out.println(finalMsg);
 
                         CloudQueue queue = client.getQueueRef(arcWriteDelQ);
@@ -265,7 +263,8 @@ public class SyncServcieImpl extends BaseService implements SyncService {
                 delStr = new String(delStr.getBytes("gbk"),"utf-8");
                Map<String , String> mapObj = JSON.parseObject(delStr, Map.class);
                  MnsMessageDto<JSONObject> itemBean = JSON.parseObject(mapObj.get("messageBody"), MnsMessageDto.class);
-        
+               
+                   
 		         
              edelfile=itemBean.getData().getJSONObject("delitem").getString("efilename");
                  efilename= FilenameUtils.getName( edelfile);
