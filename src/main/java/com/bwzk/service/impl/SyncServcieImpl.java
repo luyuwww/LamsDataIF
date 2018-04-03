@@ -177,7 +177,7 @@ public class SyncServcieImpl extends BaseService implements SyncService {
             while (null != popMsg) {
                 String json = popMsg.getMessageBodyAsString();
                 System.out.println(json);
-                 json = new String(json.getBytes("gbk"),"utf-8");
+                 json = new String(json.getBytes("utf-8"),"utf-8");
                 Map<String , String> mapObj = JSON.parseObject(json, Map.class);
                 MnsMessageDto<JSONObject> itemBean = JSON.parseObject(mapObj.get("messageBody"), MnsMessageDto.class);
                 System.out.println(itemBean.getData().toString());
@@ -261,7 +261,7 @@ public class SyncServcieImpl extends BaseService implements SyncService {
             while (null != popMsg) {
                 System.out.println(popMsg.getMessageBodyAsString());
                 delStr=popMsg.getMessageBodyAsString();
-                delStr = new String(delStr.getBytes("gbk"),"utf-8");
+                delStr = new String(delStr.getBytes("utf-8"),"utf-8");
                Map<String , String> mapObj = JSON.parseObject(delStr, Map.class);
                  MnsMessageDto<JSONObject> itemBean = JSON.parseObject(mapObj.get("messageBody"), MnsMessageDto.class);
                
