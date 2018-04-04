@@ -62,7 +62,7 @@ public class SyncServcieImpl extends BaseService implements SyncService {
                     ITEM.ItemBean addItem = new ITEM.ItemBean(libcode, DIRID, CUSTID, CUSTCARD, TITLE
                             , FILETYPE, efilename
                             , eFile.getExt(),  eFile.getPzm(), eFile.getAttr(), eFile.getMd5(), eFile.getCreator()
-                            , DateUtil.dateToStr(eFile.getCreatetime()), eFile.getFilesize());
+                            , DateUtil.dateToStr(eFile.getCreatetime()), eFile.getFilesize(),eFile.getTitle());
                     ITEM item = new ITEM();
                     item.setItem(addItem);
                     try {

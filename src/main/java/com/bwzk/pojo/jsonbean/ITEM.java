@@ -29,7 +29,7 @@ public class ITEM {
 
         public ItemBean(String libcode , String dirid , String  custid, String custcard, String custname
                 , String filetype, String efilename, String ext ,  String pzm ,  Integer attr
-                , String md5, String creator , String opertime , Integer filesize) {
+                , String md5, String creator , String opertime , Integer filesize,String efiletitle) {
     this.pzm = pzm;
     this.custcard = custcard;
     this.attr = attr;
@@ -44,6 +44,7 @@ public class ITEM {
     this.opertime = opertime;
     this.custid = custid;
     this.custname = custname;
+    this.efiletitle=efiletitle;
 }
 
         /**
@@ -79,6 +80,8 @@ public class ITEM {
         private String opertime;
         private String custid;
         private String custname;
+        private String efiletitle;
+        
 
 
         public String getPzm() {
@@ -200,5 +203,18 @@ public class ITEM {
         public void setCustname(String custname) {
             this.custname = custname;
         }
+
+
+
+		public String getEfiletitle() {
+			return efiletitle;
+		}
+
+
+
+		public void setEfiletitle(String efiletitle) {
+			this.efiletitle = efiletitle;
+		}
+        
     }
 }
