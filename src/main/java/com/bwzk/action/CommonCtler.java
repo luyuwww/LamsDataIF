@@ -1,9 +1,11 @@
 package com.bwzk.action;
 
 import ch.qos.logback.classic.Logger;
+
 import com.bwzk.service.i.ArcService;
 import com.bwzk.service.i.SyncService;
 import com.bwzk.util.GlobalFinalAttr;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -17,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -260,6 +264,47 @@ public class CommonCtler {
             out.close();
         }
     }
+    
+    /**
+     * 获取访问者的IP
+     */
+    @RequestMapping(value = "/getClientIp", method = RequestMethod.GET)
+    public void getClientIp(HttpServletRequest request, HttpServletResponse response,@RequestParam String getKey, @RequestParam String random) {
+    
+    	if (!getKey.equals("hams@2017")){
+    		return ;
+    	}
+    	
+    	PrintWriter out = null;
+      
+            response.setContentType("text/html;charset=GBK ");
+            try {
+				out = response.getWriter();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	String ip = request.getHeader("X-Real-IP");
+        if (!StringUtils.isBlank(ip) && !"unknown".equalsIgnoreCase(ip)) {
+        	out.println(ip);   
+        }
+        ip = request.getHeader("X-Forwarded-For");
+        if (!StringUtils.isBlank(ip) && !"unknown".equalsIgnoreCase(ip)) {
+            // 多次反向代理后会有多个IP值，第一个为真实IP。
+           int index = ip.indexOf(',');
+            if (index != -1) {
+            	
+            } else {
+            	out.println(ip);   
+            }
+        } else {
+        	out.println( request.getRemoteAddr());
+        }
+        
+    	
+    	 
+    }
+    
 
     /**
      * 内部调用 判断是否是允许用户 ture是的
