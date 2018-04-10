@@ -204,12 +204,16 @@ public class SyncServcieImpl extends BaseService implements SyncService {
                         // 电子文件不存在 判断DFILE是否存在
                         String judgeDfileSql = "SELECT DID FROM D_FILE" + ai.getItem().getLibcode()
                                 + " WHERE CUSTID='" + ai.getItem().getCustid() + "' AND DIRID='"
-                                + ai.getItem().getDirid() + "' AND STATUS=0 AND FILETYPE='"
-                                + ai.getItem().getFiletype() + "'";
+                                + ai.getItem().getDirid() + "' AND STATUS=0";
+                                		//+ " AND FILETYPE='"+ ai.getItem().getFiletype() + "'";
                         List<Integer> dfileList = jdbcDao.query4List(judgeDfileSql, Integer.class);
                         if (dfileList.size() > 0) {//文件存在 好办了 直接插入EFILE关联
                             //插入Efile  dfile.did
                             insertEfileByAi(ai, dfileList.get(0));
+                            execSql("UPDATE D_FILE" + ai.getItem().getLibcode() + " SET FILETYPE='"
+                                    + ai.getItem().getFiletype() + "' WHERE DID=" + dfileList.get(0).toString());
+                            log.error("update D_FILE" + ai.getItem().getLibcode() + "'filetype=" + ai.getItem().getFiletype());
+                        
                         } else {//不存在文件 需要穿件文件
                             String judgeDVolSql = "SELECT DID FROM D_VOL" + ai.getItem().getLibcode()
                                     + " WHERE CUSTID='" + ai.getItem().getCustid() + "' AND STATUS=0";
