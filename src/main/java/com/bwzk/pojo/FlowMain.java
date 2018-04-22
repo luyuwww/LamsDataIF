@@ -40,6 +40,16 @@ public class FlowMain implements Serializable {
 
     private String ftriggerflag;
 
+    private String sqrbm;
+
+    public String getSqrbm() {
+        return sqrbm;
+    }
+
+    public void setSqrbm(String sqrbm) {
+        this.sqrbm = sqrbm;
+    }
+
     public String getId() {
         return id;
     }

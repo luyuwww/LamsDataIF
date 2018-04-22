@@ -20,6 +20,7 @@
     <result column="msg" property="msg" jdbcType="VARCHAR" />
     <result column="requestid" property="requestid" jdbcType="VARCHAR" />
     <result column="ftriggerflag" property="ftriggerflag" jdbcType="VARCHAR" />
+    <result column="sqrbm" property="sqrbm" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -119,7 +120,7 @@
     stardate, enddate, requesttime,
     userid, usercode, username,
     memo, status, result,
-    msg, requestid, ftriggerflag
+    msg, requestid, ftriggerflag,sqrbm
     )
     values (#{id,jdbcType=VARCHAR}, #{fid,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR},
     #{applyauth,jdbcType=VARCHAR}, #{applytype,jdbcType=VARCHAR}, #{applytimes,jdbcType=DECIMAL},
@@ -127,6 +128,7 @@
     #{userid,jdbcType=VARCHAR}, #{usercode,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR},
     #{memo,jdbcType=VARCHAR}, #{status,jdbcType=DECIMAL}, #{result,jdbcType=DECIMAL},
     #{msg,jdbcType=VARCHAR}, #{requestid,jdbcType=VARCHAR}, #{ftriggerflag,jdbcType=VARCHAR}
+    , #{sqrbm,jdbcType=VARCHAR}
     )
   </insert>
   <insert id="insertSelective" parameterType="com.bwzk.pojo.FlowMain" >
@@ -186,6 +188,9 @@
       <if test="ftriggerflag != null" >
         ftriggerflag,
       </if>
+      <if test="sqrbm != null" >
+        sqrbm,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -241,6 +246,9 @@
       </if>
       <if test="ftriggerflag != null" >
         #{ftriggerflag,jdbcType=VARCHAR},
+      </if>
+      <if test="sqrbm != null" >
+        #{sqrbm,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>

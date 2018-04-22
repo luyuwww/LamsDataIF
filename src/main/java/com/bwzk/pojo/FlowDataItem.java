@@ -19,6 +19,26 @@ public class FlowDataItem implements Serializable {
 
     private Integer arcid;
 
+    private Integer ys;
+
+    private Integer fs;
+
+    public Integer getYs() {
+        return ys;
+    }
+
+    public void setYs(Integer ys) {
+        this.ys = ys;
+    }
+
+    public Integer getFs() {
+        return fs;
+    }
+
+    public void setFs(Integer fs) {
+        this.fs = fs;
+    }
+
     public String getId() {
         return id;
     }

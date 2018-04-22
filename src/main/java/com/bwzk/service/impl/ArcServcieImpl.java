@@ -98,7 +98,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
     public String syncOaData(){
         Integer dNum = 0;
         Integer eNum = 0;
-        String msg = "OA data ok 好的";
+        String msg = "OA  ";
         //默认数据库当前时间
         String dateStr = getDatabaseType().getDateByDb();
 
@@ -128,7 +128,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                             fields.append(wsField.getFieldname()).append(",");
                             switch (wsField.getFieldtype()) {
                                 case 11:
-                                    if (StringUtils.isNotBlank(oaValue)) {
+                                    if (StringUtils.isBlank(oaValue)) {
                                         values.append(dateStr+",");
                                     } else {
                                         values.append(generateTimeToSQLDate(OAData)).append(",");
@@ -151,8 +151,17 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                             }
                         }
                     }
+
                     fields.append(defaultField);
                     values.append(defaultValue);
+                    //由于OA没有把办法提供年度,所以这里用createtime他截取前4位
+                    String createtime = (dataMap.get("CREATETIME") == null ? "" : dataMap.get("CREATETIME").toString());
+                    //如果创建日期为空或则会有了年度就不截取了
+                    if(StringUtils.isNotBlank(createtime) && createtime.length() > 4
+                            && !fields.toString().toUpperCase().contains("ND")){
+                        fields.append(",ND");
+                        values.append(","+createtime.substring(0,4));
+                    }
 
                     fields.append(",pid,createtime,qzh,did,attached");
                     values.append(",-1,sysdate,'");
@@ -167,14 +176,16 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                     fields.setLength(0);
                     values.setLength(0);
                     addEfile(fjList , maxdid);
+                    dNum++;
                 } catch (Exception e) {
                     e.printStackTrace();
+                    eNum++;
                     log.error("插入一条数据失败.fileReciveTxt: " + e.getMessage());
                     break;
                 }
             }
         }
-        return msg;
+        return msg + dNum;
     }
     /*
          * 分页抓取 300条

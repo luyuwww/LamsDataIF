@@ -10,6 +10,8 @@
     <result column="mj" property="mj" jdbcType="VARCHAR" />
     <result column="bgqx" property="bgqx" jdbcType="VARCHAR" />
     <result column="arcid" property="arcid" jdbcType="DECIMAL" />
+    <result column="ys" property="ys" jdbcType="DECIMAL" />
+    <result column="fs" property="fs" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -105,10 +107,11 @@
   <insert id="insert" parameterType="com.bwzk.pojo.FlowDataItem" >
     insert into FLOW_MID_DATA_ITEM (id, pid, tablename,
     keyword, title, mj,
-    bgqx, arcid)
+    bgqx, arcid,ys,fs)
     values (#{id,jdbcType=VARCHAR}, #{pid,jdbcType=VARCHAR}, #{tablename,jdbcType=VARCHAR},
     #{keyword,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{mj,jdbcType=VARCHAR},
-    #{bgqx,jdbcType=VARCHAR}, #{arcid,jdbcType=DECIMAL})
+    #{bgqx,jdbcType=VARCHAR}, #{arcid,jdbcType=DECIMAL}, #{ys,jdbcType=DECIMAL}
+    , #{fs,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.bwzk.pojo.FlowDataItem" >
     insert into FLOW_MID_DATA_ITEM
@@ -137,6 +140,12 @@
       <if test="arcid != null" >
         arcid,
       </if>
+      <if test="ys != null" >
+        ys,
+      </if>
+      <if test="fs != null" >
+        fs,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -162,6 +171,12 @@
       </if>
       <if test="arcid != null" >
         #{arcid,jdbcType=DECIMAL},
+      </if>
+      <if test="ys != null" >
+        #{ys,jdbcType=DECIMAL},
+      </if>
+      <if test="fs != null" >
+        #{fs,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>

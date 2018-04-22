@@ -108,6 +108,7 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
                     fm.setUsercode(sqrUser.getUsercode());
                     fm.setUsername(sqrUser.getUsername());
                     fm.setMemo(lymd + ":" + sqyy);
+                    fm.setSqrbm(sqrbm);
 
                     fm.setStatus(0);//0:有效   1:过期或者失效
                     fm.setResult(0);//0:未处理(OA没有处理) 1:同意利用  2:否决利用
@@ -122,6 +123,8 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
                         String bgqx = (map.get("BGQX") == null ? "" : map.get("BGQX").toString());
                         String keyword = (map.get("KEYWORD") == null ? "" : map.get("KEYWORD").toString());
                         String title = (map.get("TITLE") == null ? "" : map.get("TITLE").toString());
+                        String  ys= (map.get("YS") == null ? "" : map.get("YS").toString());
+                        String  gdfs= (map.get("GDFS") == null ? "" : map.get("GDFS").toString());
 
                         FlowDataItem item = new FlowDataItem();
                         item.setId(GlobalFinalAttr.getGuid());
@@ -133,6 +136,8 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
                         item.setMj(itemMj);
                         item.setBgqx(bgqx);
                         item.setArcid(itemDid);
+                        item.setYs(StringUtils.isNotBlank(ys) ? Integer.parseInt(ys) : 0);
+                        item.setFs(StringUtils.isNotBlank(gdfs) ? Integer.parseInt(gdfs) : 0);
                         flowDataItemMapper.insert(item);
                     }
                 }
