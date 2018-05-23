@@ -5,10 +5,7 @@ import com.bwzk.dao.i.da.FlowDataItemMapper;
 import com.bwzk.dao.i.da.FlowMainMapper;
 import com.bwzk.dao.i.da.SBacklogMapper;
 import com.bwzk.dao.i.da.SUserMapper;
-import com.bwzk.pojo.FlowDataItem;
-import com.bwzk.pojo.FlowMain;
-import com.bwzk.pojo.FlowMainExample;
-import com.bwzk.pojo.SUser;
+import com.bwzk.pojo.*;
 import com.bwzk.service.BaseService;
 import com.bwzk.service.i.NoticeService;
 import com.bwzk.util.GlobalFinalAttr;
@@ -92,6 +89,7 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
             for (String userCode : userCodeList) {
                 SUser sqrUser = sUserMapper.getUserByUsercode(sqrdm);
                 if (sqrUser != null) {
+                    SGroup sqrGroup = sGroupMapper.selectByPrimaryKey(sqrUser.getPid());
                     FlowMain fm = new FlowMain();
                     fm.setId(GlobalFinalAttr.getGuid());
                     fm.setFid(actTaskID);
@@ -109,6 +107,9 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
                     fm.setUsername(sqrUser.getUsername());
                     fm.setMemo(lymd + ":" + sqyy);
                     fm.setSqrbm(sqrbm);
+                    if(null != sqrGroup && StringUtils.isNotBlank(sqrGroup.getGfzj())){
+                        fm.setDeptmentname(sqrGroup.getGfzj().replace("org_", "").replace("dep_", ""));
+                    }
 
                     fm.setStatus(0);//0:有效   1:过期或者失效
                     fm.setResult(0);//0:未处理(OA没有处理) 1:同意利用  2:否决利用
@@ -125,6 +126,7 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
                         String title = (map.get("TITLE") == null ? "" : map.get("TITLE").toString());
                         String  ys= (map.get("YS") == null ? "" : map.get("YS").toString());
                         String  gdfs= (map.get("GDFS") == null ? "" : map.get("GDFS").toString());
+                        String  datadepid= (map.get("DATADEPID") == null ? "" : map.get("DATADEPID").toString());
 
                         FlowDataItem item = new FlowDataItem();
                         item.setId(GlobalFinalAttr.getGuid());
@@ -135,6 +137,7 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
                         item.setTitle(title);
                         item.setMj(itemMj);
                         item.setBgqx(bgqx);
+                        item.setDatadepid(datadepid);
                         item.setArcid(itemDid);
                         item.setYs(StringUtils.isNotBlank(ys) ? Integer.parseInt(ys) : 0);
                         item.setFs(StringUtils.isNotBlank(gdfs) ? Integer.parseInt(gdfs) : 0);

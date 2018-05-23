@@ -12,6 +12,8 @@
     <result column="arcid" property="arcid" jdbcType="DECIMAL" />
     <result column="ys" property="ys" jdbcType="DECIMAL" />
     <result column="fs" property="fs" jdbcType="DECIMAL" />
+    <result column="bz" property="bz" jdbcType="VARCHAR" />
+    <result column="datadepid" property="datadepid" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -72,7 +74,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, pid, tablename, keyword, title, mj, bgqx, arcid
+    id, pid, tablename, keyword, title, mj, bgqx, arcid,bz,ys,fs,datadepid
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bwzk.pojo.FlowDataItemExample" >
     select
@@ -107,11 +109,11 @@
   <insert id="insert" parameterType="com.bwzk.pojo.FlowDataItem" >
     insert into FLOW_MID_DATA_ITEM (id, pid, tablename,
     keyword, title, mj,
-    bgqx, arcid,ys,fs)
+    bgqx, arcid,ys,fs,bz,datadepid)
     values (#{id,jdbcType=VARCHAR}, #{pid,jdbcType=VARCHAR}, #{tablename,jdbcType=VARCHAR},
     #{keyword,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{mj,jdbcType=VARCHAR},
     #{bgqx,jdbcType=VARCHAR}, #{arcid,jdbcType=DECIMAL}, #{ys,jdbcType=DECIMAL}
-    , #{fs,jdbcType=DECIMAL})
+    , #{fs,jdbcType=DECIMAL}, #{bz,jdbcType=VARCHAR}, #{datadepid,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.bwzk.pojo.FlowDataItem" >
     insert into FLOW_MID_DATA_ITEM
@@ -146,6 +148,12 @@
       <if test="fs != null" >
         fs,
       </if>
+      <if test="bz != null" >
+        bz,
+      </if>
+      <if test="datadepid != null" >
+        datadepid,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -177,6 +185,12 @@
       </if>
       <if test="fs != null" >
         #{fs,jdbcType=DECIMAL},
+      </if>
+      <if test="bz != null" >
+        #{bz,jdbcType=VARCHAR},
+      </if>
+      <if test="datadepid != null" >
+        #{datadepid,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -213,6 +227,18 @@
       <if test="record.arcid != null" >
         arcid = #{record.arcid,jdbcType=DECIMAL},
       </if>
+      <if test="record.fs != null" >
+        fs = #{record.fs,jdbcType=DECIMAL},
+      </if>
+      <if test="record.ys != null" >
+        ys = #{record.ys,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bz != null" >
+        bz = #{record.bz,jdbcType=VARCHAR},
+      </if>
+      <if test="record.datadepid != null" >
+        datadepid = #{record.datadepid,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -227,7 +253,11 @@
     title = #{record.title,jdbcType=VARCHAR},
     mj = #{record.mj,jdbcType=VARCHAR},
     bgqx = #{record.bgqx,jdbcType=VARCHAR},
-    arcid = #{record.arcid,jdbcType=DECIMAL}
+    arcid = #{record.arcid,jdbcType=DECIMAL},
+    ys = #{record.ys,jdbcType=DECIMAL},
+    fs = #{record.fs,jdbcType=DECIMAL},
+    bz = #{record.bz,jdbcType=VARCHAR},
+    datadepid = #{record.datadepid,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -256,6 +286,18 @@
       <if test="arcid != null" >
         arcid = #{arcid,jdbcType=DECIMAL},
       </if>
+      <if test="fs != null" >
+        fs = #{fs,jdbcType=DECIMAL},
+      </if>
+      <if test="ys != null" >
+        ys = #{ys,jdbcType=DECIMAL},
+      </if>
+      <if test="bz != null" >
+        bz = #{bz,jdbcType=VARCHAR},
+      </if>
+      <if test="datadepid != null" >
+        datadepid = #{datadepid,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -267,7 +309,11 @@
       title = #{title,jdbcType=VARCHAR},
       mj = #{mj,jdbcType=VARCHAR},
       bgqx = #{bgqx,jdbcType=VARCHAR},
-      arcid = #{arcid,jdbcType=DECIMAL}
+      arcid = #{arcid,jdbcType=DECIMAL},
+      ys = #{ys,jdbcType=DECIMAL},
+      fs = #{fs,jdbcType=DECIMAL},
+      bz = #{bz,jdbcType=VARCHAR},
+      datadepid = #{datadepid,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

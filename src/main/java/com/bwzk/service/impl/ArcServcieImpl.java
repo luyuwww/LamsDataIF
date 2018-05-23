@@ -207,11 +207,12 @@ public class ArcServcieImpl extends BaseService implements ArcService {
      */
     private void addEfile(List<Map<String , Object>> fjList , Integer pid) {
         String tableName = "E_FILE" + libcode ;
-        String euuid , docID , eBizName = "";
+        String euuid , docID , ext1 , eBizName = "";
 
         for (Map<String, Object> dataMap : fjList) {
             euuid = dataMap.get("UUID") == null ? "" : MapUtils.getString(dataMap , "UUID");
             docID = dataMap.get("DOCUID") == null ? "" : MapUtils.getString(dataMap , "DOCUID");
+            ext1 = dataMap.get("EXT1") == null ? "" : MapUtils.getString(dataMap , "EXT1");
             eBizName = dataMap.get("FILEBIZNAME") == null ? "" : MapUtils.getString(dataMap , "FILEBIZNAME");
             File sFile = new File(FilenameUtils.normalize(basePath + docID));
             if(sFile.exists()){
@@ -228,8 +229,14 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                     eFile.setDid(getMaxDid(tableName));
                     eFile.setPid(pid);
                     eFile.setEfilename(docID);
-                    eFile.setTitle(StringUtils.isBlank(eBizName) ? docID : eBizName);
                     eFile.setExt(FilenameUtils.getExtension(docID));
+                    if(docID.contains(eBizName) || ext1.equals("6")){
+                        eFile.setTitle("审批单");
+                    }else{
+                        String tempFileanme = StringUtils.isBlank(eBizName) ? docID : eBizName;
+                        tempFileanme = tempFileanme.substring(0 , tempFileanme.lastIndexOf(eFile.getExt())+ 1);
+                        eFile.setTitle(tempFileanme);
+                    }
                     eFile.setPzm(pzm);
                     eFile.setPathname(ftpXdlj+efilepath);
                     eFile.setStatus(0);

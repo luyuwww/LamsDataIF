@@ -42,6 +42,8 @@ public class FlowMain implements Serializable {
 
     private String sqrbm;
 
+    private String deptmentname;
+
     public String getSqrbm() {
         return sqrbm;
     }
@@ -192,5 +194,14 @@ public class FlowMain implements Serializable {
 
     public void setFtriggerflag(String ftriggerflag) {
         this.ftriggerflag = ftriggerflag == null ? null : ftriggerflag.trim();
+    }
+
+
+    public String getDeptmentname() {
+        return deptmentname;
+    }
+
+    public void setDeptmentname(String deptmentname) {
+        this.deptmentname = deptmentname;
     }
 }

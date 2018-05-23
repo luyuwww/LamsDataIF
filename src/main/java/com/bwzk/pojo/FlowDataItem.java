@@ -23,6 +23,25 @@ public class FlowDataItem implements Serializable {
 
     private Integer fs;
 
+    private  String bz;
+    private  String datadepid;
+
+    public String getDatadepid() {
+        return datadepid;
+    }
+
+    public void setDatadepid(String datadepid) {
+        this.datadepid = datadepid;
+    }
+
+    public String getBz() {
+        return bz;
+    }
+
+    public void setBz(String bz) {
+        this.bz = bz;
+    }
+
     public Integer getYs() {
         return ys;
     }
