@@ -69,6 +69,14 @@ public class NoticeServiceImpl extends BaseService implements NoticeService {
             sqyy = (vars.get("sqyy") == null ? "" : vars.get("sqyy").toString());
             sqtype = (vars.get("sqtype") == null ? "" : vars.get("sqtype").toString());
 
+//            case 2: return "下载";
+//            case 3: return "借阅";
+            if(sqtype.equals("下载") || sqtype.equals("2")){
+                sqtype = "浏览、下载";
+            }else if(sqtype.equals("借阅")|| sqtype.equals("3")){
+                sqtype = "实物借阅";
+            }
+
             lylx = (vars.get("timeortimes") == null ? "" : vars.get("timeortimes").toString());
             requestTime = (vars.get("sqrq") == null ? "" : vars.get("sqrq").toString());
             if (lylx.equals("次数")) {
