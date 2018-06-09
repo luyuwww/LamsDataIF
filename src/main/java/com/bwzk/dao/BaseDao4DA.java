@@ -81,7 +81,4 @@ public interface BaseDao4DA {
     @Select("SELECT * FROM S_FWQPZ WHERE pzname='${pzm}'")
     SFwqpz getFwqpzByPzm(@Param("pzm") String pzm);
 
-    @Select("SELECT * FROM ${tableName} WHERE LIBCODE=${libcode}")
-    List<DClassifyZjk> listFlh(@Param("tableName") String tableName ,
-                               @Param("libcode") Integer libcode);
 }

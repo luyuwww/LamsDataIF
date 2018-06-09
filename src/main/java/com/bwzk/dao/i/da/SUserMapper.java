@@ -79,7 +79,4 @@ public interface SUserMapper extends BaseDao4DA {
     @Select("SELECT COUNT(DID) FROM ${dTableName} WHERE ${whereSql}")
     Integer countNumByWhere(@Param("dTableName") String dTableName, @Param("whereSql") String whereSql);
 
-    @Insert("INSERT INTO ${dTableName}(DID,PID,FLCODE,FLMC,BZ) " +
-            "VALUES(#{zjk.did},#{zjk.pid},#{zjk.flcode},#{zjk.flmc},#{zjk.bz})")
-    void insertClassify(@Param("zjk") DClassifyZjk zjk , @Param("dTableName") String dTableName);
 }

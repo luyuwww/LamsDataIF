@@ -504,99 +504,6 @@ public class BaseService {
         return ++maxDid;
     }
 
-    protected String insertUser4Map(Map<String, String> map, String dept_zj,
-                                    String esbid) {
-        String archKey = "";
-        String archVal = "";
-        Integer pid = null;
-        String result = "1";
-        FDTable fDtable = null;
-        List<FDTable> fDTableList = null;
-        StringBuffer fields = new StringBuffer();
-        StringBuffer values = new StringBuffer();
-        if (null != map && null != map.keySet() && map.keySet().size() > 0) {
-            try {
-                Integer maxdid = getMaxDid("s_user");
-                fDTableList = sGroupMapper.getFtableList("F_S_USER");
-                Set<String> fieldSet = map.keySet();
-                for (String outSysField : fieldSet) {
-                    archKey = outSysField;
-                    archVal = map.get(outSysField);
-                    if (StringUtils.isNotBlank(archVal)
-                            && StringUtils.isNotBlank(archKey)) {
-                        archVal = (StringUtils.isBlank(archVal) ? "" : archVal);
-                        archVal = (archVal.contains("'") ? archVal.replace("'",
-                                "''") : archVal);// 兼容单引号
-                        fDtable = CommonUtil.getFDtable(fDTableList, archKey);
-                        fields.append(fDtable.getFieldname()).append(",");
-                        switch (fDtable.getFieldtype()) {
-                            case 11:
-                                if (archVal.equals("")) {
-                                    values.append("sysdate,");
-                                } else {
-                                    values.append(generateTimeToSQLDate(archVal))
-                                            .append(",");
-                                }
-                                break;
-                            case 1:
-                                values.append("'").append(archVal).append("',");
-                                break;
-                            case 3:
-                                if (StringUtils.isBlank(archVal)) {
-                                    values.append("null ,");
-                                } else {
-                                    values.append(Integer.parseInt(archVal))
-                                            .append(",");
-                                }
-                                break;
-                            default:
-                                values.append("'").append(archVal).append("',");
-                                break;
-                        }
-                    }
-                }
-                try {
-                    SUser user = sUserMapper.getUserByEsbid(esbid);
-                    new IsExistDepOrUser().isUserExist(user);
-                    SGroup group = sGroupMapper.getGroupByGfzj(dept_zj);
-                    if (group == null) {
-                        pid = defaultYhGroup;
-                    } else {
-                        pid = group.getDid();
-                    }
-                    fields.append("did,pid,esbid,esbcode");
-                    values.append(maxdid).append(",").append(pid).append(",'")
-                            .append(esbid).append("',").append("'")
-                            .append(dept_zj).append("'");
-                    String SQL = "insert into s_user (" + fields.toString()
-                            + ") values ( " + values.toString() + " )";
-                    System.out.println(SQL);
-                    execSql(SQL);
-                    result = "0";
-                    log.error("插入一条数据成功. " + SQL);
-                    SUserrole userrole = new SUserrole();
-                    userrole.setDid(getMaxDid("S_USERROLE"));
-                    userrole.setYhid(maxdid);
-                    userrole.setJsid(jsid);
-                    sUserroleMapper.insert(userrole);
-                    log.error("用户:" + esbid + " 关联角色");
-                } catch (ExceptionThrows e) {
-                    System.out.println(e.getMessage());
-                    log.error(e.getMessage());
-                    result = "1";
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                log.error("插入一条数据失败." + e.getMessage());
-            }
-        } else {
-            result = "1";
-        }
-        fields.setLength(0);
-        values.setLength(0);
-        return result;
-    }
-
     protected String updateUser4Map(Map<String, String> map, String esbid) {
         String archKey = "";
         String archVal = "";
@@ -664,92 +571,6 @@ public class BaseService {
             } catch (Exception e) {
                 e.printStackTrace();
                 log.error("更新一条数据失败. " + e.getMessage());
-            }
-        } else {
-            result = "1";
-        }
-        fields.setLength(0);
-        values.setLength(0);
-        return result;
-    }
-
-    protected String insertDept4Map(Map<String, String> map, String gfzj,
-                                    String parent_org_no, String qzh_zj) {
-        String archKey = "";
-        String archVal = "";
-        String qzh = null;
-        Integer pid = null;
-        String result = "1";
-        FDTable fDtable = null;
-        List<FDTable> fDTableList = null;
-        StringBuffer fields = new StringBuffer();
-        StringBuffer values = new StringBuffer();
-        if (null != map && null != map.keySet() && map.keySet().size() > 0) {
-            try {
-                Integer maxdid = getMaxDid("s_group");
-                fDTableList = sGroupMapper.getFtableList("F_S_GROUP");
-                Set<String> fieldSet = map.keySet();
-                for (String outSysField : fieldSet) {
-                    archKey = outSysField;
-                    archVal = map.get(outSysField);
-                    if (StringUtils.isNotBlank(archVal)
-                            && StringUtils.isNotBlank(archKey)) {
-                        archVal = (StringUtils.isBlank(archVal) ? "" : archVal);
-                        archVal = (archVal.contains("'") ? archVal.replace("'",
-                                "''") : archVal);// 兼容单引号
-                        fDtable = CommonUtil.getFDtable(fDTableList, archKey);
-                        fields.append(fDtable.getFieldname()).append(",");
-                        switch (fDtable.getFieldtype()) {
-                            case 11:
-                                if (archVal.equals("")) {
-                                    values.append("sysdate,");
-                                } else {
-                                    values.append(generateTimeToSQLDate(archVal))
-                                            .append(",");
-                                }
-                                break;
-                            case 1:
-                                values.append("'").append(archVal).append("',");
-                                break;
-                            case 3:
-                                if (StringUtils.isBlank(archVal)) {
-                                    values.append("null ,");
-                                } else {
-                                    values.append(Integer.parseInt(archVal))
-                                            .append(",");
-                                }
-                                break;
-                            default:
-                                values.append("'").append(archVal).append("',");
-                                break;
-                        }
-                    }
-                }
-                try {
-                    SGroup group = sGroupMapper.getGroupByGfzj(gfzj);
-                    new IsExistDepOrUser().isDeptExist(group);
-                    String deptQzh = getQzhByKey(qzh_zj);
-                    SGroup parent = sGroupMapper.getGroupByGfzj(parent_org_no);
-                    qzh = (deptQzh == null ? defaultQzh : deptQzh);
-                    pid = (parent == null ? defaultDeptPid : parent.getDid());
-                    fields.append("did,pid,qzh,gfzj,depcode");
-                    values.append(maxdid).append(",").append(pid).append(",'")
-                            .append(qzh).append("','").append(gfzj)
-                            .append("','").append(parent_org_no).append("'");
-                    String SQL = "insert into s_group (" + fields.toString()
-                            + ") values ( " + values.toString() + " )";
-                    System.out.println(SQL);
-                    execSql(SQL);
-                    result = "0";
-                    log.error("插入一条数据成功. " + SQL);
-                } catch (ExceptionThrows e) {
-                    log.error(e.getMessage());
-                    System.out.println(e.getMessage());
-                    result = "1";
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                log.error("插入一条数据失败. " + e.getMessage());
             }
         } else {
             result = "1";
@@ -835,85 +656,6 @@ public class BaseService {
         return result;
     }
 
-    protected String insertUser(SUserWithBLOBs suser, String dept_zj,
-                                String esbid) {
-        Integer pid = null;
-        String result = "1";
-        try {
-            Integer maxdid = getMaxDid("s_user");
-            SUser user = sUserMapper.getUserByEsbid(esbid);
-            new IsExistDepOrUser().isUserExist(user);
-            SGroup group = sGroupMapper.getGroupByGfzj(dept_zj);
-            if (group == null) {
-                pid = defaultYhGroup;
-            } else {
-                pid = group.getDid();
-            }
-            suser.setDid(maxdid);
-            suser.setPid(pid);
-            suser.setEsbid(esbid);
-            suser.setEsbcode(dept_zj);
-            sUserMapper.insert(suser);
-            log.error("增加一个用户:" + esbid);
-            result = "0";
-            SUserrole userrole = new SUserrole();
-            userrole.setDid(getMaxDid("S_USERROLE"));
-            userrole.setYhid(maxdid);
-            userrole.setJsid(jsid);
-            sUserroleMapper.insert(userrole);
-            log.error("用户:" + esbid + " 关联角色");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            log.error(e.getMessage());
-            result = "1";
-        }
-        return result;
-    }
-
-    protected String updateUser(SUserWithBLOBs suser, String esbid) {
-        String result = "1";
-        try {
-            SUser user = sUserMapper.getUserByEsbid(esbid);
-            new IsExistDepOrUser().isUserNotExist(user);
-            suser.setEsbid(esbid);
-            sUserMapper.updateByKey(suser);
-            result = "0";
-            log.error("修改一个用户： " + esbid);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            log.error(e.getMessage());
-            result = "1";
-        }
-        return result;
-    }
-
-    protected String insertDept(SGroup sgroup, String gfzj,
-                                String parent_org_no, String qzh_zj) {
-        String qzh = null;
-        Integer pid = null;
-        String result = "1";
-        try {
-            Integer maxdid = getMaxDid("s_group");
-            SGroup group = sGroupMapper.getGroupByGfzj(gfzj);
-            new IsExistDepOrUser().isDeptExist(group);
-            String deptQzh = getQzhByKey(qzh_zj);
-            SGroup parent = sGroupMapper.getGroupByGfzj(parent_org_no);
-            qzh = (deptQzh == null ? defaultQzh : deptQzh);
-            pid = (parent == null ? defaultDeptPid : parent.getDid());
-            sgroup.setDid(maxdid);
-            sgroup.setPid(pid);
-            sgroup.setQzh(qzh);
-            sgroup.setGfzj(gfzj);
-            sGroupMapper.insert(sgroup);
-            result = "0";
-            log.error("增加一个部门. " + gfzj);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            System.out.println(e.getMessage());
-            result = "1";
-        }
-        return result;
-    }
 
     protected String updateDept(SGroup sgroup, String gfzj) {
         String result = "1";
@@ -984,18 +726,6 @@ public class BaseService {
         return lamsIP;
     }
 
-    public Integer getAttr() {
-        return attr;
-    }
-
-    public Integer getAttrex() {
-        return attrex;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
     @Autowired
     protected JdbcDao jdbcDao;
     @Autowired
@@ -1006,52 +736,81 @@ public class BaseService {
     protected SQzhMapper sQzhMapper;
     @Autowired
     protected SUserroleMapper sUserroleMapper;
-    @Autowired
-    @Value("${default.jsid}")
-    protected Integer jsid;// 默认的角色 普通用户
-    // 默认用户部门
-    @Autowired
-    @Value("${lams.default.nogroup.user.pid}")
-    protected Integer defaultYhGroup;
+
     @Autowired
     @Value("${sqlserverSchemaName}")
     protected String sqlserverSchemaName;
 
+    @Autowired
+    @Value("${lams.ip}")
+    protected String lamsIP;
+    @Autowired
+    @Value("${lams.pzm}")
+    protected String pzm;
     /**
      * 默认的全宗号
      */
     @Autowired
     @Value("${lams.default.qzh}")
     protected String defaultQzh;
+    @Autowired
+    @Value("${lams.defaultField}")
+    protected String defaultField;
+    @Autowired
+    @Value("${lams.defaultField.value}")
+    protected String defaultValue;
+    @Autowired
+    @Value("${lams.ky.xy.libcode}")
+    protected Integer xyLibcode;
+
+    @Autowired
+    @Value("${lams.ky.no.libcode}")
+    protected Integer noLibcode;
+
+    @Autowired
+    @Value("${lams.xyDfile.table}")
+    protected String xyZjk;
+    @Autowired
+    @Value("${lams.xyEfile.table}")
+    protected String xyZjkEFile;
+
+    @Autowired
+    @Value("${lams.noDfile.table}")
+    protected String noPrjZjk;
+    @Autowired
+    @Value("${lams.noEfile.table}")
+    protected String noPrjZjkEFile;
+
+    @Autowired
+    @Value("${lams.xyprj.mappingtablename}")
+    protected String xyFieldMappingtbName;
+
+    @Autowired
+    @Value("${lams.noprj.mappingtablename}")
+    protected String noFieldMappingtbName;
+    @Autowired
+    @Value("${lams.da.xyprj}")
+    protected String daXyPrj;
+
+    @Autowired
+    @Value("${lams.da.noprj}")
+    protected String daNoPrj;
+
+    @Autowired
+    @Value("${lams.efile.basePath}")
+    protected String basePath;
+    @Autowired
+    @Value("${lams.xyprj.efile.xdlj.basePath}")
+    protected String xyPjrXdLj;
+    @Autowired
+    @Value("${lams.noprj.efile.xdlj.basePath}")
+    protected String noPjrXdLj;
     /**
-     * 默认部门pid
+     * 一个临时路径现在无用
      */
     @Autowired
-    @Value("${default.dept.pid}")
-    protected Integer defaultDeptPid;
-
-    /**
-     * 默认密码
-     */
-    @Autowired
-    @Value("${default.user.password}")
-    protected String defaultPasswd;
-
-
-    @Autowired
-    @Value("${lams.dfile.attrex}")
-    protected Integer attrex;// 移交接收状态
-    @Autowired
-    @Value("${lams.dfile.attr}")
-    protected Integer attr;// 归档前后
-    @Autowired
-    @Value("${lams.ip}")
-    protected String lamsIP;
-
-    @Autowired
-    @Value("${lams.dfile.status}")
-    protected Integer status;//状态
-
+    @Value("${file.temp.savepath}")
+    protected String aTempPath;
 
     private String sysdate = null;
     private Logger log = (Logger) LoggerFactory.getLogger(this.getClass());

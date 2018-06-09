@@ -53,4 +53,11 @@ public interface JdbcDao {
     public Connection getConn();
 
     public Integer insertEfile(String tableName, EFile eFile);
+
+    /**
+     * 是否包含
+     * @param sql
+     * @return
+     */
+    public Boolean existsItem(String sql);
 }

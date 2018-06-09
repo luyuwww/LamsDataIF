@@ -2,8 +2,6 @@ package com.bwzk.action;
 
 import ch.qos.logback.classic.Logger;
 import com.bwzk.service.i.ArcService;
-import com.bwzk.service.i.NoticeService;
-import com.bwzk.service.i.OrgService;
 import com.bwzk.util.GlobalFinalAttr;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -108,46 +106,18 @@ public class CommonCtler {
     }
 
     /**
-     * 列出所有档案用户 测试方法
-     */
-    @RequestMapping(value = "/listDaUsers", method = RequestMethod.GET)
-    public String listDaUsers(Model model) {
-        model.addAttribute("userlist", orgServiceImpl.listDaUsers());
-        return "daUserlist.jsp";
-    }
-    /**
-     * 列出所有OA用户 测试方法
-     */
-    @RequestMapping(value = "/listOAUsers", method = RequestMethod.GET)
-    public String listOAUsers(Model model) {
-        model.addAttribute("userlist", orgServiceImpl.listOaUsersLess4());
-        return "oaUserlist.jsp";
-    }
-
-    /**
      * 单点登录
      */
     @RequestMapping(value = "/sso", method = RequestMethod.GET)
     public String sso(@RequestParam String usercode, @RequestParam String token) {
-        return "redirect:" ;
+        return "redirect:";
     }
 
-
-    /**
-     * 流程过来的消息 需要发送到 邮件和待办
-     */
-    @RequestMapping(value = "/sendMsg", method = RequestMethod.POST)
-    public void sendMsg(@RequestParam String userCodes, @RequestParam String varsJson, @RequestParam String actTaskID) {
-        if (StringUtils.isNotEmpty(varsJson) && StringUtils.isNotEmpty(actTaskID)) {
-            noticeServiceImpl.sendActivitiMsg(userCodes, varsJson, actTaskID);
-        }
-    }
-
-    /**
-     * 查看日志
-     */
-    @RequestMapping("/syncDclassfy")
-    public void syncDclassfy(@RequestParam Integer libcode ,  HttpServletResponse response) {
+    /*************************************************************************
+     * 科研推送->档案抓取-纵向项目和横向项目
+     **************************************************************************/
+    @RequestMapping("/keyanPushXyPrj")
+    public void keyanPushXyPrj(HttpServletResponse response) {
         PrintWriter out = null;
         try {
             response.setContentType("text/html;charset=GBK ");
@@ -156,7 +126,7 @@ public class CommonCtler {
             out.println("<HTML>");
             out.println("<BODY>");
             out.println("<XMP>");
-            out.println(arcServcieImpl.syncDclassfy(libcode));
+            out.println("档案接受了 " + arcServcieImpl.keyanPushXyPrj() + " 条数据");
             out.println("</XMP>");
             out.println("</BODY>");
             out.println("</HTML>");
@@ -169,11 +139,11 @@ public class CommonCtler {
         }
     }
 
-    /**
-     * 同步组织机构
-     */
-    @RequestMapping("/syncUserGroup")
-    public void syncUserGroup(HttpServletResponse response) {
+    /***************************************************************************
+     * 科研推送->档案抓取-无源项目的外协项目
+     **************************************************************************/
+    @RequestMapping("/keyanPushNoPrj")
+    public void keyanPushNoPrj(HttpServletResponse response) {
         PrintWriter out = null;
         try {
             response.setContentType("text/html;charset=GBK ");
@@ -182,35 +152,7 @@ public class CommonCtler {
             out.println("<HTML>");
             out.println("<BODY>");
             out.println("<XMP>");
-            out.println(orgServiceImpl.syncUserGroup());
-            out.println("</XMP>");
-            out.println("</BODY>");
-            out.println("</HTML>");
-        } catch (Exception e) {
-            e.printStackTrace();
-            out.println("读取日志错误" + e.getMessage());
-            log.error("读取日志错误" + e.getMessage());
-        } finally {
-            out.flush();
-            out.close();
-        }
-    }
-
-
-    /**
-     * 同步OA数据
-     */
-    @RequestMapping("/syncOaData")
-    public void syncOaData(HttpServletResponse response) {
-        PrintWriter out = null;
-        try {
-            response.setContentType("text/html;charset=GBK ");
-            out = response.getWriter();
-            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
-            out.println("<HTML>");
-            out.println("<BODY>");
-            out.println("<XMP>");
-            out.println("接受了 "+arcServcieImpl.syncOaData()+" 条数据");
+            out.println("档案接受了 " + arcServcieImpl.keyanPushNoPrj() + " 条数据");
             out.println("</XMP>");
             out.println("</BODY>");
             out.println("</HTML>");
@@ -223,12 +165,11 @@ public class CommonCtler {
         }
     }
 
-
-    /**
-     * 同步流程数据
-     */
-    @RequestMapping("/syncFlowData")
-    public void syncFlowData(HttpServletResponse response) {
+    /***************************************************************************
+     * 档案推送->科研抓取-纵向和横向归档
+     **************************************************************************/
+    @RequestMapping("/daPushXyPrj")
+    public void daPushXyPrj(HttpServletResponse response) {
         PrintWriter out = null;
         try {
             response.setContentType("text/html;charset=GBK ");
@@ -237,8 +178,7 @@ public class CommonCtler {
             out.println("<HTML>");
             out.println("<BODY>");
             out.println("<XMP>");
-            out.println("进行一次流程同步");
-            noticeServiceImpl.syncTaskInfo();
+            out.println("档案推送了 " + arcServcieImpl.daPushXyPrj() + " 条数据");
             out.println("</XMP>");
             out.println("</BODY>");
             out.println("</HTML>");
@@ -250,6 +190,33 @@ public class CommonCtler {
             out.close();
         }
     }
+
+    /***************************************************************************
+     * 档案推送->科研抓取-无源项目归档
+     **************************************************************************/
+    @RequestMapping("/daPushNoPrj")
+    public void daPushNoPrj(HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            response.setContentType("text/html;charset=GBK ");
+            out = response.getWriter();
+            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+            out.println("<HTML>");
+            out.println("<BODY>");
+            out.println("<XMP>");
+            out.println("档案推送了 " + arcServcieImpl.daPushNoPrj() + " 条数据");
+            out.println("</XMP>");
+            out.println("</BODY>");
+            out.println("</HTML>");
+        } catch (Exception e) {
+            out.println("读取日志错误" + e.getMessage());
+            log.error("读取日志错误" + e.getMessage());
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
+
 
     /**
      * 内部调用 判断是否是允许用户 ture是的
@@ -259,10 +226,6 @@ public class CommonCtler {
         return result;
     }
 
-    @Autowired
-    private OrgService orgServiceImpl;
-    @Autowired
-    private NoticeService noticeServiceImpl;
     @Autowired
     private ArcService arcServcieImpl;
     @Autowired

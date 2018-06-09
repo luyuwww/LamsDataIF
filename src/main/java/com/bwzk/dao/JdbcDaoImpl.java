@@ -183,6 +183,11 @@ public class JdbcDaoImpl implements JdbcDao {
         return sysdate;
     }
 
+    public Boolean existsItem(String sql){
+        List result = jdbcTemplate.queryForList(sql);
+        return result!= null && result.size()>0 ? true : false;
+    }
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private Logger log = (Logger) LoggerFactory.getLogger(this.getClass());

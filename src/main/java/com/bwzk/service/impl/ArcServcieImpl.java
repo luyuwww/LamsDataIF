@@ -2,18 +2,14 @@ package com.bwzk.service.impl;
 
 import ch.qos.logback.classic.Logger;
 import com.bwzk.dao.JdbcDao;
-import com.bwzk.dao.i.da.SGroupMapper;
-import com.bwzk.dao.i.da.SUserMapper;
-import com.bwzk.dao.i.da.SUserroleMapper;
+import com.bwzk.dao.KyDao;
 import com.bwzk.page.PageContext;
-import com.bwzk.pojo.DClassifyZjk;
 import com.bwzk.pojo.EFile;
 import com.bwzk.pojo.FDTable;
 import com.bwzk.pojo.SUser;
 import com.bwzk.service.BaseService;
 import com.bwzk.service.i.ArcService;
 import com.bwzk.util.DateUtil;
-import com.bwzk.util.GlobalFinalAttr;
 import com.bwzk.util.MD5;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.io.FileUtils;
@@ -21,18 +17,17 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.jws.WebService;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service("arcServcieImpl")
-@WebService(name = "ArcDataWs", targetNamespace = "http://service.unis.com/")
 public class ArcServcieImpl extends BaseService implements ArcService {
     @Transactional("txManager")
     public String fileRecive(String xml) {
@@ -75,117 +70,177 @@ public class ArcServcieImpl extends BaseService implements ArcService {
         return super.getLamsIP();
     }
 
-    public String syncDclassfy(Integer libcode){
-        String msg = "";
-        Integer num = 0;
-        List<DClassifyZjk> flhList = sGroupMapper.listFlh(fhlZjb , libcode);
-
-        if(null != flhList && flhList.size()>0){
-            jdbcDao.excute("DELETE FROM D_CLASSIFY"+libcode);
-            for (DClassifyZjk classy : flhList) {
-                sUserMapper.insertClassify(classy , "D_CLASSIFY"+libcode);
-                log.error("插入一条分类表 数据成功.syncDclassfy: "
-                        + classy.getDid()+" : " + classy.getFlcode()+" : " + classy.getFlmc());
-                num++;
-            }
-            msg = "同步成功:同步"+num+"条数据";
-        }else{
-            msg = "同步事变:中间库中该类型的分类为空";
-        }
-        return msg;
-    }
-
-    public String syncOaData(){
+    @Override
+    public String keyanPushXyPrj() {
         Integer dNum = 0;
         Integer eNum = 0;
-        String msg = "OA  ";
+        String msg = "纵向项目和横向项目成功插入 ";
+        String tableName = "D_FILE" + xyLibcode;
         //默认数据库当前时间
         String dateStr = getDatabaseType().getDateByDb();
 
-        List<FDTable> fDTableList = getWsFieldList();// 相关档案类型的字段List
-        String oaDfileSql = "SELECT * FROM " + oaDFile + " WHERE STATUS= 0 ORDER BY CREATETIME DESC";
-        List<Map<String, Object>> dataList = listMaps(oaDfileSql);
-
-        StringBuffer fields = new StringBuffer();
-        StringBuffer values = new StringBuffer();
-        for (Map<String, Object> dataMap : dataList) {
-            String oaid = "";
-            String tableName = "";
-            Integer maxdid = 0;
-            if (dataMap.size() > 0 && dataMap != null) {
-                oaid = dataMap.get("UUID").toString();
-                tableName = "D_FILE" + libcode + "";
-
-                List<Map<String,Object>> fjList = quertListMap("SELECT * FROM "+oaEFile + " WHERE PUUID='" + oaid + "'");
+        List<String> dataList = kyDao.pkListBySql("SELECT SCIENCECODE FROM "+xyZjk);
+        for (String key : dataList) {
+            System.out.println(key);
+            //不包含就插入
+            if(!jdbcDao.existsItem("SELECT SCIENCECODE FROM" + xyLibcode + " SCIENCECODE='" + key +"' AND STATUS=0")){
+                Map<String , Object> xyObj =
+                        kyDao.query4Obj("SELECT * FROM "+xyZjk + " WHERE SCIENCECODE='" + key +"'");
+                List<Map<String , Object>> xyEfile =
+                        kyDao.query4List("SELECT * FROM "+xyZjkEFile + " WHERE SCIENCECODE='" + key +"'");
+                Integer maxdid = 0;
                 try {
                     maxdid = getMaxDid(tableName);
-                    for (String OAData : dataMap.keySet()) {
-                        FDTable wsField = getWsField(OAData);
-                        if(null != wsField){
-                            String oaValue = (dataMap.get(OAData) == null ? "" : dataMap.get(OAData).toString());
-                            oaValue = (oaValue.contains("'") ? oaValue.replace(
-                                    "'", "''") : oaValue);
-                            fields.append(wsField.getFieldname()).append(",");
-                            switch (wsField.getFieldtype()) {
+                    StringBuffer fields = new StringBuffer();
+                    StringBuffer values = new StringBuffer();
+                    for (String kyXyFieldName : xyObj.keySet()){
+                        //这里获取对应的字段
+                        FDTable kyDfileField = getXyPrjField(kyXyFieldName);
+                        if (null != kyDfileField) {
+                            String kyXyValue = (MapUtils.getString(xyObj , kyXyFieldName) == null ?
+                                                "" : MapUtils.getString(xyObj , kyXyFieldName));
+                            kyXyValue = kyXyValue.replace("'", "''") ;
+                            fields.append(kyDfileField.getFieldname()).append(",");
+                            switch (kyDfileField.getFieldtype()) {
                                 case 11:
-                                    if (StringUtils.isBlank(oaValue)) {
-                                        values.append(dateStr+",");
+                                    if (StringUtils.isBlank(kyXyValue)) {
+                                        values.append(dateStr + ",");
                                     } else {
-                                        values.append(generateTimeToSQLDate(OAData)).append(",");
+                                        values.append(generateTimeToSQLDate(kyXyValue)).append(",");
                                     }
                                     break;
                                 case 1:
-                                    values.append("'").append(oaValue).append("',");
+                                    values.append("'").append(kyXyValue).append("',");
                                     break;
                                 case 3:
-                                    if (StringUtils.isBlank(oaValue)) {
+                                    if (StringUtils.isBlank(kyXyValue)) {
                                         values.append("null ,");
                                     } else {
-                                        values.append(Integer.parseInt(oaValue))
+                                        values.append(Integer.parseInt(kyXyValue))
                                                 .append(",");
                                     }
                                     break;
                                 default:
-                                    values.append("'").append(oaValue).append("',");
+                                    values.append("'").append(kyXyValue).append("',");
                                     break;
                             }
                         }
                     }
+                    fields.append(defaultField).append(",pid,qzh,did,attached");
+                    values.append(defaultValue).append(",-1,'").append(defaultQzh)
+                            .append("',").append(maxdid).append(",").append(xyEfile.size() > 0 ? 1 : 0);
 
-                    fields.append(defaultField);
-                    values.append(defaultValue);
-                    //由于OA没有把办法提供年度,所以这里用createtime他截取前4位
-                    String createtime = (dataMap.get("CREATETIME") == null ? "" : dataMap.get("CREATETIME").toString());
-                    //如果创建日期为空或则会有了年度就不截取了
-                    if(StringUtils.isNotBlank(createtime) && createtime.length() > 4
-                            && !fields.toString().toUpperCase().contains("ND")){
-                        fields.append(",ND");
-                        values.append(","+createtime.substring(0,4));
-                    }
-
-                    fields.append(",pid,createtime,qzh,did,attached");
-                    values.append(",-1,sysdate,'");
-                    values.append(defaultQzh).append("',").append(maxdid).append(",").append(
-                            fjList.size() > 0 ? 1 : 0       );
-
-                    String InsertSql = "insert into " + tableName + "" + " ("
+                    String insertSql = "insert into " + tableName + "" + " ("
                             + fields.toString() + ") values (" + values.toString() + " )";
-                    log.error("插入一条数据成功.fileReciveTxt: " + InsertSql);
-                    execSql(InsertSql);
-                    jdbcDao.excute("UPDATE " + oaDFile + " SET STATUS = 1 WHERE UUID = '" + oaid + "'");
+                    log.error("插入一条XY科研数据成功.keyanPushXyPrj: " + insertSql);
+                    execSql(insertSql);
                     fields.setLength(0);
                     values.setLength(0);
-                    addEfile(fjList , maxdid);
+                    addEfile(xyEfile, maxdid , xyLibcode);
                     dNum++;
-                } catch (Exception e) {
+                } catch(Exception e){
                     e.printStackTrace();
                     eNum++;
-                    log.error("插入一条数据失败.fileReciveTxt: " + e.getMessage());
+                    log.error("插入一条数据失败.keyanPushXyPrj: " + e.getMessage());
                     break;
                 }
             }
         }
-        return msg + dNum;
+        return msg + dNum + "条, 失败:" + dNum+"条";
+    }
+
+    @Override
+    public String keyanPushNoPrj() {
+        Integer dNum = 0;
+        Integer eNum = 0;
+        String msg = "无源项目的外协项目成功插入 ";
+        String tableName = "D_FILE" + noLibcode;
+        //默认数据库当前时间
+        String dateStr = getDatabaseType().getDateByDb();
+
+        List<String> dataList = kyDao.pkListBySql("SELECT SCIENCECODE FROM "+noPrjZjk);
+        for (String key : dataList) {
+            System.out.println(key);
+            //不包含就插入
+            if(!jdbcDao.existsItem("SELECT SCIENCECODE FROM" + noLibcode + " SCIENCECODE='" + key +"' AND STATUS=0")){
+                Map<String , Object> noPrjObj =
+                        kyDao.query4Obj("SELECT * FROM "+noPrjZjk + " WHERE SCIENCECODE='" + key +"'");
+                List<Map<String , Object>> noPrjEfileList =
+                        kyDao.query4List("SELECT * FROM "+noPrjZjkEFile + " WHERE SCIENCECODE='" + key +"'");
+                Integer maxdid = 0;
+                try {
+                    maxdid = getMaxDid(tableName);
+                    StringBuffer fields = new StringBuffer();
+                    StringBuffer values = new StringBuffer();
+                    for (String noPrjField : noPrjObj.keySet()){
+                        //这里获取对应的字段
+                        FDTable daField = getNoPrjField(noPrjField);
+                        if (null != daField) {
+                            String kyValue = (MapUtils.getString(noPrjObj , noPrjField) == null ?
+                                    "" : MapUtils.getString(noPrjObj , noPrjField));
+                            kyValue = kyValue.replace("'", "''") ;
+                            fields.append(daField.getFieldname()).append(",");
+                            switch (daField.getFieldtype()) {
+                                case 11:
+                                    if (StringUtils.isBlank(kyValue)) {
+                                        values.append(dateStr + ",");
+                                    } else {
+                                        values.append(generateTimeToSQLDate(kyValue)).append(",");
+                                    }
+                                    break;
+                                case 1:
+                                    values.append("'").append(kyValue).append("',");
+                                    break;
+                                case 3:
+                                    if (StringUtils.isBlank(kyValue)) {
+                                        values.append("null ,");
+                                    } else {
+                                        values.append(Integer.parseInt(kyValue))
+                                                .append(",");
+                                    }
+                                    break;
+                                default:
+                                    values.append("'").append(kyValue).append("',");
+                                    break;
+                            }
+                        }
+                    }
+                    fields.append(defaultField).append(",pid,qzh,did,attached");
+                    values.append(defaultValue).append(",-1,'").append(defaultQzh)
+                            .append("',").append(maxdid).append(",").append(noPrjEfileList.size() > 0 ? 1 : 0);
+
+                    String insertSql = "insert into " + tableName + "" + " ("
+                            + fields.toString() + ") values (" + values.toString() + " )";
+                    log.error("插入一条无源项目项目数据成功.keyanPushNoPrj: " + insertSql);
+                    execSql(insertSql);
+                    fields.setLength(0);
+                    values.setLength(0);
+                    addEfile(noPrjEfileList, maxdid , noLibcode);
+                    dNum++;
+                } catch(Exception e){
+                    e.printStackTrace();
+                    eNum++;
+                    log.error("插入一条无源项目项目数据失败.keyanPushNoPrj: " + e.getMessage());
+                    break;
+                }
+            }
+        }
+        return msg + dNum + "条, 失败:" + dNum+"条";
+    }
+
+    @Override
+    public String daPushXyPrj() {
+        return null;
+    }
+
+    @Override
+    public String daPushNoPrj() {
+        return null;
+    }
+
+
+    public String syncAllData(){
+        return null;
     }
     /*
          * 分页抓取 300条
@@ -205,88 +260,91 @@ public class ArcServcieImpl extends BaseService implements ArcService {
     /**
      * 电子文件集成
      */
-    private void addEfile(List<Map<String , Object>> fjList , Integer pid) {
+    private void addEfile(List<Map<String , Object>> fjList , Integer pid , Integer libcode) {
         String tableName = "E_FILE" + libcode ;
-        String euuid , docID , ext1 , eBizName = "";
+        String scienceCode , filename , ext , filesource , xdlj= "";
+        xdlj= libcode.equals(xyLibcode)? xyPjrXdLj : noPjrXdLj;
 
         for (Map<String, Object> dataMap : fjList) {
-            euuid = dataMap.get("UUID") == null ? "" : MapUtils.getString(dataMap , "UUID");
-            docID = dataMap.get("DOCUID") == null ? "" : MapUtils.getString(dataMap , "DOCUID");
-            ext1 = dataMap.get("EXT1") == null ? "" : MapUtils.getString(dataMap , "EXT1");
-            eBizName = dataMap.get("FILEBIZNAME") == null ? "" : MapUtils.getString(dataMap , "FILEBIZNAME");
-            File sFile = new File(FilenameUtils.normalize(basePath + docID));
-            if(sFile.exists()){
-                String efilepath = DateUtil.getCurrentDateStr("yyyy/MM/dd/");
-                File tFile = new File(FilenameUtils.normalize(basePath + efilepath + docID));
-                try {
-                    FileUtils.moveFile(sFile , tFile);
-                } catch (IOException e1) {
-                    log.error(e1.getMessage() , e1);
-                }
-                if(tFile.exists()){
-                    EFile eFile = new EFile();
-                    //DID,PID,EFILENAME,TITLE,EXT,PZM,PATHNAME,STATUS,ATTR,ATTREX,CREATOR,CREATETIME,FILESIZE,MD5,CONVERTSTATUS
-                    eFile.setDid(getMaxDid(tableName));
-                    eFile.setPid(pid);
-                    eFile.setEfilename(docID);
-                    eFile.setExt(FilenameUtils.getExtension(docID));
-                    if(docID.contains(eBizName) || ext1.equals("6")){
-                        eFile.setTitle("审批单");
-                    }else{
-                        String tempFileanme = StringUtils.isBlank(eBizName) ? docID : eBizName;
-                        tempFileanme = tempFileanme.substring(0 , tempFileanme.lastIndexOf(eFile.getExt())+ 1);
-                        eFile.setTitle(tempFileanme);
-                    }
-                    eFile.setPzm(pzm);
-                    eFile.setPathname(ftpXdlj+efilepath);
-                    eFile.setStatus(0);
-                    eFile.setAttr(1);
-                    eFile.setAttrex(1);
-                    eFile.setCreator("ROOT");
-                    eFile.setCreatetime(new Date());
-                    eFile.setFilesize(((Long) tFile.length()).intValue() / 1000);
-                    eFile.setMd5(MD5.getFileMD5String(tFile));
-                    insertEfile(tableName , eFile);
-                }
-            }else{
-                log.error(basePath + docID+" 文件不存在");
+            scienceCode = dataMap.get("SCIENCECODE") == null ? "" : MapUtils.getString(dataMap , "SCIENCECODE");
+            filename = dataMap.get("FILENAME") == null ? "" : MapUtils.getString(dataMap , "FILENAME");
+            filesource = dataMap.get("FILESOURCE") == null ? "" : MapUtils.getString(dataMap , "FILESOURCE");
+            ext = dataMap.get("EXT") == null ? "" : MapUtils.getString(dataMap , "EXT");
+            File sFile = new File(FilenameUtils.normalize(basePath +"/" + xdlj + "/" + filesource +"/" + filename));
+            if(sFile.exists()) {
+                EFile eFile = new EFile();
+                eFile.setDid(getMaxDid(tableName));
+                eFile.setPid(pid);
+                eFile.setEfilename(filename);
+                eFile.setTitle(filename);
+                eFile.setExt(ext);
+                eFile.setPzm(pzm);
+                eFile.setPathname(xdlj + "/" + filesource +"/");
+                eFile.setStatus(0);
+                eFile.setAttr(1);
+                eFile.setAttrex(1);
+                eFile.setCreator("ROOT");
+                eFile.setXlh(scienceCode);
+                eFile.setCreatetime(new Date());
+                eFile.setFilesize(((Long) sFile.length()).intValue() / 1000);
+                eFile.setMd5(MD5.getFileMD5String(sFile));
+                insertEfile(tableName, eFile);
             }
         }
 
     }
 
-    /**
-     * 文书字段列表
+    /******************************************************
+     * xy字段列表
      * @return
      */
-    private List<FDTable> getWsFieldList(){
-        if(oaFieldList == null){
-            oaFieldList = sGroupMapper.getFtableList("F_D_FILE"+libcode);
+    private List<FDTable> getXyFieldList(){
+        if(xyFieldList == null){
+            xyFieldList = sGroupMapper.getFtableList("F_D_FILE"+xyLibcode);
         }
-        return oaFieldList;
+        return xyFieldList;
+    }
+
+
+    /******************************************************
+     * noPrj字段列表
+     * @return
+     */
+    private List<FDTable> getNoFieldList(){
+        if(noFieldList == null){
+            noFieldList = sGroupMapper.getFtableList("F_D_FILE"+noLibcode);
+        }
+        return noFieldList;
     }
 
     /**
-     * oa和档案的字段对应关系
-     * @return
+     * xyPrj字段对应关系
      */
-    private Map<String , String> getFieldMappingList(){
-        if(fieldMapping == null){
-            fieldMapping = quert2Colum4Map("SELECT * FROM "+ fieldMappingtbName , "F1" ,"F2");
+    private Map<String , String> getXyPrjFieldMappingList(){
+        if(xyPrjFieldMapping == null){
+            xyPrjFieldMapping = quert2Colum4Map("SELECT * FROM "+ xyPrjFieldMapping , "F1" ,"F2");
         }
-        return fieldMapping;
+        return xyPrjFieldMapping;
     }
 
     /**
-     * 通过对应关系得到文书档案的字段
+     * noPrj字段对应关系
+     */
+    private Map<String , String> getnoPrjFieldMappingList(){
+        if(noPrjFieldMapping == null){
+            noPrjFieldMapping = quert2Colum4Map("SELECT * FROM "+ noPrjFieldMapping , "F1" ,"F2");
+        }
+        return noPrjFieldMapping;
+    }
+    /**
+     * 通过对应关系得到可言XY档案的字段
      * @param oaField
      * @return
      */
-    private FDTable getWsField(String oaField){
+    private FDTable getXyPrjField(String xyField){
         FDTable result = null;
-        Map<String , String> mapping = getFieldMappingList();
-        List<FDTable> daFieldList = getWsFieldList();
-        String daField = getFieldMappingList().get(oaField);
+        List<FDTable> daFieldList = getXyFieldList();
+        String daField = getXyPrjFieldMappingList().get(xyField);
 
         if(StringUtils.isNotBlank(daField)){
             for (FDTable f : daFieldList) {
@@ -298,52 +356,34 @@ public class ArcServcieImpl extends BaseService implements ArcService {
         }
         return result;
     }
+    /**
+     * 通过对应关系得到noPrj档案的字段
+     * @param oaField
+     * @return
+     */
+    private FDTable getNoPrjField(String noPrjField){
+        FDTable result = null;
+        List<FDTable> daFieldList = getNoFieldList();
+        String daField = getnoPrjFieldMappingList().get(noPrjField);
 
-    protected Map<String , String> fieldMapping = null;//OA档案字段对应的字段list
-    protected List<FDTable> oaFieldList = null;//OA文书f表的字段list
-    @Autowired
-    private SGroupMapper sGroupMapper;
-    @Autowired
-    private SUserMapper sUserMapper;
-    @Autowired
-    private SUserroleMapper sUserroleMapper;
+        if(StringUtils.isNotBlank(daField)){
+            for (FDTable f : daFieldList) {
+                if(f.getFieldname().toUpperCase().equals(daField.toUpperCase())){
+                    result = f;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+    protected Map<String , String> xyPrjFieldMapping = null;//OA档案字段对应的字段list
+    protected Map<String , String> noPrjFieldMapping = null;//OA档案字段对应的字段list
+    protected List<FDTable> xyFieldList = null;//xy科研f表的字段list
+    protected List<FDTable> noFieldList = null;//no科研f表的字段list
     @Autowired
     private JdbcDao jdbcDao;
-
-    /**
-     * 分类号中间表的表名
-     */
     @Autowired
-    @Value("${dclassfy.tablename}")
-    protected String fhlZjb;
-    @Autowired
-    @Value("${lams.oaDfile.table}")
-    protected String oaDFile;
-    @Autowired
-    @Value("${lams.oaEfile.table}")
-    protected String oaEFile;
-    @Autowired
-    @Value("${lams.oa.libcode}")
-    protected Integer libcode;
-    @Autowired
-    @Value("${lams.oa.mappingtableanme}")
-    protected String fieldMappingtbName;
-    @Autowired
-    @Value("${lams.defaultField}")
-    protected String defaultField;
-    @Autowired
-    @Value("${lams.defaultField.value}")
-    protected String defaultValue;
-    @Autowired
-    @Value("${lams.oa.efile.basePath}")
-    protected String basePath;
-    @Autowired
-    @Value("${lams.oa.efile.xdlj.basePath}")
-    protected String ftpXdlj;
-
-    @Autowired
-    @Value("${lams.pzm}")
-    protected String pzm;
+    private KyDao kyDao;
 
     private Logger log = (Logger) LoggerFactory.getLogger(this.getClass());
 }

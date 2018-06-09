@@ -48,10 +48,10 @@
     </bean>
 
     <bean id="dataSource4OA" class="com.alibaba.druid.pool.DruidDataSource">
-        <property name="name" value="${druid.datasource.oa.name}"/>
-        <property name="username" value="${druid.datasource.oa.username}"/>
-        <property name="url" value="${druid.datasource.oa.url}"/>
-        <property name="password" value="${druid.datasource.oa.password}"/>
+        <property name="name" value="${druid.datasource.ky.name}"/>
+        <property name="username" value="${druid.datasource.ky.username}"/>
+        <property name="url" value="${druid.datasource.ky.url}"/>
+        <property name="password" value="${druid.datasource.ky.password}"/>
         <property name="filters" value="${druid.datasource.filters}"/>
         <property name="maxActive" value="${druid.datasource.maxActive}"/>
         <property name="initialSize" value="${druid.datasource.initialSize}"/>
@@ -73,9 +73,9 @@
             <ref bean="paginationInterceptor" />
         </property>
     </bean>
-    <bean id="sqlSessionFactory4OA" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <bean id="sqlSessionFactory4KeYan" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource4OA"/>
-        <property name="mapperLocations" value="classpath:mybatis/oa/*.xml"></property>
+        <!--<property name="mapperLocations" value="classpath:mybatis/oa/*.xml"></property>-->
     </bean>
     <!-- 分页拦截器 dialect是方言 , "pageFilter"是需要方言的过滤字符串 只有方法带这个开头的才可以 -->
     <bean id="paginationInterceptor" class="com.bwzk.page.PaginationInterceptor">
@@ -89,8 +89,8 @@
     </bean>
     <bean id="mapperScannerConfigurer4OA" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.bwzk.dao.i.oa"/>
-        <property name="markerInterface" value="com.bwzk.dao.BaseDao4OA"/>
-        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory4OA"/>
+        <property name="markerInterface" value="com.bwzk.dao.BaseDao4KeYan"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory4KeYan"/>
     </bean>
 
     <!-- jdbcTemplate -->
@@ -105,9 +105,6 @@
 
     <!-- dao -->
     <!-- service -->
-    <!-- CXF -->
-    <jaxws:endpoint id="arcDataServiceWS" implementor="#arcDataService" address="/ArcDataWsSingle"/>
-
     <!-- 事务配置 UNIS-->
     <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource4DataIF"/>
@@ -142,13 +139,7 @@
     </task:scheduled-tasks>
      -->
     <task:scheduled-tasks>
-        <!-- 同步流程状态给Lams -->
-        <task:scheduled ref="noticeServiceImpl" method="syncTaskInfo" cron="${schedule.noticeServiceImpl.syncTaskInfo}"/>
-
         <!-- 同步OA数据给Lams -->
-        <task:scheduled ref="arcServcieImpl" method="syncOaData" cron="${schedule.arcServcieImpl.syncOaData}"/>
-        <!-- 同步组织机构数据for Lams -->
-        <task:scheduled ref="orgServiceImpl" method="syncUserGroup" cron="${schedule.orgServiceImpl.syncUserGroup}"/>
-
+        <task:scheduled ref="arcServcieImpl" method="syncAllData" cron="${schedule.arcServcieImpl.syncKeYanData}"/>
     </task:scheduled-tasks>
 </beans>
