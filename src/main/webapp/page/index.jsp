@@ -28,14 +28,14 @@
 
         <br>
         <a class="btn btn-lg btn-success"
-           href="${pageContext.request.contextPath}/keyanPushXyPrj">科研推送->档案抓取-纵向项目和横向项目</a>
+           href="${pageContext.request.contextPath}/keyanPushXyPrj">科研推送->档案抓取-纵向/横向项目</a>
         <a class="btn btn-lg btn-success"
-           href="${pageContext.request.contextPath}/keyanPushNoPrj">科研推送->档案抓取-无源项目的外协项目</a>
+           href="${pageContext.request.contextPath}/keyanPushWxPrj">科研推送->档案抓取-外协项目</a>
         <br>
         <a class="btn btn-lg btn-warning"
-           href="${pageContext.request.contextPath}/daPushXyPrj">档案推送->科研抓取-纵向和横向归档</a>
+           href="${pageContext.request.contextPath}/daPushXyPrj">档案推送->科研抓取-纵向/横向项目</a>
         <a class="btn btn-lg btn-warning"
-           href="${pageContext.request.contextPath}/daPushNoPrj">档案推送->科研抓取-无源项目归档</a>
+           href="${pageContext.request.contextPath}/daPushWxPrj">档案推送->科研抓取-外协项目</a>
         <br>
         <a class="btn btn-lg btn-primary"
            href="${pageContext.request.contextPath}/viewLogList">查看日志</a>

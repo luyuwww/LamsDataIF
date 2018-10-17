@@ -114,7 +114,7 @@ public class CommonCtler {
     }
 
     /*************************************************************************
-     * 科研推送->档案抓取-纵向项目和横向项目
+     * 科研推送->档案抓取-纵向/横向项目
      **************************************************************************/
     @RequestMapping("/keyanPushXyPrj")
     public void keyanPushXyPrj(HttpServletResponse response) {
@@ -140,10 +140,10 @@ public class CommonCtler {
     }
 
     /***************************************************************************
-     * 科研推送->档案抓取-无源项目的外协项目
+     * 科研推送->档案抓取-外协项目
      **************************************************************************/
-    @RequestMapping("/keyanPushNoPrj")
-    public void keyanPushNoPrj(HttpServletResponse response) {
+    @RequestMapping("/keyanPushWxPrj")
+    public void keyanPushWxPrj(HttpServletResponse response) {
         PrintWriter out = null;
         try {
             response.setContentType("text/html;charset=GBK ");
@@ -152,7 +152,7 @@ public class CommonCtler {
             out.println("<HTML>");
             out.println("<BODY>");
             out.println("<XMP>");
-            out.println("档案接受了 " + arcServcieImpl.keyanPushNoPrj() + " 条数据");
+            out.println("档案接受了 " + arcServcieImpl.keyanPushWxPrj() + " 条数据");
             out.println("</XMP>");
             out.println("</BODY>");
             out.println("</HTML>");
@@ -178,7 +178,7 @@ public class CommonCtler {
             out.println("<HTML>");
             out.println("<BODY>");
             out.println("<XMP>");
-            out.println("档案推送了 " + arcServcieImpl.daPushXyPrj() + " 条数据");
+            out.println(arcServcieImpl.daPushXyPrj());
             out.println("</XMP>");
             out.println("</BODY>");
             out.println("</HTML>");
@@ -192,10 +192,10 @@ public class CommonCtler {
     }
 
     /***************************************************************************
-     * 档案推送->科研抓取-无源项目归档
+     * 档案推送->科研抓取-外协项目归档
      **************************************************************************/
-    @RequestMapping("/daPushNoPrj")
-    public void daPushNoPrj(HttpServletResponse response) {
+    @RequestMapping("/daPushWxPrj")
+    public void daPushWxPrj(HttpServletResponse response) {
         PrintWriter out = null;
         try {
             response.setContentType("text/html;charset=GBK ");
@@ -204,7 +204,7 @@ public class CommonCtler {
             out.println("<HTML>");
             out.println("<BODY>");
             out.println("<XMP>");
-            out.println("档案推送了 " + arcServcieImpl.daPushNoPrj() + " 条数据");
+            out.println(arcServcieImpl.daPushWxPrj() );
             out.println("</XMP>");
             out.println("</BODY>");
             out.println("</HTML>");

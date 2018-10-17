@@ -19,6 +19,7 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.Reader;
@@ -315,6 +316,9 @@ public class BaseService {
         return result;
     }
 
+    public List<Integer> queryDidList(String sql){
+        return jdbcDao.queryDidList(sql);
+    }
     /**
      * 执行sql文件
      */
@@ -744,9 +748,6 @@ public class BaseService {
     @Autowired
     @Value("${lams.ip}")
     protected String lamsIP;
-    @Autowired
-    @Value("${lams.pzm}")
-    protected String pzm;
     /**
      * 默认的全宗号
      */
@@ -764,8 +765,8 @@ public class BaseService {
     protected Integer xyLibcode;
 
     @Autowired
-    @Value("${lams.ky.no.libcode}")
-    protected Integer noLibcode;
+    @Value("${lams.ky.wx.libcode}")
+    protected Integer wxLibcode;
 
     @Autowired
     @Value("${lams.xyDfile.table}")
@@ -775,11 +776,11 @@ public class BaseService {
     protected String xyZjkEFile;
 
     @Autowired
-    @Value("${lams.noDfile.table}")
-    protected String noPrjZjk;
+    @Value("${lams.WxDfile.table}")
+    protected String wxPrjZjk;
     @Autowired
-    @Value("${lams.noEfile.table}")
-    protected String noPrjZjkEFile;
+    @Value("${lams.WxEfile.table}")
+    protected String wxPrjZjkEFile;
 
     @Autowired
     @Value("${lams.xyprj.mappingtablename}")
@@ -787,7 +788,7 @@ public class BaseService {
 
     @Autowired
     @Value("${lams.noprj.mappingtablename}")
-    protected String noFieldMappingtbName;
+    protected String noPrjMappingtbName;
     @Autowired
     @Value("${lams.da.xyprj}")
     protected String daXyPrj;
@@ -801,16 +802,39 @@ public class BaseService {
     protected String basePath;
     @Autowired
     @Value("${lams.xyprj.efile.xdlj.basePath}")
-    protected String xyPjrXdLj;
+    protected String xyPrjEfileBasePath;
     @Autowired
     @Value("${lams.noprj.efile.xdlj.basePath}")
-    protected String noPjrXdLj;
-    /**
-     * 一个临时路径现在无用
-     */
+    protected String wxPrjEfileBasePath;
+
     @Autowired
-    @Value("${file.temp.savepath}")
-    protected String aTempPath;
+    @Value("${ftp.port}")
+    protected Integer ftpPort;
+    @Autowired
+    @Value("${ftp.ip}")
+    protected String ftpIp;
+    @Autowired
+    @Value("${ftp.user}")
+    protected String ftpUser;
+    @Autowired
+    @Value("${ftp.password}")
+    protected String ftpPassword;
+
+    public Integer getFtpPort() {
+        return ftpPort;
+    }
+
+    public String getFtpIp() {
+        return ftpIp;
+    }
+
+    public String getFtpUser() {
+        return ftpUser;
+    }
+
+    public String getFtpPassword() {
+        return ftpPassword;
+    }
 
     private String sysdate = null;
     private Logger log = (Logger) LoggerFactory.getLogger(this.getClass());

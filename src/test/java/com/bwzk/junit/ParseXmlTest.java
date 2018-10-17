@@ -1,6 +1,8 @@
 package com.bwzk.junit;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 
 
 public class ParseXmlTest {
@@ -34,12 +36,16 @@ public class ParseXmlTest {
 //		service.sendCommonMessageByUserCode(nSenderPlatID, nSenderUserCode, sReceiverPlatUserIds,
 //				strContent, nOnlineOnly, nReserveDays, strFromApp, strAppCode, strFromUserName, strCustomInfo)
 
-        String a = "null&;'gname'&;'bz'&;";
-        String[] aa = a.split("&;");
-        for (String aaa : aa) {
-            System.out.println(aaa);
-            System.out.println(StringUtils.isBlank(aaa));
-        }
 
+        String ftpName = "ftp://192.168.188.219/29528_预算..pdf";
+        System.out.println(FilenameUtils.getName(ftpName));
+        System.out.println(FilenameUtils.getBaseName(ftpName));
+        System.out.println(FilenameUtils.getExtension(ftpName));
+        System.out.println(FilenameUtils.getFullPathNoEndSeparator(ftpName));
+        System.out.println(ftpName.substring(ftpName.indexOf("/")));
+
+        System.out.println(new DateTime().getYear());
+        System.out.println(new DateTime().getMonthOfYear());
+        System.out.println(new DateTime().getDayOfMonth());
     }
 }

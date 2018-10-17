@@ -75,7 +75,7 @@
     </bean>
     <bean id="sqlSessionFactory4KeYan" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource4OA"/>
-        <property name="mapperLocations" value="classpath:mybatis/oa/*.xml"></property>
+        <!--<property name="mapperLocations" value="classpath:mybatis/oa/*.xml"></property>-->
     </bean>
     <!-- 分页拦截器 dialect是方言 , "pageFilter"是需要方言的过滤字符串 只有方法带这个开头的才可以 -->
     <bean id="paginationInterceptor" class="com.bwzk.page.PaginationInterceptor">

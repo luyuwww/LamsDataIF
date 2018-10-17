@@ -16,7 +16,7 @@ public interface JdbcDao {
      * 用于执行更新SQL语句
      */
     public void update(String sql) throws RuntimeException;
-
+    public List<Integer> queryDidList(String sql);
     /**
      * 用于执行更新SQL语句
      */

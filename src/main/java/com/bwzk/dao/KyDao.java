@@ -26,11 +26,15 @@ public class KyDao implements BaseDao4KeYan {
     }
 
     public Map<String , Object> query4Obj(String sql){
-        return jdbcTemplate4OA.queryForObject(sql , Map.class);
+        return jdbcTemplate4OA.queryForMap(sql);
     }
 
     public List<Map<String , Object>> query4List(String sql){
         return jdbcTemplate4OA.queryForList(sql);
+    }
+
+    public void executeSql(String sql){
+        jdbcTemplate4OA.execute(sql);
     }
 
     @Autowired

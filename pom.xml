@@ -123,6 +123,11 @@
             <version>2.4</version>
         </dependency>
         <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.3</version>
+        </dependency>
+        <dependency>
             <groupId>net.sourceforge.jtds</groupId>
             <artifactId>jtds</artifactId>
             <version>1.2.7</version>
@@ -263,6 +268,13 @@
             <artifactId>hessian</artifactId>
             <version>4.0.7</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/joda-time/joda-time -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.9.9</version>
+        </dependency>
+
     </dependencies>
 
     <properties>

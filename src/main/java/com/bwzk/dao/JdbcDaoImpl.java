@@ -108,6 +108,9 @@ public class JdbcDaoImpl implements JdbcDao {
             return null;
         }
     }
+    public List<Integer> queryDidList(String sql){
+        return jdbcTemplate.queryForList(sql , Integer.class);
+    }
 
     public Integer insertEfile(String tableName, final EFile eFile) {
         return jdbcTemplate.update("insert into " + tableName +
@@ -185,7 +188,7 @@ public class JdbcDaoImpl implements JdbcDao {
 
     public Boolean existsItem(String sql){
         List result = jdbcTemplate.queryForList(sql);
-        return result!= null && result.size()>0 ? true : false;
+        return result!= null && result.size()>0 ? Boolean.TRUE : Boolean.FALSE;
     }
 
     @Autowired
