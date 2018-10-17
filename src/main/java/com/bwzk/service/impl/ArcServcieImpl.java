@@ -273,7 +273,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
         List<Integer> dataList = super.queryDidList("SELECT DID FROM "+targetTableName
                 +" WHERE STATUS=0 AND ATTR=0 AND (SYNCSTATUS IS NULL OR SYNCSTATUS='')");
         for (Integer did : dataList) {
-            Map<String, Object> obj = super.queryForMap("SELECT SCIENCECODE,PROJECTCODE,TITLE PROJECTNAME,CHARGERNAME," +
+            Map<String, Object> obj = super.queryForMap("SELECT BZ STATUS,SCIENCECODE,PROJECTCODE,TITLE PROJECTNAME,CHARGERNAME," +
                     "EDITTIME DATETIME,KEYWORD ARCHIVECODE FROM "+targetTableName
                     +" WHERE DID="+did);
             String updateSql = "";
@@ -293,7 +293,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
         List<Integer> dataList = super.queryDidList("SELECT DID FROM "+targetTableName
                 +" WHERE  STATUS=0 AND ATTR=0 AND (SYNCSTATUS IS NULL OR SYNCSTATUS='')");
         for (Integer did : dataList) {
-            Map<String, Object> obj = super.queryForMap("SELECT SCIENCECODE,SOURCEPROJECTCODE PROJECTCODE,TITLE PROJECTNAME," +
+            Map<String, Object> obj = super.queryForMap("SELECT BZ STATUS,SCIENCECODE,SOURCEPROJECTCODE PROJECTCODE,TITLE PROJECTNAME," +
                     "WPROJECTCODE,WPROJECTNAME,WCHARGERNAME CHARGERNAME,EDITTIME DATETIME,KEYWORD ARCHIVECODE FROM "
                     +targetTableName +" WHERE DID="+did);
             String updateSql = "";
@@ -364,7 +364,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                         eFile.setDid(getMaxDid(tableName));
                         eFile.setPid(pid);
                         eFile.setEfilename(FilenameUtils.getName(fileDiskName));
-                        eFile.setTitle(fileBizName);
+                        eFile.setTitle(FilenameUtils.getBaseName(fileBizName));
                         eFile.setExt(ext);
                         eFile.setPzm(fwqpz.getPzname());
                         eFile.setPathname(FilenameUtils.normalize(efileBasePath));

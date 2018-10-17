@@ -1,0 +1,37 @@
+1. 配置2个档案类型
+  科研项目档案
+  外协项目档案
+	  科研项目档案    必须现有如下字段
+ * 中文含义	字段名称	数据类型	档案字段
+    科技处归档编号 SCIENCECODE	~~       SCIENCECODE
+    项目名称	PROJECTNAME	VARCHAR~~~	     TITLE
+    项目编号	PROJECTCODE	VARCHAR  ~       PROJECTCODE
+    项目负责人	CHARGERNAME		VARCHAR  CHARGERNAME
+    所属学院	UNITID	VARCHAR              UNITID
+    委托方名称	CLIENTNAME	VARCHAR      CLIENTNAME
+    项目分类	PROJECTTYPE	VARCHAR          ACCEPTUNIT
+    验收单位	ACCEPTUNIT	VARCHAR          ACCEPTUNIT
+    验收评价时间	ACCEPTDATE	DATETIME
+    项目执行情况	EXECUTION	VARCHAR
+    项目摘要	NOTE	VARCHAR
+
+    ☆同步状态    SYNCSTATUS 用于记录是否同步到 科研系统
+
+=============================================================
+
+       外协项目档案    科技处归档编号	SCIENCECODE
+    源项目名称	SOURCEPROJECTNAME   TITLE
+    源项目编号	SOURCEPROJECTCODE   SOURCEPROJECTCODE
+    外协项目编号	WPROJECTCODE    WPROJECTCODE
+    外协项目名称	WPROJECTNAME    WPROJECTNAME
+    外协项目负责人	WCHARGERNAME    WCHARGERNAME
+    验收单位	ACCEPTUNIT     ACCEPTUNIT
+    验收评价时间	ACCEPTDATE  DATE  ACCEPTDATE
+    项目执行情况	EXECUTION         EXECUTION
+    项目摘要	NOTE           NOTE
+    归档标记	ISARCHIVE   ISARCHIVE
+
+    ☆同步状态    SYNCSTATUS 用于记录是否同步到 科研系统
+
+配置代码表
+1. 有源科研对照 2列   第一列是科研字段 第二列是档案字段

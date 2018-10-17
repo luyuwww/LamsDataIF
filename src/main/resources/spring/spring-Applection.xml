@@ -139,7 +139,13 @@
     </task:scheduled-tasks>
      -->
     <task:scheduled-tasks>
-        <!-- 同步OA数据给Lams -->
-        <task:scheduled ref="arcServcieImpl" method="syncAllData" cron="${schedule.arcServcieImpl.syncKeYanData}"/>
+        <!-- 科研推送给档案-有源项目 -->
+        <task:scheduled ref="arcServcieImpl" method="keyanPushXyPrj" cron="0 0/30 * * * ?"/>
+        <!-- 科研推送给档案-外协项目 -->
+        <task:scheduled ref="arcServcieImpl" method="keyanPushWxPrj" cron="0 0/30 * * * ?"/>
+        <!-- 档案推送给科研系统-有源项目 -->
+        <task:scheduled ref="arcServcieImpl" method="daPushXyPrj" cron="0 0/30 * * * ?"/>
+        <!-- 档案推送给科研系统-外协项目 -->
+        <task:scheduled ref="arcServcieImpl" method="daPushWxPrj" cron="0 0/30 * * * ?"/>
     </task:scheduled-tasks>
 </beans>

@@ -789,17 +789,7 @@ public class BaseService {
     @Autowired
     @Value("${lams.noprj.mappingtablename}")
     protected String noPrjMappingtbName;
-    @Autowired
-    @Value("${lams.da.xyprj}")
-    protected String daXyPrj;
 
-    @Autowired
-    @Value("${lams.da.noprj}")
-    protected String daNoPrj;
-
-    @Autowired
-    @Value("${lams.efile.basePath}")
-    protected String basePath;
     @Autowired
     @Value("${lams.xyprj.efile.xdlj.basePath}")
     protected String xyPrjEfileBasePath;

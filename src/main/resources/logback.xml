@@ -3,7 +3,7 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>
-                <![CDATA[date:%d{yyyy-MM-dd HH:mm:ss}\tthread:%thread\tlevel:%-5level\tlogger:%-48logger{48}\tmsg:%msg%n]]></pattern>
+                <![CDATA[date:%d{yyyy-MM-dd HH:mm:ss}\tlogger:%-48logger\tmsg:%msg%n]]></pattern>
         </encoder>
     </appender>
     <property name="baseLogPath" value="c:/temp/_amssyncLog"/>

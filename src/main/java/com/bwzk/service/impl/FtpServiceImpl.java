@@ -96,7 +96,6 @@ public class FtpServiceImpl implements FtpService {
 
     public void downloadFile(String path , String filename_in , String filename_out) throws FtpDownloadFileException {
         if(!exsitsFile(path,filename_in)){
-            System.out.println("文件不存在");
             return;
         }
         if(null == ftpClient){

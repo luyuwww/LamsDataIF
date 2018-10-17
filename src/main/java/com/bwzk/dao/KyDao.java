@@ -26,7 +26,12 @@ public class KyDao implements BaseDao4KeYan {
     }
 
     public Map<String , Object> query4Obj(String sql){
-        return jdbcTemplate4OA.queryForMap(sql);
+        String coutnsql = "SELECT COUNT(*) T FROM (" + sql +") TA";
+        if( jdbcTemplate4OA.queryForInt(coutnsql)>1){
+            return query4List(sql).get(1);
+        }else{
+            return jdbcTemplate4OA.queryForMap(sql);
+        }
     }
 
     public List<Map<String , Object>> query4List(String sql){
