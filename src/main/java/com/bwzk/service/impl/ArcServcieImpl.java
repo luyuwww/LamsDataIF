@@ -114,7 +114,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
             Integer maxdid = 0;
             if (dataMap.size() > 0 && dataMap != null) {
                 oaid = dataMap.get("UUID").toString();
-                tableName = "D_FILE" + libcode + "";
+                tableName = "D_FILE" + libcode ;
 
                 List<Map<String,Object>> fjList = quertListMap("SELECT * FROM "+oaEFile + " WHERE PUUID='" + oaid + "'");
                 try {
@@ -166,7 +166,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                     fields.append(",pid,createtime,qzh,did,attached");
                     values.append(",-1,sysdate,'");
                     values.append(defaultQzh).append("',").append(maxdid).append(",").append(
-                            fjList.size() > 0 ? 1 : 0       );
+                            fjList.size() > 0 ? 1 : 0);
 
                     String InsertSql = "insert into " + tableName + "" + " ("
                             + fields.toString() + ") values (" + values.toString() + " )";
@@ -185,6 +185,13 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                 }
             }
         }
+        try {
+            execSql("UPDATE D_FILE"+ libcode +" SET ATTACHED=0 WHERE DID NOT IN" +
+                    " (SELECT PID FROM E_FILE"+ libcode +")");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return msg + dNum;
     }
     /*
