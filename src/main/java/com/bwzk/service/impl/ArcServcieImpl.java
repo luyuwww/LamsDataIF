@@ -306,6 +306,46 @@ public class ArcServcieImpl extends BaseService implements ArcService {
         return result;
     }
 
+    public void autoArchiveEfile() {
+        System.out.println("being sync efile archive");
+        String didSql = "SELECT DID,TITLE,WENHAO,ND FROM D_FILE" + this.libcode + " WHERE ATTR=1 AND HASGD<>1 OR HASGD IS NULL";
+        List<Map<String, Object>> list = quertListMap(didSql);
+        if(null == list){
+
+        }else{
+            for (Map obj : list) {
+                Integer did = MapUtils.getInteger(obj, "DID");
+                String title = MapUtils.getString(obj, "TITLE");
+                String wenhao = MapUtils.getString(obj, "WENHAO");
+                String nd = MapUtils.getString(obj, "ND");
+                try {
+                    if (StringUtils.isNotBlank(title) && StringUtils.isNotBlank(wenhao) && StringUtils.isNotBlank(nd)) {
+                        String didString = "SELECT MAX(DID) FROM D_FILE" + this.libcode + " WHERE ATTR=0 AND TRIM(TITLE)='"
+                                + title.trim() + "' AND TRIM(WENHAO)='"+wenhao.trim() + "' AND TRIM(ND)='"
+                                + nd.trim()+"' GROUP BY TITLE,WENHAO,ND";
+                        System.out.println(didString);
+                        Integer newdid = (Integer)this.jdbcDao.quert4Fx(didString, Integer.class);
+                        System.out.println("newdid:" + newdid);
+                        if ((newdid != null) && (newdid.intValue() > 0)) {
+                            String updateSql = "UPDATE E_FILE" + this.libcode + " SET PID=" + newdid + " WHERE PID=" + did;
+
+                            execSql("UPDATE E_FILE" + this.libcode + " SET PID=" + newdid + " WHERE PID=" + did);
+                            execSql("UPDATE D_FILE" + this.libcode + " SET HASGD=1,ATTACHED=1 WHERE DID=" + did);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        //清洗小星星
+        try {
+            execSql("UPDATE D_FILE"+ libcode +" SET ATTACHED=0 WHERE DID NOT IN" +
+                    " (SELECT PID FROM E_FILE"+ libcode +" WHERE STATUS=0 AND PID IS NOT NULL)");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     protected Map<String , String> fieldMapping = null;//OA档案字段对应的字段list
     protected List<FDTable> oaFieldList = null;//OA文书f表的字段list
     @Autowired

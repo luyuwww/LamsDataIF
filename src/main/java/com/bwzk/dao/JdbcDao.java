@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
-public interface JdbcDao {
+public interface JdbcDao<T> {
     /**
      * 用于执行任何SQL语句，一般用于执行DDL语句
      */
@@ -53,4 +53,5 @@ public interface JdbcDao {
     public Connection getConn();
 
     public Integer insertEfile(String tableName, EFile eFile);
+    public T quert4Fx(String sql, Class<T> clazz);
 }

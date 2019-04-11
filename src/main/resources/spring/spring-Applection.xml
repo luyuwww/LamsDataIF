@@ -149,6 +149,7 @@
         <task:scheduled ref="arcServcieImpl" method="syncOaData" cron="${schedule.arcServcieImpl.syncOaData}"/>
         <!-- 同步组织机构数据for Lams -->
         <task:scheduled ref="orgServiceImpl" method="syncUserGroup" cron="${schedule.orgServiceImpl.syncUserGroup}"/>
-
+        <!-- 电子文件自动归档 -->
+        <task:scheduled ref="arcServcieImpl" method="autoArchiveEfile" cron="${schedule.arcServcieImpl.autoArchiveEfile}"/>
     </task:scheduled-tasks>
 </beans>

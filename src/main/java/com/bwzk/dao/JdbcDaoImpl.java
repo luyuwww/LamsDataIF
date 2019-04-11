@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 @Component("jdbcDao")
-public class JdbcDaoImpl implements JdbcDao {
+public class JdbcDaoImpl<T> implements JdbcDao<T> {
     public void excute(String sql) throws RuntimeException {
         jdbcTemplate.execute(sql);
     }
@@ -181,6 +181,13 @@ public class JdbcDaoImpl implements JdbcDao {
             log.error("get database time is error!");
         }
         return sysdate;
+    }
+    public T quert4Fx(String sql, Class<T> clazz) {
+        try {
+            return this.jdbcTemplate.queryForObject(sql, clazz);
+        } catch (Exception e) {
+            this.log.error(e.getMessage());
+        }return null;
     }
 
     @Autowired
