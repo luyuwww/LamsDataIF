@@ -62,19 +62,6 @@
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="dataSource4DataIF"/>
     </bean>
-
-    <!-- dao -->
-    <!-- service -->
-    <!-- CXF -->
-    <jaxws:endpoint id="arcServicePublish" implementor="#arcServcieImpl" address="/ArcDataWs"/>
-    <jaxws:endpoint id="arcDataServiceWS" implementor="#arcDataService" address="/ArcDataWsSingle"/>
-    <jaxws:endpoint id="BaseDataWS" implementor="#baseDataServiceImpl" address="/BaseDataWS"/>
-
-    <!-- 事务配置 UNIS-->
-    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource4DataIF"/>
-        <!--<qualifier value="thamsTX"/>-->
-    </bean>
     <!--<tx:annotation-driven transaction-manager="txManager"/>-->
 
     <!-- 下面是显示定时相关配置

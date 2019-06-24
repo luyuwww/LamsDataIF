@@ -24,7 +24,7 @@ import java.util.UUID;
 /**
  * Created by luyuwww on 2015-10-13.
  */
-@Controller()
+@Controller
 public class FileUploadCtler {
     /**
      * 接收http上传的电子文件
