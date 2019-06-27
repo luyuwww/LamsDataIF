@@ -1,5 +1,6 @@
 package com.bwzk.dao;
 
+import com.bwzk.util.JdbcUtil;
 import com.bwzk.util.pageUtil.core.PageSqlExecutor;
 import org.springframework.stereotype.Component;
 
@@ -16,20 +17,19 @@ import java.util.Map;
  */
 @Component("middleDao")
 public class MiddleDao {
-    public List<Map<String, Object>> pageList(String url, String username, String password, String dirvername, String sql
-            , int pager, int pageSize, String primaryKey, String orderBySubStr) {
-        Connection conn = null;
-        Statement st = null;
+    public List<Map<String, Object>> pageList(String url, String username, String password, String dbType
+            , String dbName, String sql , int pager, int pageSize, String primaryKey, String orderBySubStr) {
         ResultSet rs = null;
+        Statement st = null;
+        Connection conn = null;
         List list = new ArrayList();
         try {
-            conn = getConn(url, username, password, dirvername);
+            conn = JdbcUtil.getConnection(url , dbType , dbName , username, password);
             PageSqlExecutor p = new PageSqlExecutor(conn);
             sql = p.getPageSql(sql, pager, pageSize, primaryKey, orderBySubStr);
             st = conn.createStatement();
             rs = st.executeQuery(sql);
             while (rs.next()) {//对结果集进行遍历
-
                 ResultSetMetaData md = rs.getMetaData();
                 int columnCount = md.getColumnCount();
                 Map rowData = new HashMap();
@@ -41,15 +41,7 @@ public class MiddleDao {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if (st != null) {
-                try {
-                    rs.close();
-                    st.close();
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            JdbcUtil.close(rs,st,conn);
         }
         return list;
 

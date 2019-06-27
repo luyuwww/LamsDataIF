@@ -63,7 +63,7 @@ INSERT INTO `F_P_MIDTB` VALUES ('2', 'DID', 'DID', '3', '50', '1', '1', '0', '1'
 INSERT INTO `F_P_MIDTB` VALUES ('3', 'STBNAME', 'STBNAME', '1', '50', '1', '1', '0', '1', '0', '0100000111000000');
 INSERT INTO `F_P_MIDTB` VALUES ('4', 'TTBNAME', 'TTBNAME', '1', '50', '1', '1', '0', '1', '0', '0100000111000000');
 INSERT INTO `F_P_MIDTB` VALUES ('5', 'MTBNAME', 'MTBNAME', '1', '50', '1', '1', '0', '1', '0', '0100000111000000');
-INSERT INTO `F_P_MIDTB` VALUES ('6', 'TSQL', 'TSQL', '1', '1000', '1', '1', '0', '1', '0', '0100000111000000');
+INSERT INTO `F_P_MIDTB` VALUES ('6', 'SSQL', 'SSQL', '1', '1000', '1', '1', '0', '1', '0', '0100000111000000');
 INSERT INTO `F_P_MIDTB` VALUES ('7', 'PIDSQL', 'PIDSQL', '1', '1000', '0', '0', '0', '1', '0', '0100000111000000');
 INSERT INTO `F_P_MIDTB` VALUES ('8', 'CALLBACKSQL', 'CALLBACKSQL', '1', '1000', '0', '0', '0', '1', '0', '0100000111000000');
 INSERT INTO `F_P_MIDTB` VALUES ('9', 'BZ', 'BZ', '1', '100', '0', '0', '0', '1', '0', '0100000111000000');
@@ -131,7 +131,7 @@ INSERT INTO F_P_MIDTB VALUES ('2', 'DID', 'DID', '3', '50', '1', '1', '0', '1', 
 INSERT INTO F_P_MIDTB VALUES ('3', 'STBNAME', 'STBNAME', '1', '50', '1', '1', '0', '1', '0', '0100000111000000');
 INSERT INTO F_P_MIDTB VALUES ('4', 'TTBNAME', 'TTBNAME', '1', '50', '1', '1', '0', '1', '0', '0100000111000000');
 INSERT INTO F_P_MIDTB VALUES ('5', 'MTBNAME', 'MTBNAME', '1', '50', '1', '1', '0', '1', '0', '0100000111000000');
-INSERT INTO F_P_MIDTB VALUES ('6', 'TSQL', 'TSQL', '1', '1000', '1', '1', '0', '1', '0', '0100000111000000');
+INSERT INTO F_P_MIDTB VALUES ('6', 'SSQL', 'SSQL', '1', '1000', '1', '1', '0', '1', '0', '0100000111000000');
 INSERT INTO F_P_MIDTB VALUES ('7', 'PIDSQL', 'PIDSQL', '1', '1000', '0', '0', '0', '1', '0', '0100000111000000');
 INSERT INTO F_P_MIDTB VALUES ('8', 'CALLBACKSQL', 'CALLBACKSQL', '1', '1000', '0', '0', '0', '1', '0', '0100000111000000');
 INSERT INTO F_P_MIDTB VALUES ('9', 'BZ', 'BZ', '1', '100', '0', '0', '0', '1', '0', '0100000111000000');
@@ -201,7 +201,7 @@ INSERT INTO F_P_MIDTB VALUES ('2', 'DID', 'DID', '3', '50', '1', '1', '0', '1', 
 INSERT INTO F_P_MIDTB VALUES ('3', 'STBNAME', 'STBNAME', '1', '50', '1', '1', '0', '1', '0', '0100000111000000');
 INSERT INTO F_P_MIDTB VALUES ('4', 'TTBNAME', 'TTBNAME', '1', '50', '1', '1', '0', '1', '0', '0100000111000000');
 INSERT INTO F_P_MIDTB VALUES ('5', 'MTBNAME', 'MTBNAME', '1', '50', '1', '1', '0', '1', '0', '0100000111000000');
-INSERT INTO F_P_MIDTB VALUES ('6', 'TSQL', 'TSQL', '1', '1000', '1', '1', '0', '1', '0', '0100000111000000');
+INSERT INTO F_P_MIDTB VALUES ('6', 'SSQL', 'SSQL', '1', '1000', '1', '1', '0', '1', '0', '0100000111000000');
 INSERT INTO F_P_MIDTB VALUES ('7', 'PIDSQL', 'PIDSQL', '1', '1000', '0', '0', '0', '1', '0', '0100000111000000');
 INSERT INTO F_P_MIDTB VALUES ('8', 'CALLBACKSQL', 'CALLBACKSQL', '1', '1000', '0', '0', '0', '1', '0', '0100000111000000');
 INSERT INTO F_P_MIDTB VALUES ('9', 'BZ', 'BZ', '1', '100', '0', '0', '0', '1', '0', '0100000111000000');
@@ -216,8 +216,10 @@ INSERT INTO P_MIDTB VALUES ('1', '2', 'LIBVOL5', 'D_VOL5', '中间表字段关�
 
 
 
--- 创建字段对应p表
-INSERT INTO s_all VALUES ('428', 'P_428', '中间表字段关系映射_D_PRJ3', '1', '2', null, '');
+-- 创建字段对应p表--------------------------------------------------------------------
+1. 添加代码库。录入名字 比如tblchname叫测试的
+2. s_all找到表名 P_428
+3. 修改对应脚本。替换表名
 --mysql
 CREATE TABLE F_P_428 (
   DID int(11) NOT NULL,
@@ -268,4 +270,5 @@ INSERT INTO F_P_428 VALUES ('4', 'SFIELD', 'SFIELD', '1', '64', '1', '1', '0', '
 INSERT INTO F_P_428 VALUES ('5', 'TFIELD', 'TFIELD', '1', '64', '1', '1', '0', '1', '0', '0100000111000000');
 INSERT INTO F_P_428 VALUES ('6', 'DEFAULTVALUE', 'DEFAULTVALUE', '1', '64', '0', '0', '0', '1', '0', '0100000111000000');
 INSERT INTO F_P_428 VALUES ('7', 'BZ', 'BZ', '1', '1000', '0', '0', '0', '1', '0', '0100000111000000');
---执行完上面语句需要创建库
+4. 执行语句
+5. 创建库，可以添加数据，创建源表和目标表的关系了

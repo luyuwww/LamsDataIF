@@ -20,7 +20,6 @@ import javax.jws.WebService;
 import java.util.List;
 
 @Service("arcServcieImpl")
-@WebService(name = "ArcDataWs", targetNamespace = "http://service.unis.com/")
 public class ArcServcieImpl extends BaseService implements ArcService {
     @Transactional("txManager")
     public String fileRecive(String xml) {

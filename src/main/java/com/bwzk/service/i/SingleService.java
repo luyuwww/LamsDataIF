@@ -4,7 +4,6 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
-@WebService(name = "ArcDataWsSingle", targetNamespace = "http://service.unis.com/")
 public interface SingleService {
     /**
      * <p>Title: fileReciveTxt</p>
@@ -15,7 +14,6 @@ public interface SingleService {
      * @param gdrCode 数据的所属人 usercode
      * @date 2014年6月19日
      */
-    @WebMethod
     public Integer fileReciveTxt(@WebParam(name = "xmlName") String xmlName
             , @WebParam(name = "dataTxt") String dataTxt, @WebParam(name = "gdrCode") String gdrCode);
 
@@ -28,12 +26,10 @@ public interface SingleService {
      * @param gdrCode 数据的所属人 usercode
      * @date 2014年6月19日
      */
-    @WebMethod
     public Integer fileReciveXml(@WebParam(name = "xmlName") String xmlName
             , @WebParam(name = "dataXml") String dataXml, @WebParam(name = "gdrCode") String gdrCode);
 
 
-    @WebMethod
     public Integer fileReciveJson(@WebParam(name = "xmlName") String xmlName
             , @WebParam(name = "dataJson") String dataJson, @WebParam(name = "gdrCode") String gdrCode);
 }

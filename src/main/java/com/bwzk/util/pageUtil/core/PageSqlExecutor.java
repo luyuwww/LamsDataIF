@@ -33,7 +33,6 @@ public class PageSqlExecutor {
 	}
 
 	public String getPageSql(String sql, int pager, int pageSize, String primaryKey, String orderBySubStr){
-
 		if(supportsLimit()){
 			sql = dialect.getLimitString(sql, pager, pageSize, primaryKey, orderBySubStr);
 		}
@@ -77,9 +76,9 @@ public class PageSqlExecutor {
 
 
 	private String DataBase_Type = ""; //方便得到数据库类类型 
-	private Dialect4Ibatis mySqlDialect = new MYSqlDialect4Ibatis();
-	private Dialect4Ibatis oracleDialect = new OracleDialect4Ibatis();
-	private Dialect4Ibatis sqlServerDialect = new SQLServerDialect4Ibatis();
+	private static Dialect4Ibatis mySqlDialect = new MYSqlDialect4Ibatis();
+	private static Dialect4Ibatis oracleDialect = new OracleDialect4Ibatis();
+	private static Dialect4Ibatis sqlServerDialect = new SQLServerDialect4Ibatis();
 	private Dialect4Ibatis dialect;
 
 	/**

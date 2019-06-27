@@ -23,10 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 @Service("arcDataService")
-@WebService(name = "ArcDataWsSingle", targetNamespace = "http://service.unis.com/")
 public class SingleServiceImpl extends BaseService implements SingleService {
 
-    @WebMethod
     public Integer fileReciveTxt(@WebParam(name = "xmlName") String xmlName
             , @WebParam(name = "dataTxt") String dataTxt, @WebParam(name = "gdrCode") String gdrCode) {
         Integer maxdid = 0;
@@ -115,7 +113,6 @@ public class SingleServiceImpl extends BaseService implements SingleService {
         return resultInteger;
     }
 
-    @WebMethod
     public Integer fileReciveXml(@WebParam(name = "xmlName") String xmlName
             , @WebParam(name = "dataXml") String dataXml, @WebParam(name = "gdrCode") String gdrCode) {
         Integer maxdid = 0;
@@ -198,7 +195,6 @@ public class SingleServiceImpl extends BaseService implements SingleService {
         return resultInteger;
     }
 
-    @WebMethod
     public Integer fileReciveJson(@WebParam(name = "xmlName") String xmlName
             , @WebParam(name = "dataJson") String dataJson, @WebParam(name = "gdrCode") String gdrCode) {
         Integer maxdid = 0;
