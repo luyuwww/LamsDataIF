@@ -61,6 +61,15 @@ public class JdbcDaoImpl implements JdbcDao {
         }
     }
 
+    public Integer queryPid(String sql) {
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return -1;
+        }
+    }
+
     public Map<String, String> quert2Colum4Map(String sql, String col1, String col2) {
         Map<String, String> resultMap = null;
         try {

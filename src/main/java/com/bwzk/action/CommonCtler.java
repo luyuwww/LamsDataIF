@@ -1,8 +1,10 @@
 package com.bwzk.action;
 
 import ch.qos.logback.classic.Logger;
+import com.bwzk.pojo.MidDbs;
 import com.bwzk.service.i.ArcService;
 import com.bwzk.service.i.NoticeService;
+import com.bwzk.service.i.ZjkService;
 import com.bwzk.util.GlobalFinalAttr;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -48,21 +50,51 @@ public class CommonCtler {
     }
 
     /**
-     * 列出所有XML
+     * 列出所有Middbs
      */
-    @RequestMapping(value = "/viewXMLList")
-    public String viewXMLList(Model model) {
+    @RequestMapping(value = "/viewMidDbsList")
+    public String viewMidDbsList(Model model) {
         try {
-            File[] listFile = new File(GlobalFinalAttr.XML_PATH).listFiles();
-            model.addAttribute("listFile", listFile);
-            model.addAttribute("fileType", "xml");
-            return "listLog.jsp";
+            List<MidDbs> list = zjkService.listAllMidDbs();
+            model.addAttribute("listMidDbs", list);
+            return "listMidDbs.jsp";
         } catch (Exception e) {
             log.error("获取日志列表错误.", e);
             return "index.jsp";
         }
     }
 
+    /**
+     * 测试中间库连接
+     */
+    @RequestMapping("/testConn")
+    public void testConn(HttpServletRequest request, HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            response.setContentType("text/html;charset=GBK ");
+            out = response.getWriter();
+            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+            out.println("<HTML>");
+            out.println("<BODY>");
+            out.println("<XMP>");
+            Integer did = Integer.valueOf(request.getParameter("midDbsDid"));
+            if(zjkService.testConn(did)){
+                out.print("连接成功!");
+            }else{
+                out.print("连接失败，请检查配置!");
+            }
+
+            out.println("</XMP>");
+            out.println("</BODY>");
+            out.println("</HTML>");
+        } catch (Exception e) {
+            out.println("错误" + e.getMessage());
+            log.error("错误" + e.getMessage());
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
     /**
      * 查看日志
      */
@@ -180,6 +212,9 @@ public class CommonCtler {
     private ArcService arcServcieImpl;
     @Autowired
     private NoticeService noticeServiceImpl;
+
+    @Autowired
+    private ZjkService zjkService;
     @Autowired
     @Value("${interface.log.home.address}")
     private String logHomeAdd;

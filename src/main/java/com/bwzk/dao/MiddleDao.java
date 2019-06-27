@@ -17,8 +17,9 @@ import java.util.Map;
  */
 @Component("middleDao")
 public class MiddleDao {
-    public List<Map<String, Object>> pageList(String url, String username, String password, String dbType
-            , String dbName, String sql , int pager, int pageSize, String primaryKey, String orderBySubStr) {
+    public List<Map<String, Object>> pageList(String url, String dbType, String dbName
+            , String username, String password   , String sql , int pager, int pageSize
+            , String primaryKey, String orderBySubStr) {
         ResultSet rs = null;
         Statement st = null;
         Connection conn = null;
@@ -32,9 +33,9 @@ public class MiddleDao {
             while (rs.next()) {//对结果集进行遍历
                 ResultSetMetaData md = rs.getMetaData();
                 int columnCount = md.getColumnCount();
-                Map rowData = new HashMap();
+                Map<String,Object> rowData = new HashMap();
                 for (int i = 1; i <= columnCount; i++) {
-                    rowData.put(md.getColumnName(i), rs.getObject(i));
+                    rowData.put(md.getColumnName(i) , rs.getObject(i));
                 }
                 list.add(rowData);
             }
@@ -44,7 +45,42 @@ public class MiddleDao {
             JdbcUtil.close(rs,st,conn);
         }
         return list;
+    }
 
+    public Integer execUpdateSql(String url, String dbType, String dbName
+            , String username, String password , String updateSql){
+        Integer rslt = 0;
+        Statement st = null;
+        Connection conn = null;
+        List list = new ArrayList();
+        try {
+            conn = JdbcUtil.getConnection(url , dbType , dbName , username, password);
+            st = conn.createStatement();
+            rslt = st.executeUpdate(updateSql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            JdbcUtil.close(st,conn);
+        }
+        return rslt;
+    }
+
+    public Boolean testConnection(String url, String dbType, String dbName
+            , String username, String password){
+        Boolean rslt = Boolean.FALSE;
+        Connection conn = null;
+        List list = new ArrayList();
+        try {
+            conn = JdbcUtil.getConnection(url , dbType , dbName , username, password);
+            if(null != conn){
+                rslt = Boolean.TRUE;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            JdbcUtil.close(conn);
+        }
+        return rslt;
     }
 
     private Connection getConn(String url, String username, String password, String dirvername) {

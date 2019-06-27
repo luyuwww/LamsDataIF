@@ -23,25 +23,25 @@ import java.util.Map;
 @ContextConfiguration(locations = {"classpath*:spring/test*.xml"})
 public class TestMiddleDao {
     @Test
-
-//    String url, String username, String password, String dbType
-//            , String dbName, String sql , int pager, int pageSize, String primaryKey, String orderBySubStr
+//    String url, String dbType, String dbName
+//            , String username, String password   , String sql , int pager, int pageSize
+//            , String primaryKey, String orderBySubStr
     public void test001() throws MalformedURLException {
         List<Map<String, Object>> rsult =  middleDao.pageList(
-                "127.0.0.1:3306", "root","root1234","mysql","zjx","select * from s_user" , 1, 10, "DID" , "DID");
+                "127.0.0.1:3306","mysql","zjx", "root","root1234","select * from s_user" , 1, 10, "DID" , "DID");
         for (Map<String, Object> obj : rsult) {
             System.out.println("mysql-"+obj.get("DID")+":"+obj.get("USERNAME"));
 
         }
 
         List<Map<String, Object>> rsultsqlserver =  middleDao.pageList(
-                "127.0.0.1:1433", "sa","ams2000","mssql","cjyt","select * from s_user" , 1, 10, "DID" , "DID");
+                "127.0.0.1:1433","mssql","cjyt", "sa","ams2000","select * from s_user" , 1, 10, "DID" , "DID");
         for (Map<String, Object> obj : rsultsqlserver) {
             System.out.println("sqlserver-"+obj.get("DID")+":"+obj.get("USERNAME"));
 
         }
         List<Map<String, Object>> oracleList =  middleDao.pageList(
-                "127.0.0.1:1521", "thams","ams2000","oracle","ORCL","select * from s_user" , 1, 1022222, "DID" , "DID");
+                "127.0.0.1:1521", "oracle","ORCL","thams","ams2000","select * from s_user" , 1, 5, "DID" , "DID");
         for (Map<String, Object> obj : oracleList) {
             System.out.println("oracle-"+obj.get("DID")+":"+obj.get("USERNAME"));
 

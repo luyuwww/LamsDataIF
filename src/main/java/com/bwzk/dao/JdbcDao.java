@@ -50,6 +50,8 @@ public interface JdbcDao {
      */
     public String query4String(String sql);
 
+    public Integer queryPid(String sql);
+
     public Connection getConn();
 
     public Integer insertEfile(String tableName, EFile eFile);

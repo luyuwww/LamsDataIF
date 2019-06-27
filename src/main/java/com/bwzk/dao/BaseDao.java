@@ -80,4 +80,7 @@ public interface BaseDao {
     @Select("SELECT * FROM ${tableName} WHERE LIBCODE=${libcode}")
     List<DClassifyZjk> listFlh(@Param("tableName") String tableName ,
                                      @Param("libcode") Integer libcode);
+
+    @Select("SELECT * FROM ${tableName} ORDER BY DID")
+    List<MidFieldMapping> listMidFieldMapping(@Param("tableName") String tableName);
 }
