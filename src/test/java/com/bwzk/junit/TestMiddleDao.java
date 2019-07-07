@@ -1,7 +1,7 @@
-package com.bwzk.junit;
+package com.hwxt.junit;
 
-import com.bwzk.dao.MiddleDao;
-import com.bwzk.service.OutInterfaceServcie;
+import com.hwxt.dao.MiddleDao;
+import com.hwxt.service.OutInterfaceServcie;
 import com.caucho.hessian.client.HessianProxyFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;

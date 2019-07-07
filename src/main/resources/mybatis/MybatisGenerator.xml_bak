@@ -24,16 +24,16 @@
 			<property name="forceBigDecimals" value="false" />
 		</javaTypeResolver>
 
-		<javaModelGenerator targetPackage="com.bwzk.pojo" targetProject="LamsIFML">
+		<javaModelGenerator targetPackage="com.hwxt.pojo" targetProject="LamsIFML">
 			<property name="enableSubPackages" value="true" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
 
-		<sqlMapGenerator targetPackage="com.bwzk.dao.i" targetProject="LamsIFML">
+		<sqlMapGenerator targetPackage="com.hwxt.dao.i" targetProject="LamsIFML">
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
 
-		<javaClientGenerator type="XMLMAPPER" targetPackage="com.bwzk.dao.i" targetProject="LamsIFML">
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.hwxt.dao.i" targetProject="LamsIFML">
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 

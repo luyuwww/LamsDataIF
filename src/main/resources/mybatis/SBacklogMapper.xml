@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.bwzk.dao.i.SBacklogMapper">
-    <resultMap id="BaseResultMap" type="com.bwzk.pojo.SBacklog">
+<mapper namespace="com.hwxt.dao.i.SBacklogMapper">
+    <resultMap id="BaseResultMap" type="com.hwxt.pojo.SBacklog">
         <id column="DID" property="did" jdbcType="INTEGER"/>
         <result column="URGENCY" property="urgency" jdbcType="INTEGER"/>
         <result column="PID" property="pid" jdbcType="INTEGER"/>
@@ -80,7 +80,7 @@
         DID, URGENCY, PID, PTABLE, TITLE, OPERMODULEZH, OPERMODULEOWNER, OPERTYPE, OPERDATE,
         USERCODE, ISOPER, DETAIL, BZ
     </sql>
-    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bwzk.pojo.SBacklogExample">
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hwxt.pojo.SBacklogExample">
         select
         <if test="distinct">
             distinct
@@ -104,13 +104,13 @@
         delete from S_BACKLOG
         where DID = #{did,jdbcType=INTEGER}
     </delete>
-    <delete id="deleteByExample" parameterType="com.bwzk.pojo.SBacklogExample">
+    <delete id="deleteByExample" parameterType="com.hwxt.pojo.SBacklogExample">
         delete from S_BACKLOG
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
         </if>
     </delete>
-    <insert id="insert" parameterType="com.bwzk.pojo.SBacklog">
+    <insert id="insert" parameterType="com.hwxt.pojo.SBacklog">
         insert into S_BACKLOG (DID, URGENCY, PID,
         PTABLE, TITLE, OPERMODULEZH,
         OPERMODULEOWNER, OPERTYPE, OPERDATE,
@@ -122,7 +122,7 @@
         #{usercode,jdbcType=VARCHAR}, #{isoper,jdbcType=INTEGER}, #{detail,jdbcType=VARCHAR},
         #{bz,jdbcType=VARCHAR})
     </insert>
-    <insert id="insertSelective" parameterType="com.bwzk.pojo.SBacklog">
+    <insert id="insertSelective" parameterType="com.hwxt.pojo.SBacklog">
         insert into S_BACKLOG
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="did != null">
@@ -207,7 +207,7 @@
             </if>
         </trim>
     </insert>
-    <select id="countByExample" parameterType="com.bwzk.pojo.SBacklogExample" resultType="java.lang.Integer">
+    <select id="countByExample" parameterType="com.hwxt.pojo.SBacklogExample" resultType="java.lang.Integer">
         select count(*) from S_BACKLOG
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
@@ -279,7 +279,7 @@
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
     </update>
-    <update id="updateByPrimaryKeySelective" parameterType="com.bwzk.pojo.SBacklog">
+    <update id="updateByPrimaryKeySelective" parameterType="com.hwxt.pojo.SBacklog">
         update S_BACKLOG
         <set>
             <if test="urgency != null">
@@ -321,7 +321,7 @@
         </set>
         where DID = #{did,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.bwzk.pojo.SBacklog">
+    <update id="updateByPrimaryKey" parameterType="com.hwxt.pojo.SBacklog">
         update S_BACKLOG
         set URGENCY = #{urgency,jdbcType=INTEGER},
         PID = #{pid,jdbcType=INTEGER},

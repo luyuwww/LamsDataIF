@@ -14,7 +14,7 @@
     <context:property-placeholder location="classpath*:config.properties"/>
     <!-- 静态资源访问 -->
     <mvc:resources location="/res/**" mapping="/res/**"/>
-    <context:component-scan base-package="com.bwzk.action"/>
+    <context:component-scan base-package="com.hwxt.action"/>
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass"
                   value="org.springframework.web.servlet.view.JstlView"/>

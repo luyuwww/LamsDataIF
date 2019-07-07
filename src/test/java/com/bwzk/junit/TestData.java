@@ -1,4 +1,4 @@
-//package com.bwzk.junit;
+//package com.hwxt.junit;
 //
 //import java.io.StringWriter;
 //import java.net.URL;

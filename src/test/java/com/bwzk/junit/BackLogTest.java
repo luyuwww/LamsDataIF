@@ -1,7 +1,7 @@
-package com.bwzk.junit;
+package com.hwxt.junit;
 
-import com.bwzk.pojo.SBacklog;
-import com.bwzk.service.i.NoticeService;
+import com.hwxt.pojo.SBacklog;
+import com.hwxt.service.i.NoticeService;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;

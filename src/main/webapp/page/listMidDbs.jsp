@@ -25,6 +25,16 @@
                 <a href="${pageContext.request.contextPath}/testConn?midDbsDid=${middbs.did}&rand=<%=Math.random()%>">
                     测试连接</a>
             </div>
+
+            <div class="col-md-1">
+                <a href="${pageContext.request.contextPath}/rand=<%=Math.random()%>">
+                    查看详情</a>
+            </div>
+
+            <div class="col-md-1">
+                <a href="${pageContext.request.contextPath}/rand=<%=Math.random()%>">
+                    抓取数据</a>
+            </div>
         </div>
     </c:forEach>
 </div>

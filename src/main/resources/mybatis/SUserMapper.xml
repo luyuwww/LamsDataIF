@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.bwzk.dao.i.SUserMapper">
-    <resultMap id="BaseResultMap" type="com.bwzk.pojo.SUser">
+<mapper namespace="com.hwxt.dao.i.SUserMapper">
+    <resultMap id="BaseResultMap" type="com.hwxt.pojo.SUser">
         <id column="DID" property="did" jdbcType="INTEGER"/>
         <result column="PID" property="pid" jdbcType="INTEGER"/>
         <result column="USERCODE" property="usercode" jdbcType="VARCHAR"/>
@@ -28,13 +28,13 @@
         <result column="ESBID" property="esbid" jdbcType="VARCHAR"/>
         <result column="ESBCODE" property="esbcode" jdbcType="VARCHAR"/>
     </resultMap>
-    <resultMap id="dFile" type="com.bwzk.pojo.DFile">
+    <resultMap id="dFile" type="com.hwxt.pojo.DFile">
         <id column="DID" property="did" jdbcType="INTEGER"/>
         <result column="PID" property="pid" jdbcType="INTEGER"/>
         <result column="TITLE" property="title" jdbcType="VARCHAR"/>
         <result column="KEYWORD" property="keyword" jdbcType="VARCHAR"/>
     </resultMap>
-    <resultMap id="ResultMapWithBLOBs" type="com.bwzk.pojo.SUserWithBLOBs" extends="BaseResultMap">
+    <resultMap id="ResultMapWithBLOBs" type="com.hwxt.pojo.SUserWithBLOBs" extends="BaseResultMap">
         <result column="INI" property="ini" jdbcType="BLOB"/>
         <result column="INIXML" property="inixml" jdbcType="BLOB"/>
     </resultMap>
@@ -106,7 +106,7 @@
     <sql id="Blob_Column_List">
         INI, INIXML
     </sql>
-    <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.bwzk.pojo.SUserExample">
+    <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hwxt.pojo.SUserExample">
         select
         <if test="distinct">
             distinct
@@ -122,7 +122,7 @@
             order by ${orderByClause}
         </if>
     </select>
-    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.bwzk.pojo.SUserExample">
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hwxt.pojo.SUserExample">
         select
         <if test="distinct">
             distinct
@@ -148,13 +148,13 @@
         delete from S_USER
         where DID = #{did,jdbcType=INTEGER}
     </delete>
-    <delete id="deleteByExample" parameterType="com.bwzk.pojo.SUserExample">
+    <delete id="deleteByExample" parameterType="com.hwxt.pojo.SUserExample">
         delete from S_USER
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
         </if>
     </delete>
-    <insert id="insert" parameterType="com.bwzk.pojo.SUserWithBLOBs">
+    <insert id="insert" parameterType="com.hwxt.pojo.SUserWithBLOBs">
     insert into S_USER (DID, PID, USERCODE, 
       USERNAME, PASSWD, EMAIL, 
       TEL_O, TEL_H, TEL_M, CARD, 
@@ -174,7 +174,7 @@
       #{esbid,jdbcType=VARCHAR}, #{esbcode,jdbcType=VARCHAR}, #{ini,jdbcType=BLOB}, #{inixml,jdbcType=BLOB}
       )
   </insert>
-    <insert id="insertSelective" parameterType="com.bwzk.pojo.SUserWithBLOBs">
+    <insert id="insertSelective" parameterType="com.hwxt.pojo.SUserWithBLOBs">
         insert into S_USER
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="did != null">
@@ -343,7 +343,7 @@
             </if>
         </trim>
     </insert>
-    <select id="countByExample" parameterType="com.bwzk.pojo.SUserExample" resultType="java.lang.Integer">
+    <select id="countByExample" parameterType="com.hwxt.pojo.SUserExample" resultType="java.lang.Integer">
         select count(*) from S_USER
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
@@ -502,7 +502,7 @@
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
     </update>
-    <update id="updateByPrimaryKeySelective" parameterType="com.bwzk.pojo.SUserWithBLOBs">
+    <update id="updateByPrimaryKeySelective" parameterType="com.hwxt.pojo.SUserWithBLOBs">
         update S_USER
         <set>
             <if test="pid != null">
@@ -586,7 +586,7 @@
         </set>
         where DID = #{did,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bwzk.pojo.SUserWithBLOBs">
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hwxt.pojo.SUserWithBLOBs">
     update S_USER
     set PID = #{pid,jdbcType=INTEGER},
       USERCODE = #{usercode,jdbcType=VARCHAR},
@@ -616,7 +616,7 @@
       INIXML = #{inixml,jdbcType=BLOB}
     where DID = #{did,jdbcType=INTEGER}
   </update>
-    <update id="updateByPrimaryKey" parameterType="com.bwzk.pojo.SUser">
+    <update id="updateByPrimaryKey" parameterType="com.hwxt.pojo.SUser">
     update S_USER
     set PID = #{pid,jdbcType=INTEGER},
       USERCODE = #{usercode,jdbcType=VARCHAR},
@@ -644,7 +644,7 @@
       ESBCODE = #{esbcode,jdbcType=VARCHAR}
     where DID = #{did,jdbcType=INTEGER}
   </update>
-    <update id="updateByKey" parameterType="com.bwzk.pojo.SUser">
+    <update id="updateByKey" parameterType="com.hwxt.pojo.SUser">
     update S_USER
     set USERCODE = #{usercode,jdbcType=VARCHAR},
       USERNAME = #{username,jdbcType=VARCHAR},

@@ -12,7 +12,7 @@
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
 	http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
 
-    <context:component-scan base-package="com.bwzk"/>
+    <context:component-scan base-package="com.hwxt"/>
     <bean id="propertyPlaceholderConfigurer"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
@@ -53,8 +53,8 @@
         <property name="mapperLocations" value="classpath:mybatis/*.xml"></property>
     </bean>
     <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.bwzk.dao.i"/>
-        <property name="markerInterface" value="com.bwzk.dao.BaseDao"/>
+        <property name="basePackage" value="com.hwxt.dao.i"/>
+        <property name="markerInterface" value="com.hwxt.dao.BaseDao"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
 
