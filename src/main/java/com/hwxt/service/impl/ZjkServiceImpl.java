@@ -5,6 +5,8 @@ import com.hwxt.dao.i.MidDbsMapper;
 import com.hwxt.dao.i.MidTabMapper;
 import com.hwxt.dao.i.SUserMapper;
 import com.hwxt.pojo.MidDbs;
+import com.hwxt.pojo.MidTab;
+import com.hwxt.pojo.MidTabExample;
 import com.hwxt.service.BaseService;
 import com.hwxt.service.i.ZjkService;
 import org.slf4j.Logger;
@@ -33,6 +35,14 @@ public class ZjkServiceImpl extends BaseService implements ZjkService {
 
     public void startSyncOneDBS(Integer midDbsDID) {
         MidDbs dbs = midDbsMapper.selectByPrimaryKey(midDbsDID);
+        MidTabExample me = new MidTabExample();
+        me.createCriteria().andPidEqualTo(midDbsDID);
+        me.setOrderByClause("DID ASC");
+        List<MidTab> mtList = midTabMapper.selectByExample(me);
+        for (MidTab  midTab: mtList) {
+            System.out.println(midTab.getMtbname());
+
+        }
     }
 
 

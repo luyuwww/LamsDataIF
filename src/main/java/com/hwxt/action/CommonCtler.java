@@ -75,14 +75,43 @@ public class CommonCtler {
             out = response.getWriter();
             out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
             out.println("<HTML>");
-            out.println("<BODY>");
+            out.print("<a href=\"/LamsDataIF/viewMidDbsList\">返回</a>          " +
+                    "<a href=\"/LamsDataIF/\">主页</a>");
             out.println("<XMP>");
+
             Integer did = Integer.valueOf(request.getParameter("midDbsDid"));
             if(zjkService.testConn(did)){
                 out.print("连接成功!");
             }else{
                 out.print("连接失败，请检查配置!");
             }
+
+            out.println("</XMP>");
+            out.println("</BODY>");
+            out.println("</HTML>");
+        } catch (Exception e) {
+            out.println("错误" + e.getMessage());
+            log.error("错误" + e.getMessage());
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
+    /**
+     * 测试中间库连接
+     */
+    @RequestMapping("/catcheOneDB")
+    public void catcheOneDB(HttpServletRequest request, HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            response.setContentType("text/html;charset=GBK ");
+            out = response.getWriter();
+            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+            out.println("<HTML>");
+            out.println("<BODY>");
+            out.println("<XMP>");
+            Integer did = Integer.valueOf(request.getParameter("midDbsDid"));
+            zjkService.startSyncOneDBS(did);
 
             out.println("</XMP>");
             out.println("</BODY>");

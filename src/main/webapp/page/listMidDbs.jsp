@@ -32,7 +32,7 @@
             </div>
 
             <div class="col-md-1">
-                <a href="${pageContext.request.contextPath}/rand=<%=Math.random()%>">
+                <a href="${pageContext.request.contextPath}/catcheOneDB?midDbsDid=${middbs.did}&rand=<%=Math.random()%>">
                     抓取数据</a>
             </div>
         </div>
