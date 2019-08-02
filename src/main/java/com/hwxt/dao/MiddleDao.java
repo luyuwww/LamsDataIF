@@ -1,5 +1,6 @@
 package com.hwxt.dao;
 
+import com.hwxt.pojo.MidDbs;
 import com.hwxt.util.JdbcUtil;
 import com.hwxt.util.pageUtil.core.PageSqlExecutor;
 import org.springframework.stereotype.Component;
@@ -17,8 +18,21 @@ import java.util.Map;
  */
 @Component("middleDao")
 public class MiddleDao {
+
+    public List<Map<String, Object>> pageList(MidDbs dbs, String sql , int pager, int pageSize
+            , String primaryKey, String orderBySubStr) {
+        return pageList(dbs.getDburl() , dbs.getDbtype()
+                , dbs.getDbname() , dbs.getUsername(), dbs.getPassword()
+                , sql , pager, pageSize , primaryKey , orderBySubStr);
+    }
+
+    public Integer countSzie(MidDbs dbs, String sql) {
+        return countSzie(dbs.getDburl() , dbs.getDbtype()
+                , dbs.getDbname() , dbs.getUsername(), dbs.getPassword() , sql);
+    }
+
     public List<Map<String, Object>> pageList(String url, String dbType, String dbName
-            , String username, String password   , String sql , int pager, int pageSize
+            , String username, String password , String sql , int pager, int pageSize
             , String primaryKey, String orderBySubStr) {
         ResultSet rs = null;
         Statement st = null;
@@ -45,6 +59,30 @@ public class MiddleDao {
             JdbcUtil.close(rs,st,conn);
         }
         return list;
+    }
+
+    public Integer countSzie(String url, String dbType, String dbName
+            , String username, String password   , String sql) {
+        ResultSet rs = null;
+        Statement st = null;
+        Connection conn = null;
+        List list = new ArrayList();
+        Integer size = 0;
+        try {
+            conn = JdbcUtil.getConnection(url , dbType , dbName , username, password);
+            PageSqlExecutor p = new PageSqlExecutor(conn);
+            String countSql = "SELECT COUNT(1) TOTALSIZE FROM (" + sql + ") T";
+            st = conn.createStatement();
+            rs = st.executeQuery(countSql);
+            while (rs.next()) {//对结果集进行遍历
+                size = rs.getInt("TOTALSIZE");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            JdbcUtil.close(rs,st,conn);
+        }
+        return size;
     }
 
     public Integer execUpdateSql(String url, String dbType, String dbName
@@ -95,4 +133,5 @@ public class MiddleDao {
         }
         return conn;
     }
+
 }

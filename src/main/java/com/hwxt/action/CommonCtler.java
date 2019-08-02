@@ -2,6 +2,7 @@ package com.hwxt.action;
 
 import ch.qos.logback.classic.Logger;
 import com.hwxt.pojo.MidDbs;
+import com.hwxt.pojo.MidTab;
 import com.hwxt.service.i.ArcService;
 import com.hwxt.service.i.NoticeService;
 import com.hwxt.service.i.ZjkService;
@@ -63,12 +64,26 @@ public class CommonCtler {
             return "index.jsp";
         }
     }
+    /**
+     * 查看中间表
+     * */
+    @RequestMapping(value = "/viewMidTableByDbID")
+    public String viewMidTableByDbID(@RequestParam Integer midDbsDid, HttpServletResponse response,Model model) {
+        try {
+            List<MidTab> list = zjkService.listMidTablsByDbsId(midDbsDid);
+            model.addAttribute("listMidTables", list);
+            return "listMidTabs.jsp";
+        } catch (Exception e) {
+            log.error("获取日志列表错误.", e);
+            return "index.jsp";
+        }
+    }
 
     /**
      * 测试中间库连接
      */
     @RequestMapping("/testConn")
-    public void testConn(HttpServletRequest request, HttpServletResponse response) {
+    public void testConn(@RequestParam Integer midDbsDid, HttpServletResponse response) {
         PrintWriter out = null;
         try {
             response.setContentType("text/html;charset=GBK ");
@@ -79,8 +94,7 @@ public class CommonCtler {
                     "<a href=\"/LamsDataIF/\">主页</a>");
             out.println("<XMP>");
 
-            Integer did = Integer.valueOf(request.getParameter("midDbsDid"));
-            if(zjkService.testConn(did)){
+            if(zjkService.testConn(midDbsDid)){
                 out.print("连接成功!");
             }else{
                 out.print("连接失败，请检查配置!");
@@ -98,7 +112,7 @@ public class CommonCtler {
         }
     }
     /**
-     * 测试中间库连接
+     * 抓取中间库数据
      */
     @RequestMapping("/catcheOneDB")
     public void catcheOneDB(HttpServletRequest request, HttpServletResponse response) {

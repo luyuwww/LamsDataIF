@@ -1,9 +1,12 @@
 package com.hwxt.dao.i;
 
 import com.hwxt.dao.BaseDao;
+import com.hwxt.pojo.MidFieldMapping;
 import com.hwxt.pojo.MidTab;
 import com.hwxt.pojo.MidTabExample;
+import com.hwxt.pojo.SQzh;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -95,4 +98,7 @@ public interface MidTabMapper extends BaseDao {
      * @mbggenerated
      */
     int updateByPrimaryKey(MidTab record);
+
+    @Select("SELECT * FROM ${TABLENAME} ORDER BY DID")
+    List<MidFieldMapping> listFieldMapping(@Param("TABLENAME") String tableName);
 }

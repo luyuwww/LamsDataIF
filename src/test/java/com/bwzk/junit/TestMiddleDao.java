@@ -1,12 +1,11 @@
 package com.hwxt.junit;
 
 import com.hwxt.dao.MiddleDao;
-import com.hwxt.service.OutInterfaceServcie;
-import com.caucho.hessian.client.HessianProxyFactory;
+import com.hwxt.dao.i.MidTabMapper;
+import com.hwxt.pojo.MidFieldMapping;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -27,25 +26,36 @@ public class TestMiddleDao {
 //            , String username, String password   , String sql , int pager, int pageSize
 //            , String primaryKey, String orderBySubStr
     public void test001() throws MalformedURLException {
-        List<Map<String, Object>> rsult =  middleDao.pageList(
-                "127.0.0.1:3306","mysql","zjx", "root","root1234","select * from s_user" , 1, 10, "DID" , "DID");
-        for (Map<String, Object> obj : rsult) {
-            System.out.println("mysql-"+obj.get("DID")+":"+obj.get("USERNAME"));
+        List<MidFieldMapping> list =  midTabMapper.listFieldMapping("P_429");
+        for (MidFieldMapping mp : list) {
+            System.out.println(mp.getSfield());
 
         }
 
-        List<Map<String, Object>> rsultsqlserver =  middleDao.pageList(
-                "127.0.0.1:1433","mssql","cjyt", "sa","ams2000","select * from s_user" , 1, 10, "DID" , "DID");
-        for (Map<String, Object> obj : rsultsqlserver) {
-            System.out.println("sqlserver-"+obj.get("DID")+":"+obj.get("USERNAME"));
+        Integer size =  middleDao.countSzie(
+                "127.0.0.1:1433","mssql","GZED_THAMSXP", "sa","ams2000"
+                ,"SELECT CREATETIME,PRJCODE,PRJNAME,XMFZR,GCLB,LXRQ,F1,F2  FROM LIBPRJ5 WHERE KYWCRQ<>1 OR KYWCRQ IS NULL");
+        System.out.println(size);
+//        List<Map<String, Object>> rsult =  middleDao.pageList(
+//                "127.0.0.1:3306","mysql","zjx", "root","root1234","select * from s_user" , 1, 10, "DID" , "DID");
+//        for (Map<String, Object> obj : rsult) {
+//            System.out.println("mysql-"+obj.get("DID")+":"+obj.get("USERNAME"));
+//
+//        }
+//
+//        List<Map<String, Object>> rsultsqlserver =  middleDao.pageList(
+//                "127.0.0.1:1433","mssql","cjyt", "sa","ams2000","select * from s_user" , 1, 10, "DID" , "DID");
+//        for (Map<String, Object> obj : rsultsqlserver) {
+//            System.out.println("sqlserver-"+obj.get("DID")+":"+obj.get("USERNAME"));
+//
+//        }
+//        List<Map<String, Object>> oracleList =  middleDao.pageList(
+//                "127.0.0.1:1521", "oracle","ORCL","thams","ams2000","select * from s_user" , 1, 5, "DID" , "DID");
+//        for (Map<String, Object> obj : oracleList) {
+//            System.out.println("oracle-"+obj.get("DID")+":"+obj.get("USERNAME"));
+//
+//        }
 
-        }
-        List<Map<String, Object>> oracleList =  middleDao.pageList(
-                "127.0.0.1:1521", "oracle","ORCL","thams","ams2000","select * from s_user" , 1, 5, "DID" , "DID");
-        for (Map<String, Object> obj : oracleList) {
-            System.out.println("oracle-"+obj.get("DID")+":"+obj.get("USERNAME"));
-
-        }
 
     }
 
@@ -62,4 +72,6 @@ public class TestMiddleDao {
 //#druid.datasource.password=ams2000
     @Autowired
     protected MiddleDao middleDao;
+    @Autowired
+    protected MidTabMapper midTabMapper;
 }

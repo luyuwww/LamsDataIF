@@ -14,29 +14,46 @@
 </head>
 <body>
 <div class="container">
-    <h2>日志列表</h2>
-    <c:forEach var="middbs" items="${listMidDbs}" varStatus="count">
-        <div class="row">
-            <div class="col-md-1">${count.index+1}</div>
-            <div class="col-md-2">${middbs.dalxchname}【${middbs.libcode}】</div>
-            <div class="col-md-2">${middbs.dbname}</div>
-            <div class="col-md-2">${middbs.dbtype}</div>
-            <div class="col-md-1">
-                <a href="${pageContext.request.contextPath}/testConn?midDbsDid=${middbs.did}&rand=<%=Math.random()%>">
-                    测试连接</a>
-            </div>
+    <h2>中间库列表</h2>
 
-            <div class="col-md-1">
-                <a href="${pageContext.request.contextPath}/rand=<%=Math.random()%>">
-                    查看详情</a>
-            </div>
-
-            <div class="col-md-1">
-                <a href="${pageContext.request.contextPath}/catcheOneDB?midDbsDid=${middbs.did}&rand=<%=Math.random()%>">
-                    抓取数据</a>
-            </div>
-        </div>
-    </c:forEach>
+    <br/>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>门类</th>
+            <th>数据库名</th>
+            <th>数据库类型</th>
+            <th>数据库URL</th>
+            <th colspan="3" style="text-align: center">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach var="middbs" items="${listMidDbs}" varStatus="count">
+            <tr>
+                <td>${count.index+1}</td>
+                <td>${middbs.dalxchname}【${middbs.libcode}】</td>
+                <td>${middbs.dbname}</td>
+                <td>${middbs.dbtype}</td>
+                <td>${middbs.dburl}</td>
+                <td>
+                    <a href="${pageContext.request.contextPath}/testConn?midDbsDid=${middbs.did}&rand=<%=Math.random()%>">
+                        测试连接</a>
+                </td>
+                <td>
+                    <a href="${pageContext.request.contextPath}/viewMidTableByDbID?midDbsDid=${middbs.did}&rand=<%=Math.random()%>">
+                        详情</a>
+                </td>
+                <td>
+                    <a href="${pageContext.request.contextPath}/catcheOneDB?midDbsDid=${middbs.did}&rand=<%=Math.random()%>">
+                        抓取</a>
+                </td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+    <a href="${pageContext.request.contextPath}/">
+        返回</a>
 </div>
 </body>
 </html>
