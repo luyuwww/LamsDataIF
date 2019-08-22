@@ -320,4 +320,21 @@ public class MidDbs {
     public void setBz(String bz) {
         this.bz = bz;
     }
+
+
+    @Override
+    public String toString() {
+        return "MidDbs{" +
+                "did=" + did +
+                ", dalxchname='" + dalxchname + '\'' +
+                ", libcode=" + libcode +
+                ", dburl='" + dburl + '\'' +
+                ", dbname='" + dbname + '\'' +
+                ", dbtype='" + dbtype + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", maxlevel='" + maxlevel + '\'' +
+                ", bz='" + bz + '\'' +
+                '}';
+    }
 }

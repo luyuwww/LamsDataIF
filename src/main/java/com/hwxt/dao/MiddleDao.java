@@ -103,6 +103,24 @@ public class MiddleDao {
         return rslt;
     }
 
+    public Integer execUpdateSql(MidDbs dbs, String updateSql){
+        Integer rslt = 0;
+        Statement st = null;
+        Connection conn = null;
+        List list = new ArrayList();
+        try {
+            conn = JdbcUtil.getConnection(dbs.getDburl() , dbs.getDbtype() , dbs.getDbname()
+                    , dbs.getUsername(), dbs.getPassword());
+            st = conn.createStatement();
+            rslt = st.executeUpdate(updateSql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            JdbcUtil.close(st,conn);
+        }
+        return rslt;
+    }
+
     public Boolean testConnection(String url, String dbType, String dbName
             , String username, String password){
         Boolean rslt = Boolean.FALSE;

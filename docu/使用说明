@@ -1,0 +1,125 @@
+1、 创建 middb
+        --这里用s_all的maxdid+1 作为426\427的替代,
+        INSERT INTO s_all VALUES ('426', 'P_MIDDB', '中间库信息表', '1', '2', null, '');
+        INSERT INTO s_all VALUES ('427', 'P_MIDTB', '中间表信息表', '1', '2', null, '');
+
+        CREATE TABLE F_P_MIDDB (
+          DID int NOT NULL PRIMARY KEY,
+          FIELDNAME varchar(32) NOT NULL,
+          CHNAME varchar(64) NOT NULL,
+          FIELDTYPE int NOT NULL,
+          LENGTH int DEFAULT NULL,
+          NOTNULL int DEFAULT NULL,
+          NOTDUP int DEFAULT NULL,
+          NOTINWEB int DEFAULT NULL,
+          FCATTR int DEFAULT NULL,
+          FMATTR int DEFAULT NULL,
+          READONLYCOLS varchar(16) DEFAULT NULL
+        );
+
+        INSERT INTO F_P_MIDDB VALUES ('1', 'DID', 'DID', '3', '50', '1', '1', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDDB VALUES ('2', 'DALXCHNAME', 'DALXCHNAME', '1', '50', '1', '0', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDDB VALUES ('3', 'LIBCODE', 'LIBCODE', '3', '49', '1', '0', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDDB VALUES ('4', 'DBURL', 'DBURL', '1', '65', '1', '1', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDDB VALUES ('5', 'DBNAME', 'DBNAME', '1', '50', '1', '1', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDDB VALUES ('6', 'DBTYPE', 'DBTYPE', '1', '50', '1', '1', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDDB VALUES ('7', 'USERNAME', 'USERNAME', '1', '50', '1', '1', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDDB VALUES ('8', 'PASSWORD', 'PASSWORD', '1', '50', '1', '1', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDDB VALUES ('9', 'MAXLEVEL', 'MAXLEVEL', '1', '50', '1', '1', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDDB VALUES ('10', 'BZ', 'BZ', '1', '512', '0', '0', '0', '1', '0', '0100000111000000');
+
+
+        CREATE TABLE F_P_MIDTB (
+          DID int NOT NULL  PRIMARY KEY ,
+          FIELDNAME varchar(32) NOT NULL,
+          CHNAME varchar(64) NOT NULL,
+          FIELDTYPE int NOT NULL,
+          LENGTH int DEFAULT NULL,
+          NOTNULL int DEFAULT NULL,
+          NOTDUP int DEFAULT NULL,
+          NOTINWEB int DEFAULT NULL,
+          FCATTR int DEFAULT NULL,
+          FMATTR int DEFAULT NULL,
+          READONLYCOLS varchar(16) DEFAULT NULL );
+
+        INSERT INTO F_P_MIDTB VALUES ('1', 'PID', 'PID', '3', '50', '1', '1', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDTB VALUES ('2', 'DID', 'DID', '3', '50', '1', '1', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDTB VALUES ('3', 'STBNAME', 'STBNAME', '1', '50', '1', '1', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDTB VALUES ('4', 'TTBNAME', 'TTBNAME', '1', '50', '1', '1', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDTB VALUES ('5', 'MTBNAME', 'MTBNAME', '1', '50', '1', '1', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDTB VALUES ('6', 'SSQL', 'SSQL', '1', '1000', '1', '1', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDTB VALUES ('7', 'PIDSQL', 'PIDSQL', '1', '1000', '0', '0', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDTB VALUES ('8', 'CALLBACKSQL', 'CALLBACKSQL', '1', '1000', '0', '0', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDTB VALUES ('9', 'BZ', 'BZ', '1', '100', '0', '0', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDTB VALUES ('10', 'DEFAULTFIELD', 'DEFAULTFIELD', '1', '1000', '0', '0', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDTB VALUES ('11', 'DEFAULTVALUE', 'DEFAULTVALUE', '1', '1000', '0', '0', '0', '1', '0', '0100000111000000');
+        INSERT INTO F_P_MIDTB VALUES ('12', 'UPDATESQL', 'UPDATESQL', '1', '1000', '0', '0', '0', '1', '0', '0100000111000000');
+
+        执行完点击创建库（代码库管理）☆☆☆☆
+
+        下面创建字段对应表
+        1. 添加代码库。录入名字 比如tblchname叫测试的
+        2. s_all找到表名，或者代表列表里面看到，比如是： P_428
+        3. 修改对应脚本。替换表名
+        4. 执行insert 别忘记替换表名
+        5. 创建库，可以添加数据，创建源表和目标表的关系了
+        CREATE TABLE F_P_428 (
+          DID int NOT NULL  PRIMARY KEY,
+          FIELDNAME varchar(32) NOT NULL,
+          CHNAME varchar(64) NOT NULL,
+          FIELDTYPE int NOT NULL,
+          LENGTH int DEFAULT NULL,
+          NOTNULL int DEFAULT NULL,
+          NOTDUP int DEFAULT NULL,
+          NOTINWEB int DEFAULT NULL,
+          FCATTR int DEFAULT NULL,
+          FMATTR int DEFAULT NULL,
+          READONLYCOLS varchar(16) DEFAULT NULL);
+
+          INSERT INTO F_P_428 VALUES ('1', 'PPID', 'PPID', '3', '50', '1', '1', '0', '1', '0', '0100000111000000');
+          INSERT INTO F_P_428 VALUES ('2', 'PID', 'PID', '3', '50', '1', '1', '0', '1', '0', '0100000111000000');
+          INSERT INTO F_P_428 VALUES ('3', 'DID', 'DID', '3', '50', '1', '1', '0', '1', '0', '0100000111000000');
+          INSERT INTO F_P_428 VALUES ('4', 'SFIELD', 'SFIELD', '1', '64', '1', '1', '0', '1', '0', '0100000111000000');
+          INSERT INTO F_P_428 VALUES ('5', 'TFIELD', 'TFIELD', '1', '64', '1', '1', '0', '1', '0', '0100000111000000');
+          INSERT INTO F_P_428 VALUES ('6', 'DEFAULTVALUE', 'DEFAULTVALUE', '1', '64', '0', '0', '0', '1', '0', '0100000111000000');
+          INSERT INTO F_P_428 VALUES ('7', 'BZ', 'BZ', '1', '1000', '0', '0', '0', '1', '0', '0100000111000000');
+
+
+--以上过程所需的表就创建完了，可以在代码表里面进行编辑了。
+设计思路
+1.  创建 midtb
+2.  middb添加一个数据库记录   1
+3.  midtb添加若干表对应关系      N
+    如果有ssql （以select开头）（源表查询语句）就使用这个语句。但是里面的每个字段都要放在字段对应关系中 + defaultfield
+    如果没有ssql（以where开头）（源表查询语句） 就只用字段对应关系的字段，+defaultfield
+
+4.  字段映射关系添加字段关系   1
+5.  建议将老表的主键保存在新表一个字段中
+
+
+
+调用过程
+1. 遍历中间库表 P_MIDDB
+2. 遍历儿子中间表 P_MIDTB
+    a. 利用P_MIDTB.SSQL或者字段对应关系 + defaultfield 分页查询,
+    b. 获取结果集 逐条插入目标表，(判断是否是顶级(midtab.did=1是顶级)，如果不是需要调用pidsql，没有查询到写-1)
+    c. 调用updatesql去更新源表的同步标识
+    d. 一个循环完毕。调用callbacksql，来更新目标表(hams)的一些状态，如果没有就算了
+    e. 如果有电子文件，写到搬运工的地方。让搬运工来分发。（写入的时候判断电子文件是否存在。如果存在要给新文件加上时间戳）
+    f. 成功错误写日志
+
+    细节midtab.ssql一定要有主键，主键的别名一定要改成did
+    细节midtab.updatesql组成  成功update子句;失败update子句;where字段  eg：flag=1;flag=2;did
+
+   ======================================================
+文件小工具
+    针对thamsxp的数据不用考虑电子文件 直接整个电子文件copy就可以
+    针对接口的电子文件理论上不用对应e表。e表的数据是根据文件名对应的。
+    其他的文件需要可以配置
+
+    所以在写文件分发工具的时候有几点要配置：
+        1. 配置是否删除源文件，如果不删除移动到目标backup文件夹，
+        2. 日志，同步过程中有一个错误，将文件放到error文件，并且同级目录加日志 文件名.err
+        3. 配置写入主库是否插入e表，插入e表，对应d表的字段是什么。（不插入E表，就是thamsxp的数据）
+        4. 配置是 原设计文件或板式文件，方别写入E表
+        5. 写入有顺序，写入档案系统e表-->得到相对路径-->copy到档案系统相对路径-->copy文件到外部分发系统的相对相对路径 哈哈

@@ -26,7 +26,7 @@ public class TestMiddleDao {
 //            , String username, String password   , String sql , int pager, int pageSize
 //            , String primaryKey, String orderBySubStr
     public void test001() throws MalformedURLException {
-        List<MidFieldMapping> list =  midTabMapper.listFieldMapping("P_429");
+        List<MidFieldMapping> list =  midTabMapper.listFieldMapping("P_429" , 1, 1);
         for (MidFieldMapping mp : list) {
             System.out.println(mp.getSfield());
 

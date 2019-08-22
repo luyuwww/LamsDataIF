@@ -384,4 +384,22 @@ public class MidTab {
     public void setUpdatesql(String updatesql) {
         this.updatesql = updatesql;
     }
+
+    @Override
+    public String toString() {
+        return "MidTab{" +
+                "did=" + did +
+                ", pid=" + pid +
+                ", stbname='" + stbname + '\'' +
+                ", ttbname='" + ttbname + '\'' +
+                ", mtbname='" + mtbname + '\'' +
+                ", ssql='" + ssql + '\'' +
+                ", pidsql='" + pidsql + '\'' +
+                ", callbacksql='" + callbacksql + '\'' +
+                ", bz='" + bz + '\'' +
+                ", defaultfield='" + defaultfield + '\'' +
+                ", defaultvalue='" + defaultvalue + '\'' +
+                ", updatesql='" + updatesql + '\'' +
+                '}';
+    }
 }

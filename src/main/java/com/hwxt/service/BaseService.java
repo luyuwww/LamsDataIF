@@ -981,6 +981,17 @@ public class BaseService {
         return null == fwqpz ? sGroupMapper.getDefaultFwqpz() : fwqpz;
     }
 
+    public List<FDTable> fTableList(String fTableName){
+        List<FDTable> list = null;
+        fTableName = fTableName.toUpperCase();
+        if(fTableName.startsWith("F_")){
+            list = sUserMapper.getFtableList(fTableName);
+        }else{
+            list = sUserMapper.getFtableList("F_"+fTableName);
+        }
+        return list;
+    }
+
     public String getLamsIP() {
         return lamsIP;
     }

@@ -99,6 +99,9 @@ public interface MidTabMapper extends BaseDao {
      */
     int updateByPrimaryKey(MidTab record);
 
-    @Select("SELECT * FROM ${TABLENAME} ORDER BY DID")
-    List<MidFieldMapping> listFieldMapping(@Param("TABLENAME") String tableName);
+    @Select("SELECT * FROM ${TABLENAME} WHERE PPID=${ppid} AND PID=${pid}  ORDER BY DID")
+    List<MidFieldMapping> listFieldMapping(@Param("TABLENAME") String tableName,@Param("ppid") Integer ppid,@Param("pid") Integer pid);
+
+    @Select("SELECT * FROM P_MIDTB WHERE PID=${pid} ORDER BY DID ASC")
+    List<MidTab> listMidTab4Pid(@Param("pid") Integer pid);
 }
