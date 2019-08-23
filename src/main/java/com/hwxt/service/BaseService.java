@@ -234,6 +234,10 @@ public class BaseService {
         return jdbcDao.quert2Colum4Map(sql, col1, col2);
     }
 
+    protected Integer queryPid(String sql){
+        return jdbcDao.queryPid(sql);
+    }
+
     /**
      * 判断表的字段或者索引是否存在
      *
@@ -990,6 +994,22 @@ public class BaseService {
             list = sUserMapper.getFtableList("F_"+fTableName);
         }
         return list;
+    }
+    /**
+     * <p>Title:  跟据字段中文名得到fdtable</p>
+     *
+     * @param fieldChname 字段中文名称得到fdtable
+     * @date 2014年5月8日
+     */
+    public FDTable getFDtable(List<FDTable> list, String fieldname) {
+        FDTable fDtable = null;
+        for (FDTable ele : list) {
+            if (ele.getFieldname().equals(fieldname)) {
+                fDtable = ele;
+                break;
+            }
+        }
+        return fDtable;
     }
 
     public String getLamsIP() {

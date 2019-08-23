@@ -110,6 +110,8 @@
 
     细节midtab.ssql一定要有主键，主键的别名一定要改成did
     细节midtab.updatesql组成  成功update子句;失败update子句;where字段  eg：flag=1;flag=2;did
+    细节midtab.pidsql组成  父表查询语句包括表名;父表字段;源表的取值字段  eg：select did from d_prj3;prjcode;prjcode
+    细节字段映射关系表中一定要有qzh和bmid字段，可以用函数实现
 
    ======================================================
 文件小工具
