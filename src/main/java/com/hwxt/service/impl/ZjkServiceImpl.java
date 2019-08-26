@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -61,90 +62,65 @@ public class ZjkServiceImpl extends BaseService implements ZjkService {
 
     }
 
-    public void startSyncOneDBS(Integer midDbsDID) throws Exception{
-        MidDbs dbs = midDbsMapper.selectByPrimaryKey(midDbsDID);
-        startSyncOneDBS(dbs);
-    }
-
-    /**
-     * 同步非efile
-     */
-    private void syncLevel(MidDbs dbs , MidTab mt){
-        String[] updateArr = mt.getUpdatesql().split("[;]");
-        String[] pidArr = mt.getPidsql().split("[;]");
-        List<FDTable> fdTableList = fTableList(mt.getTtbname());
-        //验证几个语句
-        if(updateArr.length != 3){
-            throw new RuntimeException("p_mitab.updatesql格式错误："+mt.getUpdatesql());
-        }
-        if(pidArr.length != 3){
-            throw new RuntimeException("p_mitab.Pidsql格式错误："+mt.getUpdatesql());
-        }
-        if(!(mt.getSsql().toUpperCase().startsWith("SELECT") || mt.getSsql().toUpperCase().startsWith("WHERE"))){
-            throw new RuntimeException("p_mitab.ssql格式错误："+mt.getSsql());
-        }
-
-        List<MidFieldMapping> mappingList = midTabMapper.listFieldMapping(mt.getMtbname() , mt.getPid() , mt.getDid());
-        if(null == mappingList || mappingList.size() ==0){
-            throw new RuntimeException(mt.getDid()+"p_mitab字段对应关系不可以为空");
-        }
-
-        String ssql = generatorSsql(mt , mappingList);
-        if(StringUtils.isBlank(ssql)){
-            throw new RuntimeException("ssql 为空或者生成错误："+mt);
-        }
-
-        Integer totalCount = middleDao.countSzie(dbs , ssql);
-        Integer tPage = totalCount/pageSize +1;
-        for (int i = 1; i <= tPage; i++) {
-            List<Map<String, Object>> resultList = middleDao.pageList(dbs , ssql , i, pageSize, "DID" , "DID");
-            for (Map<String, Object> item : resultList) {
-                try {
-                    String updateSql = "";
-                    //插入一条记录
-                    //插入数据
-                    if(insertOneD_tab(mt , item , mappingList , fdTableList , pidArr)){
-                        updateSql = generatorUpdateSql(mt , item , updateArr , Boolean.TRUE);
-                    }else{
-                        updateSql = generatorUpdateSql(mt , item , updateArr , Boolean.FALSE);
-                    }
-                    //更新
-                    if(StringUtils.isNotBlank(updateSql)){
-                        middleDao.execUpdateSql( dbs , updateSql);
-                    }else{
-                        log.error("update sql 错误："+mt);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            if(StringUtils.isNotBlank(mt.getCallbacksql())){
-                jdbcDao.excute(mt.getCallbacksql());
-            }
-        }
-
-    }
-
-    /**
-     * 同步efile
-     * @param table
-     */
-    private void syncEfile(MidDbs dbs , MidTab tb){
-
-    }
-
     /**
      * 开始同步一条 middb
      * @param dbs
      * @throws Exception
      */
-    private void startSyncOneDBS(MidDbs dbs) throws Exception{
+    public void startSyncOneDBS(Integer midDbsDID) throws Exception{
+        MidDbs dbs = midDbsMapper.selectByPrimaryKey(midDbsDID);
         List<MidTab> mtList = midTabMapper.listMidTab4Pid(dbs.getDid());
-        for (MidTab midTab : mtList) {
-            if(midTab.getTtbname().toUpperCase().startsWith("D_")){
-                syncLevel(dbs , midTab);
-            }else{
-                syncEfile(dbs , midTab);
+        for (MidTab mt : mtList) {
+            String[] updateArr = mt.getUpdatesql().split("[;]");
+            String[] pidArr = mt.getPidsql().split("[;]");
+            List<FDTable> fdTableList = fTableList(mt.getTtbname());
+            //验证几个语句
+            if(updateArr.length != 3){
+                throw new RuntimeException("p_mitab.updatesql格式错误："+mt.getUpdatesql());
+            }
+            if(pidArr.length != 3){
+                throw new RuntimeException("p_mitab.Pidsql格式错误："+mt.getUpdatesql());
+            }
+            if(!(mt.getSsql().toUpperCase().startsWith("SELECT") || mt.getSsql().toUpperCase().startsWith("WHERE"))){
+                throw new RuntimeException("p_mitab.ssql格式错误："+mt.getSsql());
+            }
+
+            List<MidFieldMapping> mappingList = midTabMapper.listFieldMapping(mt.getMtbname() , mt.getPid() , mt.getDid());
+            if(null == mappingList || mappingList.size() ==0){
+                throw new RuntimeException(mt.getDid()+"p_mitab字段对应关系不可以为空");
+            }
+
+            String ssql = generatorSsql(mt , mappingList);
+            if(StringUtils.isBlank(ssql)){
+                throw new RuntimeException("ssql 为空或者生成错误："+mt);
+            }
+
+            Integer totalCount = middleDao.countSzie(dbs , ssql);
+            Integer tPage = totalCount/pageSize +1;
+            for (int i = 1; i <= tPage; i++) {
+                List<Map<String, Object>> resultList = middleDao.pageList(dbs , ssql , i, pageSize, "DID" , "DID");
+                for (Map<String, Object> item : resultList) {
+                    try {
+                        Boolean flag = Boolean.FALSE;
+                        if(mt.getTtbname().toUpperCase().startsWith("D_")){
+                            flag =  insertOneD_tab(mt , item , mappingList , fdTableList , pidArr);
+                        }else{
+                            flag =  insertOneE_tab(mt , item , mappingList , fdTableList , pidArr);
+                        }
+                        String updateSql = updateSql = generatorUpdateSql(mt , item , updateArr ,flag);
+                        //更新
+                        if(StringUtils.isNotBlank(updateSql)){
+                            middleDao.execUpdateSql(dbs , updateSql);
+                        }else{
+                            throw new RuntimeException("updateSql 为空，会导致重复抓取："+mt);
+                        }
+                    } catch (Exception e) {
+                        log.error(e.getMessage() , e);
+                    }
+                }
+            }
+            if(StringUtils.isNotBlank(mt.getCallbacksql())){
+                jdbcDao.excute(mt.getCallbacksql());
             }
         }
     }
@@ -152,8 +128,8 @@ public class ZjkServiceImpl extends BaseService implements ZjkService {
     //插入d表并且更新顶级
     private Boolean insertOneD_tab(MidTab mt  , Map<String, Object> item , List<MidFieldMapping> mappingList ,
                                    List<FDTable> fdTableList , String[] pidSqlArr){
-        Boolean result = Boolean.FALSE;
         String SQL = "";
+        Boolean result = Boolean.FALSE;
         try {
             String pidSql = generatorPidSql(mt , item ,pidSqlArr);
             Integer pid = queryPid(pidSql);
@@ -167,26 +143,35 @@ public class ZjkServiceImpl extends BaseService implements ZjkService {
                     log.error(mt.getTtbname()+" not found field:"+ mp.getTfield());
                     continue;
                 }
-                String theValue = (item.get(mp.getSfield()) == null ? "" : item.get(mp.getSfield()).toString());
-                theValue = StringUtils.isBlank(theValue) ? defaultValue : theValue;
-                theValue = theValue.contains("'") ? theValue.replace("'", "''") : theValue;
+                Object theValue = item.get(mp.getSfield());
+                //有默认值还为空就跳过
+                if(null == theValue && StringUtils.isBlank(defaultValue)){
+                    continue;
+                }
+                if(theValue instanceof String){
+                    theValue = (theValue != null && StringUtils.isNotBlank(theValue.toString()))? theValue : defaultValue;
+                    theValue = theValue.toString().contains("'") ? theValue.toString().replace("'", "''") : theValue;
+                }
                 fields.append(tField.getFieldname()).append(",");
                 switch (tField.getFieldtype()) {
                     case 11:
-                        if (theValue.equals("")) {
-                            values.append(getSysdate() + ",");
-                        } else {
-                            values.append(generateTimeToSQLDate(theValue)).append(",");
-                        }
+                        values.append(generateTimeToSQLDate(theValue)).append(",");
                         break;
                     case 1:
                         values.append("'").append(theValue).append("',");
                         break;
                     case 3:
-                        if (StringUtils.isBlank(theValue)) {
+                        Integer intValue = Integer.MAX_VALUE;
+                        try {
+                            intValue = Integer.parseInt(theValue.toString());
+                        } catch (NumberFormatException e) {
+                            intValue = intValue;
+                            e.printStackTrace();
+                        }
+                        if (intValue.equals(Integer.MAX_VALUE)) {
                             values.append("null ,");
                         } else {
-                            values.append(Integer.parseInt(theValue)).append(",");
+                            values.append(intValue).append(",");
                         }
                         break;
                     default:
@@ -194,7 +179,7 @@ public class ZjkServiceImpl extends BaseService implements ZjkService {
                         break;
                 }
                 fields.append(mt.getDefaultfield()).append(",DID,PID");
-                values.append(mt.getDefaultvalue()).append(","+maxdid).append(","+pid);
+                values.append(mt.getDefaultvalue()).append(","+maxdid).append(","+(null == pid ? -1 :pid));
             }
             SQL = "insert into " + mt.getTtbname() + " (" + fields.toString()
                     + ") values ( " + values.toString() + " )";
@@ -212,7 +197,8 @@ public class ZjkServiceImpl extends BaseService implements ZjkService {
     }
 
     //插入 TODO  别忘记录日志
-    private Boolean insertOneE_tab(MidTab mt  ,  Map<String, Object> item){
+    private Boolean insertOneE_tab(MidTab mt , Map<String, Object> item , List<MidFieldMapping> mappingList ,
+                                   List<FDTable> fdTableList , String[] pidSqlArr){
         return Boolean.FALSE;
 
     }
