@@ -126,7 +126,35 @@ public class CommonCtler {
             out.println("<XMP>");
             Integer did = Integer.valueOf(request.getParameter("midDbsDid"));
             zjkService.startSyncOneDBS(did);
+            out.println("Sync DBS OK!");
+            out.println("</XMP>");
+            out.println("</BODY>");
+            out.println("</HTML>");
+        } catch (Exception e) {
+            out.println("错误" + e.getMessage());
+            log.error("错误" + e.getMessage());
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
 
+    /**
+     * 抓取中间库数据
+     */
+    @RequestMapping("/catcheOneTB")
+    public void catcheOneTB(HttpServletRequest request, HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            response.setContentType("text/html;charset=GBK ");
+            out = response.getWriter();
+            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+            out.println("<HTML>");
+            out.println("<BODY>");
+            out.println("<XMP>");
+            Integer did = Integer.valueOf(request.getParameter("midTbDid"));
+            zjkService.startSyncOneTb(did);
+            out.println("Sync TB OK!");
             out.println("</XMP>");
             out.println("</BODY>");
             out.println("</HTML>");

@@ -20,7 +20,7 @@
         <HR/>
         序号: <strong>${count.index+1}</strong><br>
         DID: <strong>${tb.did}</strong><br>
-        PID: <strong>${tb.did}</strong><br>
+        PID: <strong>${tb.pid}</strong><br>
         源表名: <strong>${tb.stbname}</strong><br>
         目标表名: <strong>${tb.ttbname}</strong><br>
         字段映射表: <strong>${tb.mtbname}</strong><br>
@@ -31,7 +31,7 @@
         默认字段: <strong>${tb.defaultfield}</strong><br>
         默认值: <strong>${tb.defaultvalue}</strong><br>
         备注: <strong>${tb.bz}</strong><br>
-        操作 <a href="#">  抓取</a>
+        操作 <a href="${pageContext.request.contextPath}/catcheOneTB?midTbDid=${tb.did}&rand=<%=Math.random()%>">  抓取</a>
     </c:forEach>
     <br/>
     <HR/>

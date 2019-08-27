@@ -26,4 +26,5 @@ public interface ZjkService {
      * @param midDbsDID
      */
     public void startSyncOneDBS(Integer midDbsDID)throws Exception;
+    public void startSyncOneTb(Integer midDbsDID)throws Exception;
 }

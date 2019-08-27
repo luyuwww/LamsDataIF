@@ -104,4 +104,7 @@ public interface MidTabMapper extends BaseDao {
 
     @Select("SELECT * FROM P_MIDTB WHERE PID=${pid} ORDER BY DID ASC")
     List<MidTab> listMidTab4Pid(@Param("pid") Integer pid);
+
+    @Select("SELECT * FROM P_MIDTB WHERE DID=${did}")
+    MidTab getOneTb(@Param("did") Integer did);
 }

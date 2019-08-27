@@ -58,8 +58,8 @@
         执行完点击创建库（代码库管理）☆☆☆☆
 
         下面创建字段对应表
-        1. 添加代码库。录入名字 比如tblchname叫测试的
-        2. s_all找到表名，或者代表列表里面看到，比如是： P_428
+        1. 添加代码库。录入名字
+        2. s_all找到表名(左侧代码表列表也可以看到)，或者代表列表里面看到，比如是： P_428
         3. 修改对应脚本。替换表名
         4. 执行insert 别忘记替换表名
         5. 创建库，可以添加数据，创建源表和目标表的关系了
@@ -92,7 +92,6 @@
 3.  midtb添加若干表对应关系      N
     如果有ssql （以select开头）（源表查询语句）就使用这个语句。但是里面的每个字段都要放在字段对应关系中 + defaultfield
     如果没有ssql（以where开头）（源表查询语句） 就只用字段对应关系的字段，+defaultfield
-
 4.  字段映射关系添加字段关系   1
 5.  建议将老表的主键保存在新表一个字段中
 
@@ -108,8 +107,10 @@
     e. 如果有电子文件，写到搬运工的地方。让搬运工来分发。（写入的时候判断电子文件是否存在。如果存在要给新文件加上时间戳）
     f. 成功错误写日志
 
-    细节midtab.ssql一定要有主键，主键的别名一定要改成DID ,语句开头必须以SELECT或者WHERE开头
-    细节midtab.updatesql组成  成功update子句;失败update子句;where字段  eg：flag=1;flag=2;did
+    细节midtab.ssql一定要有主键，主键的别名一定要改成DID，DID是主键，会自动用在后面update语句 ,语句开头必须以SELECT或者WHERE开头
+    细节  自定义函数 别名要填写备注里面
+    细节midtab.updatesql组成  成功update子句;失败update子句;where字段  eg：flag=1;flag=2;prjcode
+        （第一段是正确执行的语句，第二句是错误执行的。第三段是源表主键字段会默认和查询出来的did作为筛选更新条件）
     细节midtab.pidsql组成  父表查询语句包括表名;父表字段;源表的取值字段  eg：select did from d_prj3;prjcode;prjcode
     细节D表的字段中映射关系表中一定要有qzh和bmid字段，不需要DID和PID字段，可以用函数实现
     e_file表的对应关系一定要求 PZM，TITLE，PATHNAME，EFILENAME字段。对应S_FWQPZ里面的配置信息
