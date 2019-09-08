@@ -153,14 +153,13 @@ public class CommonCtler {
             out.println("<BODY>");
             out.println("<XMP>");
             Integer did = Integer.valueOf(request.getParameter("midTbDid"));
-            zjkService.startSyncOneTb(did);
-            out.println("Sync TB OK!");
+            out.println(zjkService.startSyncOneTb(did));
             out.println("</XMP>");
             out.println("</BODY>");
             out.println("</HTML>");
         } catch (Exception e) {
-            out.println("错误" + e.getMessage());
             log.error("错误" + e.getMessage());
+            throw new RuntimeException(e);
         } finally {
             out.flush();
             out.close();

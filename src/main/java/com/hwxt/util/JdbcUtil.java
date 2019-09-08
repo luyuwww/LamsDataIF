@@ -17,7 +17,9 @@ public class JdbcUtil {
 
     public static void close(ResultSet rs) {
         try {
-            rs.close();
+            if (null != rs) {
+                rs.close();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -25,7 +27,9 @@ public class JdbcUtil {
 
     public static void close(Statement st) {
         try {
-            st.close();
+           if(null != st){
+               st.close();
+           }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -33,7 +37,9 @@ public class JdbcUtil {
 
     public static void close(Connection conn) {
         try {
-            conn.close();
+            if(null != conn){
+                conn.close();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

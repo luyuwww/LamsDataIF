@@ -54,7 +54,7 @@ public class MiddleDao {
                 list.add(rowData);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } finally {
             JdbcUtil.close(rs,st,conn);
         }
@@ -78,7 +78,7 @@ public class MiddleDao {
                 size = rs.getInt("TOTALSIZE");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } finally {
             JdbcUtil.close(rs,st,conn);
         }
