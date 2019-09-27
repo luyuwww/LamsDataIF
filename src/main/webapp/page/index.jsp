@@ -40,6 +40,10 @@
            href="${pageContext.request.contextPath}/viewLogList">查看日志</a>
         <a class="btn btn-lg btn-danger"
            href="${pageContext.request.contextPath}/viewMidDbsList">查看中间库</a>
+        <a class="btn btn-lg btn-warning"
+           href="${pageContext.request.contextPath}/qiyebanEfile">转换企业版Efile-所有</a>
+        <a class="btn btn-lg btn-default"
+           href="${pageContext.request.contextPath}/listDalx">转换企业版Efile-列表</a>
         <a class="btn btn-lg btn-success"
            href="${pageContext.request.contextPath}/getUsers">列出所有用户</a>
 <%--        <a class="btn btn-lg btn-warning"--%>

@@ -61,6 +61,33 @@ public class MiddleDao {
         return list;
     }
 
+    public List<Map<String, Object>> pageList(Connection conn, String sql , int pager, int pageSize
+            , String primaryKey, String orderBySubStr) {
+        ResultSet rs = null;
+        Statement st = null;
+        List list = new ArrayList();
+        try {
+            PageSqlExecutor p = new PageSqlExecutor(conn);
+            sql = p.getPageSql(sql, pager, pageSize, primaryKey, orderBySubStr);
+            st = conn.createStatement();
+            rs = st.executeQuery(sql);
+            while (rs.next()) {//对结果集进行遍历
+                ResultSetMetaData md = rs.getMetaData();
+                int columnCount = md.getColumnCount();
+                Map<String,Object> rowData = new HashMap();
+                for (int i = 1; i <= columnCount; i++) {
+                    rowData.put(md.getColumnName(i) , rs.getObject(i));
+                }
+                list.add(rowData);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            JdbcUtil.close(rs,st,conn);
+        }
+        return list;
+    }
+
     public Integer countSzie(String url, String dbType, String dbName
             , String username, String password   , String sql) {
         ResultSet rs = null;

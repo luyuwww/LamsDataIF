@@ -1080,6 +1080,12 @@ public class BaseService {
     @Autowired
     @Value("${lams.dfile.status}")
     protected Integer status;//状态
+    /**
+     * 是否调试
+     */
+    @Autowired
+    @Value("${Enterprise.Efile.Convert.isdebug}")
+    protected Boolean debug;
 
     private String sysdate = null;
     private Logger log = (Logger) LoggerFactory.getLogger(this.getClass());

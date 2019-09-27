@@ -3,7 +3,9 @@ package com.hwxt.action;
 import ch.qos.logback.classic.Logger;
 import com.hwxt.pojo.MidDbs;
 import com.hwxt.pojo.MidTab;
+import com.hwxt.pojo.SDalx;
 import com.hwxt.service.i.ArcService;
+import com.hwxt.service.i.EnterPriseVersionEfileConvert;
 import com.hwxt.service.i.NoticeService;
 import com.hwxt.service.i.ZjkService;
 import com.hwxt.util.GlobalFinalAttr;
@@ -64,6 +66,81 @@ public class CommonCtler {
             return "index.jsp";
         }
     }
+    /**
+     * 列出所有Middbs
+     */
+    @RequestMapping(value = "/listDalx")
+    public String dalxList(Model model) {
+        try {
+            List<SDalx> dalxList = eFileChangeService.allDalx();
+            model.addAttribute("dalxList", dalxList);
+            return "listDalx.jsp";
+        } catch (Exception e) {
+            log.error("获取档案类型列表错误.", e);
+            return "index.jsp";
+        }
+    }
+    /**
+     * 列出所有Middbs
+     */
+    @RequestMapping(value = "/qiyebanEfile")
+    public void qiyebanEfile(HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            response.setContentType("text/html;charset=GBK ");
+            out = response.getWriter();
+            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+            out.println("<HTML>");
+            out.print("<a href=\"/LamsDataIF/viewMidDbsList\">返回</a>          " +
+                    "<a href=\"/LamsDataIF/\">主页</a>");
+            out.println("<XMP>");
+
+            eFileChangeService.starConvaerAll();
+
+
+            out.println("ok");
+            out.println("</XMP>");
+            out.println("</BODY>");
+            out.println("</HTML>");
+        } catch (Exception e) {
+            out.println("错误" + e.getMessage());
+            log.error("错误" + e.getMessage());
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
+
+    /**
+     * 转换一个档案类型的企业版电子文件
+     * */
+    @RequestMapping(value = "/qiyebanEfileBycode")
+    public void qiyebanEfileBycode(@RequestParam Integer libcode, HttpServletResponse response,Model model) {
+        PrintWriter out = null;
+        try {
+            response.setContentType("text/html;charset=GBK ");
+            out = response.getWriter();
+            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+            out.println("<HTML>");
+            out.print("<a href=\"/LamsDataIF/listDalx\">返回-档案类型列表</a>          " +
+                    "<a href=\"/LamsDataIF/\">主页</a>");
+            out.println("<XMP>");
+
+            eFileChangeService.converBylibcode(libcode);
+
+            out.println("ok");
+            out.println("</XMP>");
+            out.println("</BODY>");
+            out.println("</HTML>");
+        } catch (Exception e) {
+            out.println("错误" + e.getMessage());
+            log.error("错误" + e.getMessage());
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
+
     /**
      * 查看中间表
      * */
@@ -285,6 +362,8 @@ public class CommonCtler {
 
     @Autowired
     private ZjkService zjkService;
+    @Autowired
+    private EnterPriseVersionEfileConvert eFileChangeService;
     @Autowired
     @Value("${interface.log.home.address}")
     private String logHomeAdd;
