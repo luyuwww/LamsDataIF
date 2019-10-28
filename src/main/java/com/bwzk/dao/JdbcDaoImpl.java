@@ -5,6 +5,7 @@ import com.bwzk.pojo.EFile;
 import org.apache.ibatis.jdbc.RuntimeSqlException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,36 @@ import java.util.TimeZone;
 public class JdbcDaoImpl<T> implements JdbcDao<T> {
     public void excute(String sql) throws RuntimeException {
         jdbcTemplate.execute(sql);
+    }
+
+    public List<Map<String , Object>> listZjkMap(String sql){
+        return jdbcTemplate4OA.queryForList(sql);
+    }
+    public List<String> listZjkIdList(String sql){
+        return jdbcTemplate4OA.queryForList(sql , String.class);
+    }
+    /**
+     *获取一个具体的条目
+     * @param sql
+     * @return
+     */
+    public Map<String , Object> getOAItem(String sql){
+        return jdbcTemplate4OA.queryForMap(sql);
+    }
+
+    /**
+     * 更新完毕
+     * @param sql
+     */
+    public Boolean updateZjk(String sql){
+        Boolean flag = Boolean.FALSE;
+        try {
+            jdbcTemplate4OA.update(sql);
+            flag = Boolean.TRUE;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return flag;
     }
 
     public void update(String sql) throws RuntimeException {
@@ -192,5 +223,8 @@ public class JdbcDaoImpl<T> implements JdbcDao<T> {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate4OA;
     private Logger log = (Logger) LoggerFactory.getLogger(this.getClass());
 }

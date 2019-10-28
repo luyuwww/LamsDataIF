@@ -105,8 +105,6 @@
 
     <!-- dao -->
     <!-- service -->
-    <!-- CXF -->
-    <jaxws:endpoint id="arcDataServiceWS" implementor="#arcDataService" address="/ArcDataWsSingle"/>
 
     <!-- 事务配置 UNIS-->
     <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -133,7 +131,7 @@
         6 Day of week (1-7 or SUN-SAT)
         7 Year (1970-2099)
         取值：可以是单个值，如6；
-              也可以是个范围，如9-12；
+              也可以是个范围，如9-12；b
               也可以是个列表，如9,11,13
               也可以是任意取值，使用*
       每晚11点同步
@@ -142,14 +140,9 @@
     </task:scheduled-tasks>
      -->
     <task:scheduled-tasks>
-        <!-- 同步流程状态给Lams -->
-        <task:scheduled ref="noticeServiceImpl" method="syncTaskInfo" cron="${schedule.noticeServiceImpl.syncTaskInfo}"/>
-
         <!-- 同步OA数据给Lams -->
         <task:scheduled ref="arcServcieImpl" method="syncOaData" cron="${schedule.arcServcieImpl.syncOaData}"/>
-        <!-- 同步组织机构数据for Lams -->
-        <task:scheduled ref="orgServiceImpl" method="syncUserGroup" cron="${schedule.orgServiceImpl.syncUserGroup}"/>
         <!-- 电子文件自动归档 -->
-        <task:scheduled ref="arcServcieImpl" method="autoArchiveEfile" cron="${schedule.arcServcieImpl.autoArchiveEfile}"/>
+<!--        <task:scheduled ref="arcServcieImpl" method="autoArchiveEfile" cron="${schedule.arcServcieImpl.autoArchiveEfile}"/>-->
     </task:scheduled-tasks>
 </beans>

@@ -13,10 +13,29 @@ public interface JdbcDao<T> {
     public void excute(String sql) throws RuntimeException;
 
     /**
+     * 查询中间库
+     * @param sql
+     * @return
+     */
+    public List<Map<String , Object>> listZjkMap(String sql);
+    public List<String> listZjkIdList(String sql);
+    /**
      * 用于执行更新SQL语句
      */
     public void update(String sql) throws RuntimeException;
 
+    /**
+     *获取一个具体的条目
+     * @param sql
+     * @return
+     */
+    public Map<String , Object> getOAItem(String sql);
+
+    /**
+     * 更新完毕
+     * @param sql
+     */
+    public Boolean updateZjk(String sql);
     /**
      * 用于执行更新SQL语句
      */

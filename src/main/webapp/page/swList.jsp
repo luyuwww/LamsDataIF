@@ -17,11 +17,11 @@
 <body>
 <div class="container">
     <h2>用户列表</h2>
-    <c:forEach items="${userlist}" var="user">
+    <c:forEach items="${swList}" var="map">
         <div class="row">
-            <div class="col-md-1">${user.id}</div>
-            <div class="col-md-3">${user.loginid}</div>
-            <div class="col-md-3">${user.lastname}</div>
+            <c:forEach items="${map}" var="entry">
+                    <div class="col-md-3">${entry.key}:${entry.value}</div>
+            </c:forEach>
         </div>
     </c:forEach>
 </div>

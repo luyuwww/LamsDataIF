@@ -5,7 +5,6 @@ import com.bwzk.dao.JdbcDao;
 import com.bwzk.dao.i.da.SGroupMapper;
 import com.bwzk.dao.i.da.SUserMapper;
 import com.bwzk.dao.i.da.SUserroleMapper;
-import com.bwzk.page.PageContext;
 import com.bwzk.pojo.DClassifyZjk;
 import com.bwzk.pojo.EFile;
 import com.bwzk.pojo.FDTable;
@@ -13,7 +12,7 @@ import com.bwzk.pojo.SUser;
 import com.bwzk.service.BaseService;
 import com.bwzk.service.i.ArcService;
 import com.bwzk.util.DateUtil;
-import com.bwzk.util.GlobalFinalAttr;
+import com.bwzk.util.HttpDownload;
 import com.bwzk.util.MD5;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.io.FileUtils;
@@ -28,8 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.jws.WebService;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Service("arcServcieImpl")
 @WebService(name = "ArcDataWs", targetNamespace = "http://service.unis.com/")
@@ -58,9 +59,30 @@ public class ArcServcieImpl extends BaseService implements ArcService {
         return resultStr;
     }
 
-    @Transactional("txManager")
     public List<SUser> listAllUser() {
         return sUserMapper.getAllUserList();
+    }
+
+    public List<Map<String , Object>> listZjkSWDList(){
+        return jdbcDao.listZjkMap("SELECT * FROM "+oaGWDFile +" WHERE TBBJ=0 ORDER BY FWWH");
+    }
+
+    public List<Map<String , Object>> listZjkXWLWDList(){
+        return jdbcDao.listZjkMap("SELECT * FROM "+oaXWLWDFile +" WHERE TBBJ=0 ORDER BY FWWH");
+    }
+
+
+    /**
+     * 列出公文IDS
+     */
+    private List<String> listZjkGWidDList(){
+        return jdbcDao.listZjkIdList("SELECT FW_DATA_ID FROM "+oaGWDFile +" WHERE TBBJ=0 ORDER BY FWWH");
+    }
+    /**
+     * 列出校外来文IDS
+     */
+    private List<String> listZjkXWLWidList(){
+        return jdbcDao.listZjkIdList("SELECT SW_DATA_ID FROM "+oaXWLWDFile +" WHERE TBBJ=0 ORDER BY SWWH");
     }
 
     public String getBmidStrByDepCode(String depCode) {
@@ -96,31 +118,36 @@ public class ArcServcieImpl extends BaseService implements ArcService {
     }
 
     public String syncOaData(){
+        String result = "";
+        result = syncGWData();
+        result += syncWLFWData();
+        return result;
+    }
+
+    public String syncGWData(){
         Integer dNum = 0;
         Integer eNum = 0;
-        String msg = "OA  ";
+        String msg = "公文  ";
+        String tableName = "D_FILE" + libcodeGW ;
+        StringBuffer fields = new StringBuffer();
+        StringBuffer values = new StringBuffer();
         //默认数据库当前时间
         String dateStr = getDatabaseType().getDateByDb();
 
-        List<FDTable> fDTableList = getWsFieldList();// 相关档案类型的字段List
-        String oaDfileSql = "SELECT * FROM " + oaDFile + " WHERE STATUS= 0 ORDER BY CREATETIME DESC";
-        List<Map<String, Object>> dataList = listMaps(oaDfileSql);
+        //获取所有ID列表
+        List<String> gwIdList = listZjkGWidDList();
+        //防止数据太多 内存溢出 逐条获取
+        for (String oaid : gwIdList) {//oaGWDFile
+            Map<String, Object> dataMap = jdbcDao.getOAItem("SELECT * FROM "+ oaGWDFile +" WHERE FW_DATA_ID='"+oaid+"'");
 
-        StringBuffer fields = new StringBuffer();
-        StringBuffer values = new StringBuffer();
-        for (Map<String, Object> dataMap : dataList) {
-            String oaid = "";
-            String tableName = "";
+            //开始处理数据
             Integer maxdid = 0;
             if (dataMap.size() > 0 && dataMap != null) {
-                oaid = dataMap.get("UUID").toString();
-                tableName = "D_FILE" + libcode ;
-
-                List<Map<String,Object>> fjList = quertListMap("SELECT * FROM "+oaEFile + " WHERE PUUID='" + oaid + "'");
+                List<Map<String,Object>> fjList = quertListMap("SELECT * FROM "+oaEFile + " WHERE WJID='" + oaid + "'");
                 try {
                     maxdid = getMaxDid(tableName);
                     for (String OAData : dataMap.keySet()) {
-                        FDTable wsField = getWsField(OAData);
+                        FDTable wsField = getGWField(OAData);
                         if(null != wsField){
                             String oaValue = (dataMap.get(OAData) == null ? "" : dataMap.get(OAData).toString());
                             oaValue = (oaValue.contains("'") ? oaValue.replace(
@@ -155,12 +182,12 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                     fields.append(defaultField);
                     values.append(defaultValue);
                     //由于OA没有把办法提供年度,所以这里用createtime他截取前4位
-                    String createtime = (dataMap.get("CREATETIME") == null ? "" : dataMap.get("CREATETIME").toString());
+                    String swsj = (dataMap.get("SWSJ") == null ? "" : dataMap.get("SWSJ").toString());
                     //如果创建日期为空或则会有了年度就不截取了
-                    if(StringUtils.isNotBlank(createtime) && createtime.length() > 4
+                    if(StringUtils.isNotBlank(swsj) && swsj.length() > 4
                             && !fields.toString().toUpperCase().contains("ND")){
                         fields.append(",ND");
-                        values.append(","+createtime.substring(0,4));
+                        values.append(","+swsj.substring(0,4));
                     }
 
                     fields.append(",pid,createtime,qzh,did,attached");
@@ -172,10 +199,10 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                             + fields.toString() + ") values (" + values.toString() + " )";
                     log.error("插入一条数据成功.fileReciveTxt: " + InsertSql);
                     execSql(InsertSql);
-                    jdbcDao.excute("UPDATE " + oaDFile + " SET STATUS = 1 WHERE UUID = '" + oaid + "'");
+                    jdbcDao.excute("UPDATE " + oaGWDFile + " SET TBBJ = 1 WHERE FW_DATA_ID = '" + oaid + "'");
                     fields.setLength(0);
                     values.setLength(0);
-                    addEfile(fjList , maxdid);
+                    addEfile(fjList , maxdid , libcodeGW);
                     dNum++;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -185,78 +212,175 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                 }
             }
         }
+
         try {
-            execSql("UPDATE D_FILE"+ libcode +" SET ATTACHED=0 WHERE DID NOT IN" +
-                    " (SELECT PID FROM E_FILE"+ libcode +")");
+            execSql("UPDATE D_FILE"+ libcodeGW +" SET ATTACHED=0 WHERE DID NOT IN" +
+                    " (SELECT PID FROM E_FILE"+ libcodeGW +")");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return msg + dNum;
     }
-    /*
-         * 分页抓取 300条
-         */
-    private List<Map<String, Object>> listMaps(String sql) {
-        PageContext page = PageContext.getContext();
-        page.setCurrentPage(1);
-        page.setPageSize(300);
-        page.setPagination(true);
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("page", page);
-        map.put("sql", sql);
-        List<Map<String, Object>> mapList = sUserMapper.listPageMapQuery(map);
-        return mapList;
+
+    //外来发文
+    public String syncWLFWData(){
+        Integer dNum = 0;
+        Integer eNum = 0;
+        String msg = "校外来文  ";
+        String tableName = "D_FILE" + libcodeWLFW;
+        StringBuffer fields = new StringBuffer();
+        StringBuffer values = new StringBuffer();
+        //默认数据库当前时间
+        String dateStr = getDatabaseType().getDateByDb();
+
+        //获取所有ID列表
+        List<String> xwlwIdList = listZjkXWLWidList();
+        //防止数据太多 内存溢出 逐条获取
+        for (String oaid : xwlwIdList) {//oaGWDFile
+            Map<String, Object> dataMap = jdbcDao.getOAItem("SELECT * FROM "+ oaXWLWDFile +" WHERE SW_DATA_ID='"+oaid+"'");
+
+            //开始处理数据
+            Integer maxdid = 0;
+            if (dataMap.size() > 0 && dataMap != null) {
+                List<Map<String,Object>> fjList = quertListMap("SELECT * FROM "+oaEFile + " WHERE WJID='" + oaid + "'");
+                try {
+                    maxdid = getMaxDid(tableName);
+                    for (String OAData : dataMap.keySet()) {
+                        FDTable wsField = getWLFWField(OAData);
+                        if(null != wsField){
+                            String oaValue = (dataMap.get(OAData) == null ? "" : dataMap.get(OAData).toString());
+                            oaValue = (oaValue.contains("'") ? oaValue.replace(
+                                    "'", "''") : oaValue);
+                            fields.append(wsField.getFieldname()).append(",");
+                            switch (wsField.getFieldtype()) {
+                                case 11:
+                                    if (StringUtils.isBlank(oaValue)) {
+                                        values.append(dateStr+",");
+                                    } else {
+                                        values.append(generateTimeToSQLDate(OAData)).append(",");
+                                    }
+                                    break;
+                                case 1:
+                                    values.append("'").append(oaValue).append("',");
+                                    break;
+                                case 3:
+                                    if (StringUtils.isBlank(oaValue)) {
+                                        values.append("null ,");
+                                    } else {
+                                        values.append(Integer.parseInt(oaValue))
+                                                .append(",");
+                                    }
+                                    break;
+                                default:
+                                    values.append("'").append(oaValue).append("',");
+                                    break;
+                            }
+                        }
+                    }
+
+                    fields.append(defaultField);
+                    values.append(defaultValue);
+                    //由于OA没有把办法提供年度,所以这里用createtime他截取前4位
+                    String swlwsj = (dataMap.get("SWLWSJ") == null ? "" : dataMap.get("SWLWSJ").toString());
+                    //如果创建日期为空或则会有了年度就不截取了
+                    if(StringUtils.isNotBlank(swlwsj) && swlwsj.length() > 4
+                            && !fields.toString().toUpperCase().contains("ND")){
+                        fields.append(",ND");
+                        values.append(","+swlwsj.substring(0,4));
+                    }
+
+                    fields.append(",pid,createtime,qzh,did,attached");
+                    values.append(",-1,sysdate,'");
+                    values.append(defaultQzh).append("',").append(maxdid).append(",").append(
+                            fjList.size() > 0 ? 1 : 0);
+
+                    String InsertSql = "insert into " + tableName + "" + " ("
+                            + fields.toString() + ") values (" + values.toString() + " )";
+                    log.error("插入一条数据成功.fileReciveTxt: " + InsertSql);
+                    execSql(InsertSql);
+                    jdbcDao.excute("UPDATE " + oaXWLWDFile + " SET TBBJ = 1 WHERE SW_DATA_ID = '" + oaid + "'");
+                    fields.setLength(0);
+                    values.setLength(0);
+                    addEfile(fjList , maxdid , libcodeWLFW);
+                    dNum++;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    eNum++;
+                    log.error("插入一条数据失败.fileReciveTxt: " + e.getMessage());
+                    break;
+                }
+            }
+        }
+
+        try {
+            execSql("UPDATE D_FILE"+ libcodeWLFW +" SET ATTACHED=0 WHERE DID NOT IN" +
+                    " (SELECT PID FROM E_FILE"+ libcodeWLFW +")");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return msg + dNum;
     }
 
     /**
      * 电子文件集成
      */
-    private void addEfile(List<Map<String , Object>> fjList , Integer pid) {
-        String tableName = "E_FILE" + libcode ;
-        String euuid , docID , ext1 , eBizName = "";
+    private void addEfile(List<Map<String , Object>> fjList , Integer pid , Integer libcodezzz) {
+        String tableName = "E_FILE" + libcodezzz ;
+        String euuid , docID , FJDM , eBizName,fjdm = "";
 
         for (Map<String, Object> dataMap : fjList) {
-            euuid = dataMap.get("UUID") == null ? "" : MapUtils.getString(dataMap , "UUID");
-            docID = dataMap.get("DOCUID") == null ? "" : MapUtils.getString(dataMap , "DOCUID");
-            ext1 = dataMap.get("EXT1") == null ? "" : MapUtils.getString(dataMap , "EXT1");
-            eBizName = dataMap.get("FILEBIZNAME") == null ? "" : MapUtils.getString(dataMap , "FILEBIZNAME");
-            File sFile = new File(FilenameUtils.normalize(basePath + docID));
-            if(sFile.exists()){
-                String efilepath = DateUtil.getCurrentDateStr("yyyy/MM/dd/");
-                File tFile = new File(FilenameUtils.normalize(basePath + efilepath + docID));
+            euuid = dataMap.get("FJID") == null ? "" : MapUtils.getString(dataMap , "FJID");
+            docID = dataMap.get("WJID") == null ? "" : MapUtils.getString(dataMap , "WJID");
+            fjdm = dataMap.get("FJDM") == null ? "" : MapUtils.getString(dataMap , "FJDM");
+            eBizName = dataMap.get("FJZWMC") == null ? "" : MapUtils.getString(dataMap , "FJZWMC");
+            String downloadURL =  dataMap.get("DOWNLOADURL") == null ? "" : MapUtils.getString(dataMap , "DOWNLOADURL");
+
+            if(StringUtils.isBlank(downloadURL)){
+                continue;
+            }
+            String ext = FilenameUtils.getExtension(fjdm);
+            String realyFileName = UUID.randomUUID() + "." + ext;
+
+            String efilepath = basePath + File.separator + tableName + File.separator
+                    + DateUtil.getCurrentDateStr4Dir() + File.separator+ realyFileName;
+
+
+            try {
+                HttpDownload.download(beforeURL+downloadURL, efilepath);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            File newFile = new File(efilepath);
+            //希尔说不存在再下载一次。我就醉了
+            if(!newFile.exists()){
                 try {
-                    FileUtils.moveFile(sFile , tFile);
-                } catch (IOException e1) {
-                    log.error(e1.getMessage() , e1);
+                    HttpDownload.download(beforeURL+downloadURL, efilepath);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                if(tFile.exists()){
-                    EFile eFile = new EFile();
-                    //DID,PID,EFILENAME,TITLE,EXT,PZM,PATHNAME,STATUS,ATTR,ATTREX,CREATOR,CREATETIME,FILESIZE,MD5,CONVERTSTATUS
-                    eFile.setDid(getMaxDid(tableName));
-                    eFile.setPid(pid);
-                    eFile.setEfilename(docID);
-                    eFile.setExt(FilenameUtils.getExtension(docID));
-                    if(docID.contains(eBizName) || ext1.equals("6")){
-                        eFile.setTitle("审批单");
-                    }else{
-                        String tempFileanme = StringUtils.isBlank(eBizName) ? docID : eBizName;
-                        tempFileanme = tempFileanme.substring(0 , tempFileanme.lastIndexOf(eFile.getExt())+ 1);
-                        eFile.setTitle(tempFileanme);
-                    }
-                    eFile.setPzm(pzm);
-                    eFile.setPathname(ftpXdlj+efilepath);
-                    eFile.setStatus(0);
-                    eFile.setAttr(1);
-                    eFile.setAttrex(1);
-                    eFile.setCreator("ROOT");
-                    eFile.setCreatetime(new Date());
-                    eFile.setFilesize(((Long) tFile.length()).intValue() / 1000);
-                    eFile.setMd5(MD5.getFileMD5String(tFile));
-                    insertEfile(tableName , eFile);
-                }
+            }
+
+            if(!newFile.exists()){
+                continue;
             }else{
-                log.error(basePath + docID+" 文件不存在");
+                EFile eFile = new EFile();
+                //DID,PID,EFILENAME,TITLE,EXT,PZM,PATHNAME,STATUS,ATTR,ATTREX,CREATOR,CREATETIME,FILESIZE,MD5,CONVERTSTATUS
+                eFile.setDid(getMaxDid(tableName));
+                eFile.setPid(pid);
+                eFile.setEfilename(realyFileName);
+                eFile.setExt(ext);
+                eFile.setPzm(pzm);
+                eFile.setPathname(ftpXdlj+efilepath);
+                eFile.setStatus(0);
+                eFile.setAttr(1);
+                eFile.setAttrex(1);
+                eFile.setCreator("ROOT");
+                eFile.setCreatetime(new Date());
+                eFile.setFilesize(((Long) newFile.length()).intValue() / 1000);
+                eFile.setMd5(MD5.getFileMD5String(newFile));
+                insertEfile(tableName , eFile);
             }
         }
 
@@ -266,34 +390,56 @@ public class ArcServcieImpl extends BaseService implements ArcService {
      * 文书字段列表
      * @return
      */
-    private List<FDTable> getWsFieldList(){
-        if(oaFieldList == null){
-            oaFieldList = sGroupMapper.getFtableList("F_D_FILE"+libcode);
+    private List<FDTable> getGWFieldList(){
+        if(oaFieldListGW == null){
+            oaFieldListGW = sGroupMapper.getFtableList("F_D_FILE"+libcodeGW);
         }
-        return oaFieldList;
+        return oaFieldListGW;
     }
 
     /**
-     * oa和档案的字段对应关系
+     * 文书字段列表
      * @return
      */
-    private Map<String , String> getFieldMappingList(){
-        if(fieldMapping == null){
-            fieldMapping = quert2Colum4Map("SELECT * FROM "+ fieldMappingtbName , "F1" ,"F2");
+    private List<FDTable> getWLFWFieldList(){
+        if(oaFieldListWLFW == null){
+            oaFieldListWLFW = sGroupMapper.getFtableList("F_D_FILE"+libcodeWLFW);
         }
-        return fieldMapping;
+        return oaFieldListWLFW;
     }
 
     /**
-     * 通过对应关系得到文书档案的字段
-     * @param oaField
+     * oa和档案的字段对应关系 外来发文
      * @return
      */
-    private FDTable getWsField(String oaField){
+    private Map<String , String> getFieldGWMappingList(){
+        if(fieldMappingGW == null){
+            fieldMappingGW = quert2Colum4Map("SELECT * FROM "+ fieldMappingtbNameGW , "F1" ,"F2");
+        }
+        return fieldMappingGW;
+    }
+
+    /**
+     * oa和档案的字段对应关系 公文
+     * @return
+     */
+    private Map<String , String> getFieldWLFWMappingList(){
+        if(fieldMappingWLFW == null){
+            fieldMappingWLFW = quert2Colum4Map("SELECT * FROM "+ fieldMappingtbNameWLFW , "F1" ,"F2");
+        }
+        return fieldMappingWLFW;
+    }
+
+    /**
+     * 通过公文
+     * @param GWField
+     * @return
+     */
+    private FDTable getGWField(String oaField){
         FDTable result = null;
-        Map<String , String> mapping = getFieldMappingList();
-        List<FDTable> daFieldList = getWsFieldList();
-        String daField = getFieldMappingList().get(oaField);
+        Map<String , String> mapping = getFieldGWMappingList();
+        List<FDTable> daFieldList = getGWFieldList();
+        String daField = getFieldGWMappingList().get(oaField);
 
         if(StringUtils.isNotBlank(daField)){
             for (FDTable f : daFieldList) {
@@ -306,48 +452,33 @@ public class ArcServcieImpl extends BaseService implements ArcService {
         return result;
     }
 
-    public void autoArchiveEfile() {
-        System.out.println("being sync efile archive");
-        String didSql = "SELECT DID,TITLE,WENHAO,ND FROM D_FILE" + this.libcode + " WHERE ATTR=1 AND HASGD<>1 OR HASGD IS NULL";
-        List<Map<String, Object>> list = quertListMap(didSql);
-        if(null == list){
+    /**
+     * 通过对应关系得到文书档案的字段
+     * @param oaField
+     * @return
+     */
+    private FDTable getWLFWField(String oaField){
+        FDTable result = null;
+        Map<String , String> mapping = getFieldWLFWMappingList();
+        List<FDTable> daFieldList = getWLFWFieldList();
+        String daField = getFieldWLFWMappingList().get(oaField);
 
-        }else{
-            for (Map obj : list) {
-                Integer did = MapUtils.getInteger(obj, "DID");
-                String title = MapUtils.getString(obj, "TITLE");
-                String wenhao = MapUtils.getString(obj, "WENHAO");
-                String nd = MapUtils.getString(obj, "ND");
-                try {
-                    if (StringUtils.isNotBlank(title) && StringUtils.isNotBlank(wenhao) && StringUtils.isNotBlank(nd)) {
-                        String didString = "SELECT MAX(DID) FROM D_FILE" + this.libcode + " WHERE ATTR=0 AND TRIM(TITLE)='"
-                                + title.trim() + "' AND TRIM(WENHAO)='"+wenhao.trim() + "' AND TRIM(ND)='"
-                                + nd.trim()+"' GROUP BY TITLE,WENHAO,ND";
-                        System.out.println(didString);
-                        Integer newdid = (Integer)this.jdbcDao.quert4Fx(didString, Integer.class);
-                        System.out.println("newdid:" + newdid);
-                        if ((newdid != null) && (newdid.intValue() > 0)) {
-                            String updateSql = "UPDATE E_FILE" + this.libcode + " SET PID=" + newdid + " WHERE PID=" + did;
-
-                            execSql("UPDATE E_FILE" + this.libcode + " SET PID=" + newdid + " WHERE PID=" + did);
-                            execSql("UPDATE D_FILE" + this.libcode + " SET HASGD=1,ATTACHED=1 WHERE DID=" + did);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+        if(StringUtils.isNotBlank(daField)){
+            for (FDTable f : daFieldList) {
+                if(f.getFieldname().toUpperCase().equals(daField.toUpperCase())){
+                    result = f;
+                    break;
                 }
             }
         }
-        //清洗小星星
-        try {
-            execSql("UPDATE D_FILE"+ libcode +" SET ATTACHED=0 WHERE DID NOT IN" +
-                    " (SELECT PID FROM E_FILE"+ libcode +" WHERE STATUS=0 AND PID IS NOT NULL)");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        return result;
     }
-    protected Map<String , String> fieldMapping = null;//OA档案字段对应的字段list
-    protected List<FDTable> oaFieldList = null;//OA文书f表的字段list
+
+
+    protected Map<String , String> fieldMappingGW = null;//OA档案字段对应的字段list
+    protected Map<String , String> fieldMappingWLFW = null;//OA档案字段对应的字段list
+    protected List<FDTable> oaFieldListGW = null;//OA文书f表的字段list
+    protected List<FDTable> oaFieldListWLFW = null;//OA文书f表的字段list
     @Autowired
     private SGroupMapper sGroupMapper;
     @Autowired
@@ -363,18 +494,33 @@ public class ArcServcieImpl extends BaseService implements ArcService {
     @Autowired
     @Value("${dclassfy.tablename}")
     protected String fhlZjb;
+    /**
+     * 公文
+     */
     @Autowired
-    @Value("${lams.oaDfile.table}")
-    protected String oaDFile;
+    @Value("${lams.oaSWDfile.table}")
+    protected String oaGWDFile;
+    /**
+     * 校外公文
+     */
+    @Autowired
+    @Value("${lams.oaXWLWDfile.table}")
+    protected String oaXWLWDFile;
     @Autowired
     @Value("${lams.oaEfile.table}")
     protected String oaEFile;
     @Autowired
-    @Value("${lams.oa.libcode}")
-    protected Integer libcode;
+    @Value("${lams.oa.libcodeGW}")
+    protected Integer libcodeGW;
     @Autowired
-    @Value("${lams.oa.mappingtableanme}")
-    protected String fieldMappingtbName;
+    @Value("${lams.oa.libcodeWLFW}")
+    protected Integer libcodeWLFW;
+    @Autowired
+    @Value("${lams.oa.mappingtableanmeGW}")
+    protected String fieldMappingtbNameGW;
+    @Autowired
+    @Value("${lams.oa.mappingtableanmeWLFW}")
+    protected String fieldMappingtbNameWLFW;
     @Autowired
     @Value("${lams.defaultField}")
     protected String defaultField;
@@ -391,6 +537,9 @@ public class ArcServcieImpl extends BaseService implements ArcService {
     @Autowired
     @Value("${lams.pzm}")
     protected String pzm;
+    @Autowired
+    @Value("${lams.oa.downloadefileURL}")
+    protected String beforeURL;
 
     private Logger log = (Logger) LoggerFactory.getLogger(this.getClass());
 }

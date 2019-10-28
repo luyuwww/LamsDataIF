@@ -2,8 +2,6 @@ package com.bwzk.action;
 
 import ch.qos.logback.classic.Logger;
 import com.bwzk.service.i.ArcService;
-import com.bwzk.service.i.NoticeService;
-import com.bwzk.service.i.OrgService;
 import com.bwzk.util.GlobalFinalAttr;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -112,16 +110,16 @@ public class CommonCtler {
      */
     @RequestMapping(value = "/listDaUsers", method = RequestMethod.GET)
     public String listDaUsers(Model model) {
-        model.addAttribute("userlist", orgServiceImpl.listDaUsers());
+        model.addAttribute("userlist", arcServcieImpl.listAllUser());
         return "daUserlist.jsp";
     }
     /**
      * 列出所有OA用户 测试方法
      */
-    @RequestMapping(value = "/listOAUsers", method = RequestMethod.GET)
+    @RequestMapping(value = "/listSwIdList", method = RequestMethod.GET)
     public String listOAUsers(Model model) {
-        model.addAttribute("userlist", orgServiceImpl.listOaUsersLess4());
-        return "oaUserlist.jsp";
+        model.addAttribute("swList", arcServcieImpl.listZjkSWDList());
+        return "swList.jsp";
     }
 
     /**
@@ -132,16 +130,6 @@ public class CommonCtler {
         return "redirect:" ;
     }
 
-
-    /**
-     * 流程过来的消息 需要发送到 邮件和待办
-     */
-    @RequestMapping(value = "/sendMsg", method = RequestMethod.POST)
-    public void sendMsg(@RequestParam String userCodes, @RequestParam String varsJson, @RequestParam String actTaskID) {
-        if (StringUtils.isNotEmpty(varsJson) && StringUtils.isNotEmpty(actTaskID)) {
-            noticeServiceImpl.sendActivitiMsg(userCodes, varsJson, actTaskID);
-        }
-    }
 
     /**
      * 查看日志
@@ -170,34 +158,6 @@ public class CommonCtler {
     }
 
     /**
-     * 同步组织机构
-     */
-    @RequestMapping("/syncUserGroup")
-    public void syncUserGroup(HttpServletResponse response) {
-        PrintWriter out = null;
-        try {
-            response.setContentType("text/html;charset=GBK ");
-            out = response.getWriter();
-            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
-            out.println("<HTML>");
-            out.println("<BODY>");
-            out.println("<XMP>");
-            out.println(orgServiceImpl.syncUserGroup());
-            out.println("</XMP>");
-            out.println("</BODY>");
-            out.println("</HTML>");
-        } catch (Exception e) {
-            e.printStackTrace();
-            out.println("读取日志错误" + e.getMessage());
-            log.error("读取日志错误" + e.getMessage());
-        } finally {
-            out.flush();
-            out.close();
-        }
-    }
-
-
-    /**
      * 同步OA数据
      */
     @RequestMapping("/syncOaData")
@@ -224,32 +184,7 @@ public class CommonCtler {
     }
 
 
-    /**
-     * 同步流程数据
-     */
-    @RequestMapping("/syncFlowData")
-    public void syncFlowData(HttpServletResponse response) {
-        PrintWriter out = null;
-        try {
-            response.setContentType("text/html;charset=GBK ");
-            out = response.getWriter();
-            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
-            out.println("<HTML>");
-            out.println("<BODY>");
-            out.println("<XMP>");
-            out.println("进行一次流程同步");
-            noticeServiceImpl.syncTaskInfo();
-            out.println("</XMP>");
-            out.println("</BODY>");
-            out.println("</HTML>");
-        } catch (Exception e) {
-            out.println("读取日志错误" + e.getMessage());
-            log.error("读取日志错误" + e.getMessage());
-        } finally {
-            out.flush();
-            out.close();
-        }
-    }
+
 
     /**
      * 内部调用 判断是否是允许用户 ture是的
@@ -259,10 +194,6 @@ public class CommonCtler {
         return result;
     }
 
-    @Autowired
-    private OrgService orgServiceImpl;
-    @Autowired
-    private NoticeService noticeServiceImpl;
     @Autowired
     private ArcService arcServcieImpl;
     @Autowired

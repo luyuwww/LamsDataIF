@@ -29,19 +29,13 @@
            href="${pageContext.request.contextPath}/viewLogList">查看日志</a>
         <a class="btn btn-lg btn-danger"
            href="${pageContext.request.contextPath}/viewXMLList">查看XML</a>
-        <a class="btn btn-lg btn-success"
-           href="${pageContext.request.contextPath}/listDaUsers">列出所有档案用户</a>
-        <a class="btn btn-lg btn-info"
-           href="${pageContext.request.contextPath}/listOAUsers">列出所有OA用户</a>
-        <a class="btn btn-lg btn-warning"
-           href="${pageContext.request.contextPath}/cxf">查看服务</a>
         <br>
+        <a class="btn btn-lg btn-success"
+           href="${pageContext.request.contextPath}/listDaUsers">测试档案数据库</a>
         <a class="btn btn-lg btn-info"
-           href="${pageContext.request.contextPath}/syncUserGroup">同步部门用户</a>
+           href="${pageContext.request.contextPath}/listSwIdList">测试OA数据库连接</a>
         <a class="btn btn-lg btn-warning"
            href="${pageContext.request.contextPath}/syncOaData">抓取OA数据</a>
-        <a class="btn btn-lg btn-danger"
-           href="${pageContext.request.contextPath}/syncFlowData">同步流程数据</a>
 
     </p>
 </div>

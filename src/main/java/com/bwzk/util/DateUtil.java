@@ -3,6 +3,7 @@ package com.bwzk.util;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.FastDateFormat;
 
+import java.io.File;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -175,6 +176,13 @@ public class DateUtil {
      */
     public static String getCurrentDateStr() {
         return getCurrentDateStr(DEFAULT_DATE_FORMAT);
+    }
+
+    /**
+     * 返回格式 yyyy-MM-dd 日期 string
+     */
+    public static String getCurrentDateStr4Dir() {
+        return getCurrentDateStr("yyyy"+ File.separator+"MM"+File.separator+"dd");
     }
 
     /**

@@ -103,10 +103,6 @@
         <property name="dataSource" ref="dataSource4OA"/>
     </bean>
 
-    <!-- dao -->
-    <!-- service -->
-    <!-- CXF -->
-    <jaxws:endpoint id="arcDataServiceWS" implementor="#arcDataService" address="/ArcDataWsSingle"/>
 
     <!-- 事务配置 UNIS-->
     <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
