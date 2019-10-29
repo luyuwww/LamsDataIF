@@ -183,6 +183,58 @@ public class CommonCtler {
         }
     }
 
+    /**
+     * 同步OA数据
+     */
+    @RequestMapping("/syncXwfwData")
+    public void syncXwfwData(HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            response.setContentType("text/html;charset=GBK ");
+            out = response.getWriter();
+            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+            out.println("<HTML>");
+            out.println("<BODY>");
+            out.println("<XMP>");
+            out.println("接受了 "+arcServcieImpl.syncWLFWData() +" 条数据");
+            out.println("</XMP>");
+            out.println("</BODY>");
+            out.println("</HTML>");
+        } catch (Exception e) {
+            out.println("读取日志错误" + e.getMessage());
+            log.error("读取日志错误" + e.getMessage());
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
+
+    /**
+     * 同步OA数据
+     */
+    @RequestMapping("/syncGwData")
+    public void syncGwData(HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            response.setContentType("text/html;charset=GBK ");
+            out = response.getWriter();
+            out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
+            out.println("<HTML>");
+            out.println("<BODY>");
+            out.println("<XMP>");
+            out.println("接受了 "+arcServcieImpl.syncGWData()+" 条数据");
+            out.println("</XMP>");
+            out.println("</BODY>");
+            out.println("</HTML>");
+        } catch (Exception e) {
+            out.println("读取日志错误" + e.getMessage());
+            log.error("读取日志错误" + e.getMessage());
+        } finally {
+            out.flush();
+            out.close();
+        }
+    }
+
 
 
 

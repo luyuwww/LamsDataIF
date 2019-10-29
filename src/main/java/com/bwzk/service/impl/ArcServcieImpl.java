@@ -345,8 +345,6 @@ public class ArcServcieImpl extends BaseService implements ArcService {
 
             String efilepath = basePath + File.separator + tableName + File.separator
                     + DateUtil.getCurrentDateStr4Dir() + File.separator+ realyFileName;
-
-
             try {
                 HttpDownload.download(beforeURL+downloadURL, efilepath);
             } catch (Exception e) {

@@ -34,8 +34,12 @@
            href="${pageContext.request.contextPath}/listDaUsers">测试档案数据库</a>
         <a class="btn btn-lg btn-info"
            href="${pageContext.request.contextPath}/listSwIdList">测试OA数据库连接</a>
+        <a class="btn btn-lg btn-primary"
+           href="${pageContext.request.contextPath}/syncGwData">抓取OA数据【公文】</a>
+        <a class="btn btn-lg btn-danger"
+           href="${pageContext.request.contextPath}/syncXwfwData">抓取OA数据【校外发文】</a>
         <a class="btn btn-lg btn-warning"
-           href="${pageContext.request.contextPath}/syncOaData">抓取OA数据</a>
+           href="${pageContext.request.contextPath}/syncOaData">抓取OA数据【所有】</a>
 
     </p>
 </div>

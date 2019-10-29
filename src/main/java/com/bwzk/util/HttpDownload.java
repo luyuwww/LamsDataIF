@@ -1,5 +1,6 @@
 package com.bwzk.util;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -48,6 +49,7 @@ public class HttpDownload {
      * @return
      */
     public static String download(String url, String filepath) {
+
         HttpClient client = new DefaultHttpClient();
         HttpGet httpget = new HttpGet(url);
         InputStream is = null;
@@ -60,7 +62,7 @@ public class HttpDownload {
             if (filepath == null)
                 filepath = getFilePath(response);
             File file = new File(filepath);
-            file.getParentFile().mkdirs();
+            FileUtils.touch(file);
             fileout = new FileOutputStream(file);
             /**
              * 根据实际运行效果 设置缓冲区大小
@@ -153,7 +155,7 @@ public class HttpDownload {
 
     public static void main(String[] args) {
         String url = "http://33281.url.9xiazaiqi.com/xiaz/oracle%209i%20%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9B%86%E6%88%90%E8%BD%AF%E4%BB%B6%E5%8C%85%20%E5%AE%98%E6%96%B9%E4%B8%AD%E6%96%87%E7%89%88(%E9%99%84%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B)%2032%E4%BD%8D/64%E4%BD%8D@156_568422.exe";
-        String filepath = "d:/doubaidouba.exe";
+        String filepath = "d:/1/2//1/4/doubaidouba.exe";
         HttpDownload.download(url, filepath);
     }
 }
