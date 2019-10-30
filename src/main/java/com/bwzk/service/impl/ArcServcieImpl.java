@@ -199,7 +199,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                             + fields.toString() + ") values (" + values.toString() + " )";
                     log.error("插入一条数据成功.fileReciveTxt: " + InsertSql);
                     execSql(InsertSql);
-                    jdbcDao.updateZjk("UPDATE " + oaGWDFile + " SET TBBJ = 1 WHERE FW_DATA_ID = '" + oaid + "'");
+                    jdbcDao.updateZjk("UPDATE " + oaGWDFile + " SET TBBJ = '1' WHERE FW_DATA_ID = '" + oaid + "'");
                     fields.setLength(0);
                     values.setLength(0);
                     addEfile(fjList , maxdid , libcodeGW);
@@ -299,7 +299,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                             + fields.toString() + ") values (" + values.toString() + " )";
                     log.error("插入一条数据成功.fileReciveTxt: " + InsertSql);
                     execSql(InsertSql);
-                    jdbcDao.updateZjk("UPDATE " + oaXWLWDFile + " SET TBBJ = 1 WHERE SW_DATA_ID = '" + oaid + "'");
+                    jdbcDao.updateZjk("UPDATE " + oaXWLWDFile + " SET TBBJ = '1' WHERE SW_DATA_ID = '" + oaid + "'");
                     fields.setLength(0);
                     values.setLength(0);
                     addEfile(fjList , maxdid , libcodeWLFW);
@@ -319,7 +319,6 @@ public class ArcServcieImpl extends BaseService implements ArcService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return msg + dNum;
     }
 
@@ -381,7 +380,6 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                 insertEfile(tableName , eFile);
             }
         }
-
     }
 
     /**
