@@ -143,7 +143,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
             //开始处理数据
             Integer maxdid = 0;
             if (dataMap.size() > 0 && dataMap != null) {
-                List<Map<String,Object>> fjList = quertListMap("SELECT * FROM "+oaEFile + " WHERE WJID='" + oaid + "'");
+                List<Map<String,Object>> fjList = jdbcDao.listZjkMap("SELECT * FROM "+oaEFile + " WHERE WJID='" + oaid + "'");
                 try {
                     maxdid = getMaxDid(tableName);
                     for (String OAData : dataMap.keySet()) {
@@ -199,7 +199,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                             + fields.toString() + ") values (" + values.toString() + " )";
                     log.error("插入一条数据成功.fileReciveTxt: " + InsertSql);
                     execSql(InsertSql);
-                    jdbcDao.excute("UPDATE " + oaGWDFile + " SET TBBJ = 1 WHERE FW_DATA_ID = '" + oaid + "'");
+                    jdbcDao.updateZjk("UPDATE " + oaGWDFile + " SET TBBJ = 1 WHERE FW_DATA_ID = '" + oaid + "'");
                     fields.setLength(0);
                     values.setLength(0);
                     addEfile(fjList , maxdid , libcodeGW);
@@ -243,7 +243,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
             //开始处理数据
             Integer maxdid = 0;
             if (dataMap.size() > 0 && dataMap != null) {
-                List<Map<String,Object>> fjList = quertListMap("SELECT * FROM "+oaEFile + " WHERE WJID='" + oaid + "'");
+                List<Map<String,Object>> fjList = jdbcDao.listZjkMap("SELECT * FROM "+oaEFile + " WHERE WJID='" + oaid + "'");
                 try {
                     maxdid = getMaxDid(tableName);
                     for (String OAData : dataMap.keySet()) {
@@ -299,7 +299,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                             + fields.toString() + ") values (" + values.toString() + " )";
                     log.error("插入一条数据成功.fileReciveTxt: " + InsertSql);
                     execSql(InsertSql);
-                    jdbcDao.excute("UPDATE " + oaXWLWDFile + " SET TBBJ = 1 WHERE SW_DATA_ID = '" + oaid + "'");
+                    jdbcDao.updateZjk("UPDATE " + oaXWLWDFile + " SET TBBJ = 1 WHERE SW_DATA_ID = '" + oaid + "'");
                     fields.setLength(0);
                     values.setLength(0);
                     addEfile(fjList , maxdid , libcodeWLFW);
