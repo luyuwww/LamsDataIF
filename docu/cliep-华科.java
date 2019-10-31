@@ -20,21 +20,21 @@
 
             String efilepath = basePath + File.separator + tableName + File.separator
                     + DateUtil.getCurrentDateStr4Dir() + File.separator+ realyFileName;
-//            try {
-//                HttpDownload.download(beforeURL+downloadURL, efilepath);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            File newFile = new File(efilepath);
-//            //希尔说不存在再下载一次。我就醉了
-//            if(!newFile.exists()){
-//                try {
-//                    HttpDownload.download(beforeURL+downloadURL, efilepath);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-            File newFile = new File("d:/1.txt");
+            try {
+                HttpDownload.download(beforeURL+downloadURL, efilepath);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            File newFile = new File(efilepath);
+            //希尔说不存在再下载一次。我就醉了
+            if(!newFile.exists()){
+                try {
+                    HttpDownload.download(beforeURL+downloadURL, efilepath);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+//            File newFile = new File("d:/1.txt");
             if(!newFile.exists()){
                 continue;
             }else{
