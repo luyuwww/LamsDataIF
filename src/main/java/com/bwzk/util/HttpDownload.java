@@ -50,6 +50,8 @@ public class HttpDownload {
      */
     public static String download(String url, String filepath) {
 
+        System.out.println("star download:"+url);
+        System.out.println("star download:"+filepath);
         HttpClient client = new DefaultHttpClient();
         HttpGet httpget = new HttpGet(url);
         InputStream is = null;

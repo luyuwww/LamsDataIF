@@ -334,26 +334,27 @@ public class ArcServcieImpl extends BaseService implements ArcService {
             docID = dataMap.get("WJID") == null ? "" : MapUtils.getString(dataMap , "WJID");
             fjdm = dataMap.get("FJDM") == null ? "" : MapUtils.getString(dataMap , "FJDM");
             eBizName = dataMap.get("FJZWMC") == null ? "" : MapUtils.getString(dataMap , "FJZWMC");
-            String downloadURL =  dataMap.get("DOWNLOADURL") == null ? "" : MapUtils.getString(dataMap , "DOWNLOADURL");
 
-            if(StringUtils.isBlank(downloadURL)){
+            if(StringUtils.isBlank(euuid)){
                 continue;
             }
             String ext = FilenameUtils.getExtension(fjdm);
             String realyFileName = UUID.randomUUID() + "." + ext;
 
-            String efilepath = basePath + File.separator + tableName + File.separator
-                    + DateUtil.getCurrentDateStr4Dir() + File.separator+ realyFileName;
+
+            String efilepath = File.separator + tableName + File.separator
+                    + DateUtil.getCurrentDateStr4Dir() +File.separator+pid+ File.separator;
+            String realFile = basePath + efilepath + realyFileName;
             try {
-                HttpDownload.download(beforeURL+downloadURL, efilepath);
+                HttpDownload.download(beforeURL+euuid, realFile);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            File newFile = new File(efilepath);
+            File newFile = new File(realFile);
             //希尔说不存在再下载一次。我就醉了
             if(!newFile.exists()){
                 try {
-                    HttpDownload.download(beforeURL+downloadURL, efilepath);
+                    HttpDownload.download(beforeURL+euuid, realFile);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -366,10 +367,11 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                 //DID,PID,EFILENAME,TITLE,EXT,PZM,PATHNAME,STATUS,ATTR,ATTREX,CREATOR,CREATETIME,FILESIZE,MD5,CONVERTSTATUS
                 eFile.setDid(getMaxDid(tableName));
                 eFile.setPid(pid);
+                eFile.setTitle(FilenameUtils.getBaseName(eBizName));
                 eFile.setEfilename(realyFileName);
                 eFile.setExt(ext);
                 eFile.setPzm(pzm);
-                eFile.setPathname(ftpXdlj+efilepath);
+                eFile.setPathname(FilenameUtils.normalize(ftpXdlj+efilepath));
                 eFile.setStatus(0);
                 eFile.setAttr(1);
                 eFile.setAttrex(1);
