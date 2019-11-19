@@ -351,16 +351,25 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                 e.printStackTrace();
             }
             File newFile = new File(realFile);
+            Boolean hasSecond = Boolean.TRUE;
+            System.out.println( FileUtils.sizeOf(newFile));
+            if(newFile.exists() && FileUtils.sizeOf(newFile)>1024){
+                hasSecond = false;
+            }else{
+                System.out.println(newFile.getAbsoluteFile());
+            }
             //希尔说不存在再下载一次。我就醉了
-            if(!newFile.exists()){
+            if(hasSecond){
                 try {
+                    Thread.sleep(2000L);
                     HttpDownload.download(beforeURL+euuid, realFile);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-
-            if(!newFile.exists()){
+            newFile = new File(realFile);
+            if(!newFile.exists() ||  FileUtils.sizeOf(newFile)< 1024){
+                log.error(euuid+":"+realFile+" 不存在或者为空");
                 continue;
             }else{
                 EFile eFile = new EFile();
@@ -377,6 +386,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                 eFile.setAttrex(1);
                 eFile.setCreator("ROOT");
                 eFile.setCreatetime(new Date());
+                eFile.setBz(euuid);
                 eFile.setFilesize(((Long) newFile.length()).intValue() / 1000);
                 eFile.setMd5(MD5.getFileMD5String(newFile));
                 insertEfile(tableName , eFile);

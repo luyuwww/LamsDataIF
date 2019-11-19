@@ -142,8 +142,8 @@ public class JdbcDaoImpl<T> implements JdbcDao<T> {
 
     public Integer insertEfile(String tableName, final EFile eFile) {
         return jdbcTemplate.update("insert into " + tableName +
-                "(DID,PID,EFILENAME,TITLE,EXT,PZM,PATHNAME,STATUS,ATTR,ATTREX,CREATOR,CREATETIME,FILESIZE,MD5,CONVERTSTATUS) "
-                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", new PreparedStatementSetter() {
+                "(DID,PID,EFILENAME,TITLE,EXT,PZM,PATHNAME,STATUS,ATTR,ATTREX,CREATOR,CREATETIME,FILESIZE,MD5,CONVERTSTATUS,BZ) "
+                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", new PreparedStatementSetter() {
             public void setValues(PreparedStatement ps) throws SQLException {
                 Integer i = 1;
                 ps.setInt(i++, eFile.getDid());
@@ -161,6 +161,7 @@ public class JdbcDaoImpl<T> implements JdbcDao<T> {
                 ps.setInt(i++, eFile.getFilesize());
                 ps.setString(i++, eFile.getMd5());
                 ps.setInt(i++, 0);//电子文件转换的一个标识  0 是未转换
+                ps.setString(i++ , eFile.getBz());
             }
         });
     }
