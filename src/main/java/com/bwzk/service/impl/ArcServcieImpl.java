@@ -123,6 +123,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
         return result;
     }
 
+    //公文才有正文，
     public String syncGWData(){
         Integer dNum = 0;
         Integer eNum = 0;
@@ -138,7 +139,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
         //防止数据太多 内存溢出 逐条获取
         for (String oaid : gwIdList) {//oaGWDFile
             Map<String, Object> dataMap = jdbcDao.getOAItem("SELECT * FROM "+ oaGWDFile +" WHERE FW_DATA_ID='"+oaid+"'");
-
+            String title = MapUtils.getString(dataMap , "FWBT" , "");
             //开始处理数据
             Integer maxdid = 0;
             if (dataMap.size() > 0 && dataMap != null) {
@@ -203,10 +204,10 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                     values.setLength(0);
                     //抓附件
                     addFjEfile(fjList , maxdid , libcodeWLFW);
-                    //todo: 正文
-                    addZwEfile(oaid , maxdid , libcodeGW);
-                    //todo: 痕迹稿
-                    addHjgEfile(oaid , maxdid , libcodeGW);
+                    //正文
+                    addZwEfile(oaid , title, maxdid , libcodeGW);
+                    //痕迹稿
+                    addHjgEfile(oaid , title, maxdid , libcodeGW);
                     dNum++;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -227,7 +228,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
         return msg + dNum;
     }
 
-    //外来发文
+    //外来发文 校外来文没有正文 所有正文和痕迹稿都用doc 名字用父级的title
     public String syncWLFWData(){
         Integer dNum = 0;
         Integer eNum = 0;
@@ -243,7 +244,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
         //防止数据太多 内存溢出 逐条获取
         for (String oaid : xwlwIdList) {//oaGWDFile
             Map<String, Object> dataMap = jdbcDao.getOAItem("SELECT * FROM "+ oaXWLWDFile +" WHERE SW_DATA_ID='"+oaid+"'");
-
+            String title = MapUtils.getString(dataMap , "SWBT" , "");
             //开始处理数据
             Integer maxdid = 0;
             if (dataMap.size() > 0 && dataMap != null) {
@@ -307,10 +308,8 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                     values.setLength(0);
                     //抓附件
                     addFjEfile(fjList , maxdid , libcodeWLFW);
-                    //todo: 正文
-                    addZwEfile(oaid , maxdid , libcodeGW);
-                    //todo: 痕迹稿
-                    addHjgEfile(oaid , maxdid , libcodeGW);
+                    //痕迹稿
+                    addHjgEfile(oaid , title , maxdid , libcodeGW);
                     dNum++;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -335,13 +334,14 @@ public class ArcServcieImpl extends BaseService implements ArcService {
      */
     private void addFjEfile(List<Map<String , Object>> fjList , Integer pid , Integer libcodezzz) {
         String tableName = "E_FILE" + libcodezzz ;
-        String euuid , docID , FJDM , eBizName,fjdm = "";
+        String euuid , docID , FJDM , eBizName,fjdm , fjlx = "";
 
         for (Map<String, Object> dataMap : fjList) {
-            euuid = dataMap.get("FJID") == null ? "" : MapUtils.getString(dataMap , "FJID");
-            docID = dataMap.get("WJID") == null ? "" : MapUtils.getString(dataMap , "WJID");
-            fjdm = dataMap.get("FJDM") == null ? "" : MapUtils.getString(dataMap , "FJDM");
-            eBizName = dataMap.get("FJZWMC") == null ? "" : MapUtils.getString(dataMap , "FJZWMC");
+            euuid =  MapUtils.getString(dataMap , "FJID" , "");
+            docID =  MapUtils.getString(dataMap , "WJID", "");
+            fjdm = MapUtils.getString(dataMap , "FJDM", "");
+            eBizName = MapUtils.getString(dataMap , "FJZWMC", "");
+            fjlx = MapUtils.getString(dataMap , "FJLX", "");
 
             if(StringUtils.isBlank(euuid)){
                 continue;
@@ -356,26 +356,22 @@ public class ArcServcieImpl extends BaseService implements ArcService {
             try {
                 HttpDownload.download(fjURL+euuid, realFile);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("第一次抓取附件失败："+euuid);
             }
             File newFile = new File(realFile);
-            Boolean hasSecond = Boolean.TRUE;
-            System.out.println( FileUtils.sizeOf(newFile));
             if(newFile.exists() && FileUtils.sizeOf(newFile)>1024){
-                hasSecond = false;
+                //第一次抓取成功
             }else{
-                System.out.println(newFile.getAbsoluteFile());
-            }
-            //希尔说不存在再下载一次。我就醉了
-            if(hasSecond){
+                //希尔说不存在再下载一次。我就醉了
                 try {
                     Thread.sleep(2000L);
                     HttpDownload.download(fjURL+euuid, realFile);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error("第二次抓取附件-又-失败："+euuid);
                 }
+                newFile = new File(realFile);
             }
-            newFile = new File(realFile);
+
             if(!newFile.exists() ||  FileUtils.sizeOf(newFile)< 1024){
                 log.error(euuid+":"+realFile+" 不存在或者为空");
                 continue;
@@ -395,6 +391,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                 eFile.setCreator("ROOT");
                 eFile.setCreatetime(new Date());
                 eFile.setBz(euuid);
+                eFile.setBbh(fjlx);
                 eFile.setFilesize(((Long) newFile.length()).intValue() / 1000);
                 eFile.setMd5(MD5.getFileMD5String(newFile));
                 insertEfile(tableName , eFile);
@@ -403,55 +400,44 @@ public class ArcServcieImpl extends BaseService implements ArcService {
     }
 
     /**
-     * TODO  抓正文 电子文件名字就叫正文
+     * 抓正文 电子文件名字就叫正文
      */
-    private void addZwEfile(String wjzj , Integer pid , Integer libcodezzz) {
+    private void addZwEfile(String wjzj , String title, Integer pid , Integer libcodezzz) {
+        String ext = "doc";
         String tableName = "E_FILE" + libcodezzz ;
-        String euuid , docID , FJDM , eBizName,fjdm = "";
-
-        euuid = wjzj;
-        docID = wjzj;
-        fjdm = wjzj;
-        eBizName = "正文";
-
-        String ext = FilenameUtils.getExtension(fjdm);
         String realyFileName = UUID.randomUUID() + "." + ext;
 
         String efilepath = File.separator + tableName + File.separator
                 + DateUtil.getCurrentDateStr4Dir() +File.separator+pid+ File.separator;
         String realFile = basePath + efilepath + realyFileName;
         try {
-            HttpDownload.download(zwURL+euuid, realFile);
+            HttpDownload.download(zwURL+wjzj, realFile);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("第一次抓取正文失败："+wjzj);
         }
         File newFile = new File(realFile);
-        Boolean hasSecond = Boolean.TRUE;
-        System.out.println( FileUtils.sizeOf(newFile));
         if(newFile.exists() && FileUtils.sizeOf(newFile)>1024){
-            hasSecond = false;
+            //第一次抓取成功
         }else{
-            System.out.println(newFile.getAbsoluteFile());
-        }
-        //希尔说不存在再下载一次。我就醉了
-        if(hasSecond){
+            //希尔说不存在再下载一次。我就醉了
             try {
                 Thread.sleep(2000L);
-                HttpDownload.download(zwURL+euuid, realFile);
+                HttpDownload.download(zwURL+wjzj, realFile);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("第二次抓取正文-也-失败："+wjzj);
             }
+            newFile = new File(realFile);
         }
-        newFile = new File(realFile);
+
         if(!newFile.exists() ||  FileUtils.sizeOf(newFile)< 1024){
-            log.error(euuid+":"+realFile+" 不存在或者为空");
-            continue;
+            log.error(wjzj +":"+realFile+" 不存在或者为空-正文");
+            return;
         }else{
             EFile eFile = new EFile();
             //DID,PID,EFILENAME,TITLE,EXT,PZM,PATHNAME,STATUS,ATTR,ATTREX,CREATOR,CREATETIME,FILESIZE,MD5,CONVERTSTATUS
             eFile.setDid(getMaxDid(tableName));
             eFile.setPid(pid);
-            eFile.setTitle(FilenameUtils.getBaseName(eBizName));
+            eFile.setTitle("【正文】-"+title);
             eFile.setEfilename(realyFileName);
             eFile.setExt(ext);
             eFile.setPzm(pzm);
@@ -461,7 +447,8 @@ public class ArcServcieImpl extends BaseService implements ArcService {
             eFile.setAttrex(1);
             eFile.setCreator("ROOT");
             eFile.setCreatetime(new Date());
-            eFile.setBz(euuid);
+            eFile.setBz(wjzj);
+            eFile.setBbh("正文");
             eFile.setFilesize(((Long) newFile.length()).intValue() / 1000);
             eFile.setMd5(MD5.getFileMD5String(newFile));
             insertEfile(tableName , eFile);
@@ -469,74 +456,58 @@ public class ArcServcieImpl extends BaseService implements ArcService {
     }
 
     /**
-     * todo 抓痕迹
+     * 抓痕迹
      */
-    private void addHjgEfile(String oaid , Integer pid , Integer libcodezzz) {
+    private void addHjgEfile(String wjzj , String title , Integer pid , Integer libcodezzz) {
+        String ext = "doc";
         String tableName = "E_FILE" + libcodezzz ;
-        String euuid , docID , FJDM , eBizName,fjdm = "";
 
-        for (Map<String, Object> dataMap : fjList) {
-            euuid = dataMap.get("FJID") == null ? "" : MapUtils.getString(dataMap , "FJID");
-            docID = dataMap.get("WJID") == null ? "" : MapUtils.getString(dataMap , "WJID");
-            fjdm = dataMap.get("FJDM") == null ? "" : MapUtils.getString(dataMap , "FJDM");
-            eBizName = dataMap.get("FJZWMC") == null ? "" : MapUtils.getString(dataMap , "FJZWMC");
-
-            if(StringUtils.isBlank(euuid)){
-                continue;
-            }
-            String ext = FilenameUtils.getExtension(fjdm);
-            String realyFileName = UUID.randomUUID() + "." + ext;
-
-
-            String efilepath = File.separator + tableName + File.separator
-                    + DateUtil.getCurrentDateStr4Dir() +File.separator+pid+ File.separator;
-            String realFile = basePath + efilepath + realyFileName;
-            try {
-                HttpDownload.download(hjgURL+euuid, realFile);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            File newFile = new File(realFile);
-            Boolean hasSecond = Boolean.TRUE;
-            System.out.println( FileUtils.sizeOf(newFile));
-            if(newFile.exists() && FileUtils.sizeOf(newFile)>1024){
-                hasSecond = false;
-            }else{
-                System.out.println(newFile.getAbsoluteFile());
-            }
+        String realyFileName = UUID.randomUUID() + "." + ext;
+        String efilepath = File.separator + tableName + File.separator
+                + DateUtil.getCurrentDateStr4Dir() +File.separator+pid+ File.separator;
+        String realFile = basePath + efilepath + realyFileName;
+        try {
+            HttpDownload.download(hjgURL+wjzj, realFile);
+        } catch (Exception e) {
+            log.error("第一次抓取痕迹稿失败："+wjzj);
+        }
+        File newFile = new File(realFile);
+        if(newFile.exists() && FileUtils.sizeOf(newFile)>1024){
+            //第一次就成功
+        }else{
             //希尔说不存在再下载一次。我就醉了
-            if(hasSecond){
-                try {
-                    Thread.sleep(2000L);
-                    HttpDownload.download(hjgURL+euuid, realFile);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            try {
+                Thread.sleep(2000L);
+                HttpDownload.download(hjgURL+wjzj, realFile);
+            } catch (Exception e) {
+                log.error("第二次抓取痕迹稿-也-失败："+wjzj);
             }
             newFile = new File(realFile);
-            if(!newFile.exists() ||  FileUtils.sizeOf(newFile)< 1024){
-                log.error(euuid+":"+realFile+" 不存在或者为空");
-                continue;
-            }else{
-                EFile eFile = new EFile();
-                //DID,PID,EFILENAME,TITLE,EXT,PZM,PATHNAME,STATUS,ATTR,ATTREX,CREATOR,CREATETIME,FILESIZE,MD5,CONVERTSTATUS
-                eFile.setDid(getMaxDid(tableName));
-                eFile.setPid(pid);
-                eFile.setTitle(FilenameUtils.getBaseName(eBizName));
-                eFile.setEfilename(realyFileName);
-                eFile.setExt(ext);
-                eFile.setPzm(pzm);
-                eFile.setPathname(FilenameUtils.normalize(ftpXdlj+efilepath));
-                eFile.setStatus(0);
-                eFile.setAttr(1);
-                eFile.setAttrex(1);
-                eFile.setCreator("ROOT");
-                eFile.setCreatetime(new Date());
-                eFile.setBz(euuid);
-                eFile.setFilesize(((Long) newFile.length()).intValue() / 1000);
-                eFile.setMd5(MD5.getFileMD5String(newFile));
-                insertEfile(tableName , eFile);
-            }
+        }
+
+        if(!newFile.exists() ||  FileUtils.sizeOf(newFile)< 1024){
+            log.error(wjzj +":"+realFile+" 不存在或者为空-痕迹稿");
+            return;
+        }else{
+            EFile eFile = new EFile();
+            //DID,PID,EFILENAME,TITLE,EXT,PZM,PATHNAME,STATUS,ATTR,ATTREX,CREATOR,CREATETIME,FILESIZE,MD5,CONVERTSTATUS
+            eFile.setDid(getMaxDid(tableName));
+            eFile.setPid(pid);
+            eFile.setTitle("【痕迹稿】-"+title);
+            eFile.setEfilename(realyFileName);
+            eFile.setExt(ext);
+            eFile.setPzm(pzm);
+            eFile.setPathname(FilenameUtils.normalize(ftpXdlj+efilepath));
+            eFile.setStatus(0);
+            eFile.setAttr(1);
+            eFile.setAttrex(1);
+            eFile.setCreator("ROOT");
+            eFile.setCreatetime(new Date());
+            eFile.setBz(wjzj);
+            eFile.setBbh("痕迹稿");
+            eFile.setFilesize(((Long) newFile.length()).intValue() / 1000);
+            eFile.setMd5(MD5.getFileMD5String(newFile));
+            insertEfile(tableName , eFile);
         }
     }
 
