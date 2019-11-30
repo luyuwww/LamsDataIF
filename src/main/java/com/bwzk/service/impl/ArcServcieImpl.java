@@ -190,10 +190,10 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                         values.append(","+swsj.substring(0,4));
                     }
 
-                    fields.append(",pid,createtime,qzh,did,attached");
+                    fields.append(",pid,createtime,qzh,did,attached,wjlx");
                     values.append(",-1,sysdate,'");
                     values.append(defaultQzh).append("',").append(maxdid).append(",").append(
-                            fjList.size() > 0 ? 1 : 0);
+                            fjList.size() > 0 ? 1 : 0).append(",'公文'");
 
                     String InsertSql = "insert into " + tableName + "" + " ("
                             + fields.toString() + ") values (" + values.toString() + " )";
@@ -295,9 +295,9 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                         values.append(","+swlwsj.substring(0,4));
                     }
 
-                    fields.append(",pid,createtime,qzh,did,attached");
+                    fields.append(",pid,createtime,qzh,did,attached,wjlx");
                     values.append(",-1,sysdate,'");
-                    values.append(defaultQzh).append("',").append(maxdid).append(",1");
+                    values.append(defaultQzh).append("',").append(maxdid).append(",1,'校外来文'");
 
                     String InsertSql = "insert into " + tableName + "" + " ("
                             + fields.toString() + ") values (" + values.toString() + " )";
