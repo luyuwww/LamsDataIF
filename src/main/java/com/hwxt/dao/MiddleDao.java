@@ -26,6 +26,11 @@ public class MiddleDao {
                 , sql , pager, pageSize , primaryKey , orderBySubStr);
     }
 
+    public List<Map<String, Object>> listAll(MidDbs dbs, String sql) {
+        return listAll(dbs.getDburl() , dbs.getDbtype()
+                , dbs.getDbname() , dbs.getUsername(), dbs.getPassword(),sql);
+    }
+
     public Integer countSzie(MidDbs dbs, String sql) {
         return countSzie(dbs.getDburl() , dbs.getDbtype()
                 , dbs.getDbname() , dbs.getUsername(), dbs.getPassword() , sql);
@@ -42,6 +47,33 @@ public class MiddleDao {
             conn = JdbcUtil.getConnection(url , dbType , dbName , username, password);
             PageSqlExecutor p = new PageSqlExecutor(conn);
             sql = p.getPageSql(sql, pager, pageSize, primaryKey, orderBySubStr);
+            st = conn.createStatement();
+            rs = st.executeQuery(sql);
+            while (rs.next()) {//对结果集进行遍历
+                ResultSetMetaData md = rs.getMetaData();
+                int columnCount = md.getColumnCount();
+                Map<String,Object> rowData = new HashMap();
+                for (int i = 1; i <= columnCount; i++) {
+                    rowData.put(md.getColumnName(i) , rs.getObject(i));
+                }
+                list.add(rowData);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            JdbcUtil.close(rs,st,conn);
+        }
+        return list;
+    }
+
+    public List<Map<String, Object>> listAll(String url, String dbType, String dbName
+            , String username, String password , String sql) {
+        ResultSet rs = null;
+        Statement st = null;
+        Connection conn = null;
+        List list = new ArrayList();
+        try {
+            conn = JdbcUtil.getConnection(url , dbType , dbName , username, password);
             st = conn.createStatement();
             rs = st.executeQuery(sql);
             while (rs.next()) {//对结果集进行遍历
