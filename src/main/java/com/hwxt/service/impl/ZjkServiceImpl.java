@@ -170,7 +170,8 @@ public class ZjkServiceImpl extends BaseService implements ZjkService {
                     log.error(mt.getTtbname()+" not found field:"+ mp.getTfield());
                     continue;
                 }
-                Object theValue = item.get(mp.getSfield());
+                Object theValue = item.get(StringUtils.split(mp.getSfield() , "[ ]").length > 1 ?
+                        StringUtils.split(mp.getSfield() , "[ ]")[1] : mp.getSfield() );
                 //自定义函数 别名要填写备注里面
                 if(null == theValue){
                     theValue = item.get(bzValue);
