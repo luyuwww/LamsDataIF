@@ -158,7 +158,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                                     if (StringUtils.isBlank(oaValue)) {
                                         values.append(dateStr+",");
                                     } else {
-                                        values.append(generateTimeToSQLDate(OAData)).append(",");
+                                        values.append(generateTimeToSQLDate(oaValue)).append(",");
                                     }
                                     break;
                                 case 1:
@@ -263,7 +263,7 @@ public class ArcServcieImpl extends BaseService implements ArcService {
                                     if (StringUtils.isBlank(oaValue)) {
                                         values.append(dateStr+",");
                                     } else {
-                                        values.append(generateTimeToSQLDate(OAData)).append(",");
+                                        values.append(generateTimeToSQLDate(oaValue)).append(",");
                                     }
                                     break;
                                 case 1:
